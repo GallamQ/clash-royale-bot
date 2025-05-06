@@ -1,0 +1,13 @@
+#! FICHIERS IGNORÉS PAR GIT #!
+
+#? FICHIERS SENSIBLES ?#
+.env
+absences.json
+clan_members.json
+warlog_backup.json
+
+
+#? FICHIERS GÉNÉRÉS ?#
+__pycache__/
+*.pyc
+*.log
