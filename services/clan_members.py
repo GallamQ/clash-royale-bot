@@ -69,10 +69,17 @@ def update_clan_members():
             "members": clan_members
         }
 
+        #* SAUVEGARDE DES DONNÉES DANS LE FICHIER CLAN_MEMBERS.JSON
         with open(CLAN_MEMBERS_FILE, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
 
         print(f"Liste des membres mise à jour dans {CLAN_MEMBERS_FILE}")
+
+        #* LOG DU CONTENU DU FICHIER CLAN_MEMBERS.JSON
+        with open(CLAN_MEMBERS_FILE, "r", encoding="utf-8") as f:
+            saved_data = json.load(f)
+            print("Contenu du fichier clan_members.json après sauvegarde :")
+            print(json.dumps(saved_data, indent=4, ensure_ascii=False))
 
     except Exception as e:
         print(f"Erreur lors de la mise à jour des membres du clan : {e}")
