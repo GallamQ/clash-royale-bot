@@ -1,18 +1,23 @@
 
-#! IMPORTS !#
+#! IMPORTS
 
-from discord.ext import commands
-import json
 import os
+import json
+from discord.ext import commands
 from datetime import datetime
 
 
 
-#! COMMANDE "!KICK" !#
+#! COMMANDE "!KICK"
+
+#? INITIALISATION DES VARIABLES
 
 WAR_LOG_FILE = os.path.join(os.path.dirname(__file__), "../data/warlog_backup.json")
 CLAN_MEMBERS_FILE = os.path.join(os.path.dirname(__file__), "../data/clan_members.json")
 ABSENCE_FILE = os.path.join(os.path.dirname(__file__), "../data/absences.json")
+
+
+#? INITIALISATION DE LA COMMANDE
 
 class Kick(commands.Cog):
     def __init__(self, bot):
@@ -23,14 +28,16 @@ class Kick(commands.Cog):
     async def kick(self, ctx):
         quota = 1600
         war_start_date = datetime.strptime("%d-%m-%Y %H:%M:%S")
-        
+
         try:
+            #* RÉCUPÉRATION DES DONNÉES DE LA DERNIÈRE GUERRE DE CLAN
             with open(WAR_LOG_FILE, "r", encoding="utf-8") as f:
                 war_data = json.load(f)
             
             latest_war = war_data[0]
             participants = latest_war["clan"]["participants"]
 
+            #* RÉCUPÉRATION DES DONNÉES DES MEMBRES DU CLAN
             if os.path.exists(CLAN_MEMBERS_FILE):
                 with open(CLAN_MEMBERS_FILE, "r", encoding="utf-8") as f:
                     clan_data = json.load(f)
@@ -39,12 +46,14 @@ class Kick(commands.Cog):
                 await ctx.send("Le fichier `clan_members.json` est introuvable !")
                 return
 
+            #* RÉCUPÉRATION DES DONNÉES DES MEMBRES ABSENTS
             if os.path.exists(ABSENCE_FILE):
                 with open(ABSENCE_FILE, "r", encoding="utf-8") as f:
                     absences = json.load(f)
             else:
                 absences = {}
 
+            #* PARAMÉTRAGE DE LA COMMANDE
             underperformers = []
             for player in participants:
                 name = player.get("name", "Inconnu")
@@ -76,6 +85,8 @@ class Kick(commands.Cog):
             await ctx.send(f"Une erreur est survenue: {e}")
 
 
+
+#! AJOUT DE LA COMMANDE AU BOT
 
 async def setup(bot):
     await bot.add_cog(Kick(bot))

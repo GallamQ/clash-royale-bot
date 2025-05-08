@@ -41,3 +41,17 @@ Commande : !kick
 
 !absence [n] [x]
 
+
+
+
+
+
+Commandes automatiques :
+- !top5
+- !kick
+- !welcome
+
+Commandes à utiliser :
+- !absence
+- !GDC
+- !help

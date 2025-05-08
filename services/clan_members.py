@@ -1,5 +1,5 @@
 
-# ! IMPORTS ! #
+#! IMPORTS
 
 import os
 import json
@@ -8,7 +8,9 @@ from .clash_api import get_clan_members
 
 
 
-# ! SAUVEGARDE DES MEMBRES DU CLAN ! #
+#! SAUVEGARDE DES MEMBRES DU CLAN
+
+#? INITIALISATION DES VARIABLES
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "../data")
 CLAN_MEMBERS_FILE = os.path.join(DATA_DIR, "clan_members.json")
@@ -20,10 +22,13 @@ ROLE_TRANSLATION = {
     "leader": "Chef de clan"
 }
 
+#? INITIALISATION DE LA FONCTION DE RÉCUPÉRATION DES DONNÉES DES MEMBRES DU CLAN
+
 def update_clan_members():
     try:
         members = get_clan_members()
 
+        #* RÉCUPÉRATION DES DONNÉES DES MEMBRES DU CLAN
         if os.path.exists(CLAN_MEMBERS_FILE):
             with open(CLAN_MEMBERS_FILE, "r", encoding="utf-8") as f:
                 existing_data = json.load(f)
@@ -31,6 +36,7 @@ def update_clan_members():
         else:
             existing_members = {}
 
+        #* PARAMÉTRAGE DE LA FONCTION
         clan_members = []
         for member in members:
             tag = member.get("tag", "Inconnu")

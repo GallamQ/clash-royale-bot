@@ -1,37 +1,37 @@
 
-#! IMPORTS !#
+#! IMPORTS
 
+import os
 import discord
+import asyncio
 from discord.ext import commands
 from dotenv import load_dotenv
-import os
 from services.scheduler import initialize_scheduler
-import asyncio
 
 
 
-#! INITIALISATION DU BOT !#
+#! INITIALISATION DU BOT
 
-#? CHARGEMENT DES VARIABLES D'ENVIRONNEMENT ?#
+#? CHARGEMENT DES VARIABLES D'ENVIRONNEMENT
 
 load_dotenv()
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
 
-#? PARAMÉTRAGE DU BOT ?#
+#? PARAMÉTRAGE DU BOT
 
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 
-#? INITIALISATION DU SCHEDULER ?#
+#? INITIALISATION DU SCHEDULER
 
 bot.scheduler = initialize_scheduler(bot)
 
 
-#? ACTIVATION DU BOT ?#
+#? FONCTION DE CONFIRMATION DU DÉMARRAGE DU BOT
 
 @bot.event
 async def on_ready():
@@ -42,20 +42,24 @@ async def on_ready():
         print("Scheduler démarré !")
 
 
-#? CHARGEMENT DES COMMANDES ?#
+#? CHARGEMENT DES COMMANDES
 
 async def load_extensions():
-    await bot.load_extension("commands.ping")
-    await bot.load_extension("commands.top5")
-    # await bot.load_extension("commands.quota")
-    # await bot.load_extension("commands.lastwar")
-    await bot.load_extension("commands.kick")
+#- COMMANDES AUTOMATIQUES
+    await bot.load_extension("commands.auto.top5")
+    await bot.load_extension("commands.auto.kick")
     await bot.load_extension("events.welcome")
-    await bot.load_extension("commands.absence")
-    
+
+#- COMMANDES USERS
+    await bot.load_extension("commands.user.ping")
+    await bot.load_extension("commands.user.absence")
+
+
+#? DÉMARRAGE DU BOT
+
 async def main():
     async with bot:
         await load_extensions()
         await bot.start(DISCORD_TOKEN)
-        
+
 asyncio.run(main())

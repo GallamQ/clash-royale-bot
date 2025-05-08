@@ -1,16 +1,21 @@
 
-# ! IMPORTS ! #
+#! IMPORTS
 
-from discord.ext import commands
 import json
 import os
+from discord.ext import commands
 
 
 
-# ! COMMANDE "!ABSENCE" ! #
+#! COMMANDE "!ABSENCE"
+
+#? INITIALISATION DES VARIABLES
 
 ABSENCE_FILE = os.path.join(os.path.dirname(__file__), "../data/absences.json")
 CLAN_MEMBERS_FILE = os.path.join(os.path.dirname(__file__), "../data/clan_members.json")
+
+
+#? INITIALISATION DE LA COMMANDE
 
 class Absence(commands.Cog):
     def __init__(self, bot):
@@ -19,6 +24,7 @@ class Absence(commands.Cog):
     @commands.command()
     async def absence(self, ctx, tag: str, wars: int):
         try:
+            #* RÉCUPÉRATION DES DONNÉES DES MEMBRES DU CLAN
             if os.path.exists(CLAN_MEMBERS_FILE):
                 with open(CLAN_MEMBERS_FILE, "r", encoding="utf-8") as f:
                     clan_data = json.load(f)
@@ -27,6 +33,7 @@ class Absence(commands.Cog):
                 await ctx.send("Le fichier clan_members.json est introuvable !")
                 return
 
+            #* PARAMÉTRAGE DE LA COMMANDE
             if tag not in clan_members:
                 await ctx.send(f"Aucun membre avec le tag `{tag}` trouvé dans le clan !")
                 return
@@ -58,7 +65,7 @@ class Absence(commands.Cog):
 
 
 
-# ! AJOUT DE LA COMMANDE AU BOT ! #
+#! AJOUT DE LA COMMANDE AU BOT
 
 async def setup(bot):
     await bot.add_cog(Absence(bot))

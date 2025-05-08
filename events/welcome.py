@@ -1,12 +1,13 @@
 
-# ! IMPORTS ! #
+#! IMPORTS 
 
 from discord.ext import commands
-import discord
 
 
 
-# ! ÉVÉNEMENT "WELCOME" ! #
+#! ÉVÉNEMENT "WELCOME" 
+
+#? INITIALISATION DE LA COMMANDE
 
 class Welcome(commands.Cog):
     def __init__(self, bot):
@@ -26,7 +27,7 @@ class Welcome(commands.Cog):
 
 
 
-#! AJOUT DE L'ÉVÉNEMENT AU BOT !#
+#! AJOUT DE L'ÉVÉNEMENT AU BOT
 
 async def setup(bot):
     await bot.add_cog(Welcome(bot))

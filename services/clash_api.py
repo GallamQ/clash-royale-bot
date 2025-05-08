@@ -1,15 +1,15 @@
 
-#! IMPORTS !#
+#! IMPORTS
 
-import requests
 import os
 import json
-from dotenv import load_dotenv
+import requests
 import datetime
+from dotenv import load_dotenv
 
 
 
-#! INITIALISATION DES VARIABLES D'ENVIRONNEMENT !#
+#! INITIALISATION DES VARIABLES D'ENVIRONNEMENT
 
 load_dotenv()
 
@@ -20,9 +20,9 @@ HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
 
 
-#! FONCTIONS D'INTERACTION AVEC L'API CLASH ROYALE !#
+#! FONCTION DE RÉCUPÉRATION DES DONNÉES DE GUERRE
 
-#? FONCTION DE RÉCUPÉRATION DES DONNÉES DE GUERRE ?#
+#? INITIALISATION DE LA COMMANDE
 
 def get_clan_war_data():
     url = f"{BASE_URL}/clans/%23{CLAN_TAG}/currentriverrace"
@@ -38,7 +38,10 @@ def get_clan_war_data():
         return None
 
 
-#? FONCTION DE RÉCUPÉRATION DES RÔLES DES MEMBRES DU CLAN ?#
+
+#! FONCTION DE RÉCUPÉRATION DES RÔLES DES MEMBRES DU CLAN
+
+#? INITIALISATION DE LA COMMANDE
 
 def get_clan_members():
     url = f"{BASE_URL}/clans/%23{CLAN_TAG}"
@@ -51,35 +54,36 @@ def get_clan_members():
         return []
 
 
-#? FONCTION DE RÉCUPÉRATION DE L'HISTORIQUE DES GUERRES DU CLAN ?#
 
-def get_warlog():
-    """Récupère l'historique des guerres de clan."""
-    url = f"{BASE_URL}/clans/%23{CLAN_TAG}/warlog"  # %23 encode le caractère '#'
-    response = requests.get(url, headers=HEADERS)
-    print(f"Statut de la réponse : {response.status_code}")
-    print(f"Contenu de la réponse : {response.text}")
-    if response.status_code == 200:
-        return response.json().get("items", [])
-    else:
-        print(f"Erreur lors de la récupération du warlog : {response.status_code}")
-        return None
+#! FONCTION DE SAUVEGARDE DES DONNÉES DE GUERRE EN COURS
 
-
-#? FONCTION DE SAUVEGARDE DES DONNÉES DE GUERRE EN COURS ?#
+#? INITIALISATION DES VARIABLES
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 WAR_LOG_FILE = os.path.join(BASE_DIR, "warlog_backup.json")
+
+MONTHS_FR = {
+    "January": "Janvier", "February": "Février", "March": "Mars",
+    "April": "Avril", "May": "Mai", "June": "Juin",
+    "July": "Juillet", "August": "Août", "September": "Septembre",
+    "October": "Octobre", "November": "Novembre", "December": "Décembre"
+}
+
+
+#? INITIALISATION DE LA FONCTION DE PRÉCISION DE LA SEMAINE EN COURS
 
 def get_week_of_month(date):
     first_day_of_month = date.replace(day=1)
     adjusted_day = date.day + first_day_of_month.weekday()
     return (adjusted_day - 1) // 7 + 1
 
+#? INITIALISATION DE LA FONCTION DE SAUVEGARDE DES DONNÉES DE LA GUERRE EN COURS
+
 def save_current_war_data():
+    #* RÉCUPÉRATION DES DONNÉES DES MEMBRES DU CLAN PARTICIPANT À LA GUERRE EN COURS
     url = f"{BASE_URL}/clans/%23{CLAN_TAG}/currentriverrace"
     response = requests.get(url, headers=HEADERS)
-    
+
     if response.status_code == 200:
         war_data = response.json()
 
@@ -87,15 +91,16 @@ def save_current_war_data():
         if not clan_data:
             print("Aucune donnée de clan trouvée dans la réponse !")
             return
-        
+
         participants = clan_data.get("participants", [])
         if not participants:
             print("Aucune participant trouvé pour la guerre en cours !")
             return
-        
+
+        #* PARAMÉTRAGE DE LA FONCTION
         current_members = get_clan_members()
         member_roles = {member["tag"]: member["role"] for member in current_members}
-        
+
         participants = [
             {
                 "name": player.get("name", "Inconnu"),
@@ -105,25 +110,18 @@ def save_current_war_data():
             }
             for player in participants
         ]
-        
-        MONTHS_FR = {
-            "January": "Janvier", "February": "Février", "March": "Mars",
-            "April": "Avril", "May": "Mai", "June": "Juin",
-            "July": "Juillet", "August": "Août", "September": "Septembre",
-            "October": "Octobre", "November": "Novembre", "December": "Décembre"
-        }
-        
+
         current_date = datetime.datetime.now()
         month_english = current_date.strftime("%B")
         month_french = MONTHS_FR.get(month_english, month_english)
         formatted_date = f"{month_french} {current_date.strftime("%Y")}"
-        
+
         week_of_month = get_week_of_month(current_date)
         week_names = ["Première", "Deuxième", "Troisième", "Quatrième", "Cinquième"]
         week_label = week_names[week_of_month - 1] if week_of_month <= len(week_names) else f"{week_of_month}ème"
-        
+
         participants = sorted(participants, key=lambda x: x.get("fame", 0), reverse=True)
-        
+
         war_entry = {
             "date": f"{week_label} semaine de {formatted_date}",
             "clan": {
@@ -133,26 +131,26 @@ def save_current_war_data():
                 "participants": participants
             },
         }
-        
+
         try:
             if os.path.exists(WAR_LOG_FILE):
                 with open(WAR_LOG_FILE, "r", encoding="utf-8") as f:
                     existing_data = json.load(f)
             else:
                 existing_data = []
-                
+
             existing_data.insert(0, war_entry)
-            
+
             with open(WAR_LOG_FILE, "w", encoding="utf-8") as f:
                 json.dump(existing_data, f, indent=4, ensure_ascii=False)
             print(f"Données sauvegardées dans {WAR_LOG_FILE}")
-            
+
         except IOError as e:
             print(f"Erreur lors de la création du fichier {WAR_LOG_FILE} : {e}")
-        
+
         except Exception as e:
             print(f"Erreur inattendue lors de la sauvegarde des données : {e}")
-            
+
     else:
         print(f"Erreur lors de la récupération des données de guerre : {response.status_code}")
         print(response.text)
