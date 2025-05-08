@@ -62,4 +62,4 @@ async def main():
         await load_extensions()
         await bot.start(DISCORD_TOKEN)
 
-asyncio.run(main())
+# asyncio.run(main())
