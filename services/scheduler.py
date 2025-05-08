@@ -116,7 +116,7 @@ def initialize_scheduler(bot):
     #* COMMANDES AUTOMATIQUES
     
     #- PUBLICATION DU TOP 5
-    scheduler.add_job(publish_top5_wrapper, 'cron', day_of_week='fri, sat, sun, mon', hour=12, minute=0)
+    scheduler.add_job(publish_top5_wrapper, 'cron', day_of_week='mon', hour=12, minute=0)
 
     #- PUBLICATION DE LA LISTE DES MEMBRES À /KICK
     scheduler.add_job(auto_kick_wrapper, 'cron', day_of_week='mon', hour=12, minute=00)
@@ -133,6 +133,6 @@ def initialize_scheduler(bot):
     scheduler.add_job(decrement_absences_wrapper, 'cron', day_of_week='mon', hour=14, minute=0)
 
     #* TEST DE PLANIFICATION
-    # scheduler.add_job(save_war_data_wrapper, 'date', run_date=datetime.now() + timedelta(minutes=1))
+    scheduler.add_job(update_clan_members_wrapper, 'date', run_date=datetime.now() + timedelta(minutes=1))
 
     return scheduler

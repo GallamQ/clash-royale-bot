@@ -26,9 +26,18 @@ ROLE_TRANSLATION = {
 
 def update_clan_members():
     try:
-        members = get_clan_members()
+        #* VÉRIFICATION DE L'EXISTENCE DU DOSSIER "DATA"
+        if not os.path.exists(DATA_DIR):
+            os.makedirs(DATA_DIR)
 
-        #* RÉCUPÉRATION DES DONNÉES DES MEMBRES DU CLAN
+        #* RÉCUPÉRATION DES DONNÉES DES MEMBRES DU CLAN VIA L'API
+        try:
+            members = get_clan_members()
+        except Exception as e:
+            print(f"Erreur lors de la récupération des données des membres du clan : {e} !")
+            return
+        
+        #* RÉCUPÉRATION DES DONNÉES EXISTANTES DES MEMBRES DU CLAN
         if os.path.exists(CLAN_MEMBERS_FILE):
             with open(CLAN_MEMBERS_FILE, "r", encoding="utf-8") as f:
                 existing_data = json.load(f)
