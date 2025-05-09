@@ -20,22 +20,41 @@ HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
 
 
+#! PROXIES
+
+proxies_list = [
+    {"http": "http://spk2ihoy6o:ympO0wyr9X32+gXRfj@isp.decodo.com:10002", "https": "https://spk2ihoy6o:ympO0wyr9X32+gXRfj@isp.decodo.com:10002"},
+    {"http": "http://spk2ihoy6o:ympO0wyr9X32+gXRfj@isp.decodo.com:10004", "https": "https://spk2ihoy6o:ympO0wyr9X32+gXRfj@isp.decodo.com:10004"},
+    {"http": "http://spk2ihoy6o:ympO0wyr9X32+gXRfj@isp.decodo.com:10006", "https": "https://spk2ihoy6o:ympO0wyr9X32+gXRfj@isp.decodo.com:10006"},
+    {"http": "http://spk2ihoy6o:ympO0wyr9X32+gXRfj@isp.decodo.com:10008", "https": "https://spk2ihoy6o:ympO0wyr9X32+gXRfj@isp.decodo.com:10008"},
+    {"http": "http://spk2ihoy6o:ympO0wyr9X32+gXRfj@isp.decodo.com:10010", "https": "https://spk2ihoy6o:ympO0wyr9X32+gXRfj@isp.decodo.com:10010"}
+]
+
+
+#! FONCTION DE GESTION DES REQUÊTES API AVEC PROXIES
+
+def fetch_with_proxies(endpoint):
+    url = f"{BASE_URL}/{endpoint}"
+
+    for proxy in proxies_list:
+        try:
+            response = requests.get(url, headers=HEADERS, proxies=proxy)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"Erreur avec le proxy {proxy} : {e}")
+    print("Tous les proxies ont échoué !")
+    return None
+
+
+
 #! FONCTION DE RÉCUPÉRATION DES DONNÉES DE GUERRE
 
 #? INITIALISATION DE LA COMMANDE
 
 def get_clan_war_data():
-    url = f"{BASE_URL}/clans/%23{CLAN_TAG}/currentriverrace"
-    print(f"URL utilisée : {url}")
-    print(f"Headers utilisés : {HEADERS}")
-    print(f"Clé API utilisée : {API_KEY}")
-    response = requests.get(url, headers=HEADERS)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"Erreur lors de la récupération des données de guerre : {response.status_code}")
-        print(response.text)
-        return None
+    endpoint = f"clans/%23{CLAN_TAG}/currentriverrace"
+    return fetch_with_proxies(endpoint)
 
 
 
@@ -44,14 +63,11 @@ def get_clan_war_data():
 #? INITIALISATION DE LA COMMANDE
 
 def get_clan_members():
-    url = f"{BASE_URL}/clans/%23{CLAN_TAG}"
-    response = requests.get(url, headers=HEADERS)
-    if response.status_code == 200:
-        return response.json().get("memberList", [])
-    else:
-        print(f"Erreur lors de la récupération des membres du clan : {response.status_code}")
-        print(response.text)
-        return []
+    endpoint = f"clans/%23{CLAN_TAG}"
+    data = fetch_with_proxies(endpoint)
+    if data:
+        return data.get("memberList", [])
+    return []
 
 
 
@@ -81,20 +97,20 @@ def get_week_of_month(date):
 
 def save_current_war_data():
     #* RÉCUPÉRATION DES DONNÉES DES MEMBRES DU CLAN PARTICIPANT À LA GUERRE EN COURS
-    url = f"{BASE_URL}/clans/%23{CLAN_TAG}/currentriverrace"
-    response = requests.get(url, headers=HEADERS)
+    endpoint = f"clans/%23{CLAN_TAG}/currentriverrace"
+    war_data = fetch_with_proxies(endpoint)
 
-    if response.status_code == 200:
-        war_data = response.json()
-
+    if war_data:
         clan_data = war_data.get("clan", {})
+
         if not clan_data:
             print("Aucune donnée de clan trouvée dans la réponse !")
             return
 
         participants = clan_data.get("participants", [])
+
         if not participants:
-            print("Aucune participant trouvé pour la guerre en cours !")
+            print("Aucun participant trouvé pour la guerre en cours !")
             return
 
         #* PARAMÉTRAGE DE LA FONCTION
@@ -152,5 +168,4 @@ def save_current_war_data():
             print(f"Erreur inattendue lors de la sauvegarde des données : {e}")
 
     else:
-        print(f"Erreur lors de la récupération des données de guerre : {response.status_code}")
-        print(response.text)
+        print("Impossible de récupérer les données de guerre via l'API !")

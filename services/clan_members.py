@@ -4,7 +4,7 @@
 import os
 import json
 import datetime
-from .clash_api import get_clan_members
+from services.clash_api import get_clan_members
 
 
 
