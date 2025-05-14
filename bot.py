@@ -53,6 +53,7 @@ async def load_extensions():
 #- COMMANDES USERS
     await bot.load_extension("commands.user.ping")
     await bot.load_extension("commands.user.absence")
+    await bot.load_extension("commands.user.war")
 
 
 #? DÉMARRAGE DU BOT

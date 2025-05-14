@@ -3,11 +3,11 @@
 
 import os
 import json
-import asyncio
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from datetime import datetime, timedelta
 from services.clash_api import save_current_war_data
 from services.clan_members import update_clan_members
+from services.database import sync_clan_members
 
 
 
@@ -29,7 +29,7 @@ def initialize_scheduler(bot):
 
 
 #? FONCTION DE PUBLICATION AUTOMATIQUE DES MEMBRES À /KICK
-    
+
     async def auto_kick():
         channel = bot.get_channel(1361756395510436162)
         if channel:
@@ -40,7 +40,7 @@ def initialize_scheduler(bot):
 
 
 #? FONCTION DE SAUVEGARDE DES DONNÉES DE GUERRE
-    
+
     async def save_war_data():
         print("Sauvegarde automatique des données de guerre en cours...")
         save_current_war_data()
@@ -48,14 +48,15 @@ def initialize_scheduler(bot):
 
 
 #? FONCTION DE SAUVEGARDE QUOTIDIENNE DES MEMBRES DU CLAN
-    
+
     async def update_clan_members_task():
         print("Mise à jour quotidienne des membres du clan en cours...")
-        update_clan_members()
+        await sync_clan_members()
         print("Mise à jour des membres terminée !")
 
 
 #? FONCTION DE DÉCRÉMENTATION DES ABSENCES
+
     #* INITIALISATION DES VARIABLES
     ABSENCE_FILE = os.path.join(os.path.dirname(__file__), "../data/absences.json")
 
@@ -86,6 +87,7 @@ def initialize_scheduler(bot):
 
 
 #? WRAPPERS DES FONCTIONS
+
     #* COMMANDES AUTOMATIQUES
 
     #- WRAPPER TOP 5
@@ -133,6 +135,6 @@ def initialize_scheduler(bot):
     scheduler.add_job(decrement_absences_wrapper, 'cron', day_of_week='mon', hour=14, minute=0)
 
     #* TEST DE PLANIFICATION
-    # scheduler.add_job(update_clan_members_wrapper, 'date', run_date=datetime.now() + timedelta(minutes=1))
+    scheduler.add_job(update_clan_members_wrapper, 'date', run_date=datetime.now() + timedelta(minutes=1))
 
     return scheduler

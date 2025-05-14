@@ -1,0 +1,57 @@
+
+#! IMPORTS
+
+import os
+import asyncpg
+import datetime
+from services.clash_api import get_clan_members
+
+
+
+#! INITIALISATION DE LA BASE DE DONNÉES
+
+#? INITIALISATION DES VARIABLES
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+
+#? CONNEXION À LA BASE DE DONNÉES
+
+async def get_db_connection():
+    return await asyncpg.connect(DATABASE_URL)
+
+
+#? SAUVEGARDE DES MEMBRES DU CLAN
+
+async def sync_clan_members():
+    #* RÉCUPÉRATION DES DONNÉES DES MEMBRES DU CLAN
+    api_members = get_clan_members()
+    api_tags = {m["tag"] for m in api_members}
+    conn = await get_db_connection()
+
+    #* RÉCUPÉRATION DES TAGS ET JOIN_DATES DÉJÀ PRÉSENTS DANS LA DB
+    rows = await conn.fetch("SELECT tag, join_date FROM clan_members;")
+    db_info = {row["tag"]: row["join_date"] for row in rows}
+
+    #* AJOUT OU MÀJ DES MEMBRES DU CLAN
+    for member in api_members:
+        tag = member["tag"]
+        join_date = db_info.get(tag) or datetime.date.today()
+
+        await conn.execute("""
+            INSERT INTO clan_members (tag, name, role, join_date)
+            VALUES ($1, $2, $3, $4)
+            ON CONFLICT (tag) DO UPDATE
+            SET name = EXCLUDED.name, role = EXCLUDED.role;
+        """, tag, member["name"], member["role"], join_date)
+
+    #* SUPPRESSION DES MEMBRES QUI NE SONT PLUS DANS LE CLAN
+    tags_to_remove = set(db_info.keys()) - api_tags
+
+    if tags_to_remove:
+        await conn.execute(
+            "DELETE FROM clan_members WHERE tag = ANY($1::varchar[]);",
+            list(tags_to_remove)
+        )
+
+    await conn.close()

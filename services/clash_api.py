@@ -93,6 +93,7 @@ def get_week_of_month(date):
     adjusted_day = date.day + first_day_of_month.weekday()
     return (adjusted_day - 1) // 7 + 1
 
+
 #? INITIALISATION DE LA FONCTION DE SAUVEGARDE DES DONNÉES DE LA GUERRE EN COURS
 
 def save_current_war_data():
