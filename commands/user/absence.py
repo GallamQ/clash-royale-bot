@@ -40,7 +40,7 @@ class Absence(commands.Cog):
                 end_date = datetime.datetime.strptime(end, "%d-%m-%Y").date()
 
             await add_absence(tag, start_date, end_date)
-            await ctx.send(f"Le joueur `{member['name']}` a été marqué absent du {start_date} au {end_date}.")
+            await ctx.send(f"Le joueur `{member['name']}` a été marqué absent du {start_date.strftime('%d-%m-%Y')} au {end_date.strftime('%d-%m-%Y')}.")
 
         except Exception as e:
             await ctx.send(f"Une erreur est survenue : {e}")
