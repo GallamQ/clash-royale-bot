@@ -4,7 +4,6 @@
 import os
 import asyncpg
 import datetime
-from services.clash_api import get_clan_members
 
 
 
@@ -24,6 +23,9 @@ async def get_db_connection():
 #? SAUVEGARDE DES MEMBRES DU CLAN
 
 async def sync_clan_members():
+    #* IMPORT LOCAL
+    from services.clash_api import get_clan_members
+    
     #* RÉCUPÉRATION DES DONNÉES DES MEMBRES DU CLAN
     api_members = get_clan_members()
     api_tags = {m["tag"] for m in api_members}

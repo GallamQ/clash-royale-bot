@@ -2,7 +2,6 @@
 #! IMPORTS
 
 import os
-import json
 import requests
 import datetime
 import asyncio
