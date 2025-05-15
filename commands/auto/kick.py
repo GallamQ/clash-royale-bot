@@ -1,21 +1,13 @@
 
 #! IMPORTS
 
-import os
-import json
 from discord.ext import commands
 from datetime import datetime
+from services.database import get_latest_war_logs, get_all_clan_members, get_all_absences
 
 
 
 #! COMMANDE "!KICK"
-
-#? INITIALISATION DES VARIABLES
-
-WAR_LOG_FILE = os.path.join(os.path.dirname(__file__), "../data/warlog_backup.json")
-CLAN_MEMBERS_FILE = os.path.join(os.path.dirname(__file__), "../data/clan_members.json")
-ABSENCE_FILE = os.path.join(os.path.dirname(__file__), "../data/absences.json")
-
 
 #? INITIALISATION DE LA COMMANDE
 
@@ -27,60 +19,67 @@ class Kick(commands.Cog):
     @commands.has_any_role("Clash Bot")
     async def kick(self, ctx):
         quota = 1600
-        war_start_date = datetime.strptime("%d-%m-%Y %H:%M:%S")
 
         try:
             #* RÉCUPÉRATION DES DONNÉES DE LA DERNIÈRE GUERRE DE CLAN
-            with open(WAR_LOG_FILE, "r", encoding="utf-8") as f:
-                war_data = json.load(f)
-            
-            latest_war = war_data[0]
-            participants = latest_war["clan"]["participants"]
-
-            #* RÉCUPÉRATION DES DONNÉES DES MEMBRES DU CLAN
-            if os.path.exists(CLAN_MEMBERS_FILE):
-                with open(CLAN_MEMBERS_FILE, "r", encoding="utf-8") as f:
-                    clan_data = json.load(f)
-                    clan_members = {member["tag"]: member for member in clan_data["members"]}
-            else:
-                await ctx.send("Le fichier `clan_members.json` est introuvable !")
+            war_logs = await get_latest_war_logs()
+            if not war_logs:
+                await ctx.send("Aucune donnée de guerre trouvée !")
                 return
 
-            #* RÉCUPÉRATION DES DONNÉES DES MEMBRES ABSENTS
-            if os.path.exists(ABSENCE_FILE):
-                with open(ABSENCE_FILE, "r", encoding="utf-8") as f:
-                    absences = json.load(f)
-            else:
-                absences = {}
+            #* RÉCUPÉRATION DE LA DATE DE LA DERNIÈRE GUERRE DE CLAN
+            war_id = war_logs[0]["war_id"]
+
+            try:
+                war_start_date = datetime.strptime(war_id, "%d-%m-%Y").date()
+            except ValueError:
+                war_start_date = datetime.strptime(war_id, "%Y-%m-%d").date()
+
+            #* RÉCUPÉRATION DES MEMBRES DU CLAN
+            clan_members = await get_all_clan_members()
+            clan_members_dict = {member["tag"]: member for member in clan_members}
+
+            #* RÉCUPÉRATION DES ABSENCES
+            absences = await get_all_absences()
+            absent_tags = {absence["tag"] for absence in absences}
 
             #* PARAMÉTRAGE DE LA COMMANDE
             underperformers = []
-            for player in participants:
-                name = player.get("name", "Inconnu")
-                tag = player.get("tag", "Inconny")
-                fame = player.get("fame", 0)
+            for player in war_logs:
+                tag = player["tag"]
+                name = clan_members_dict.get(tag, {}).get("name", "Inconnu")
+                fame = player["fame"]
 
-                if tag in absences and absences[tag]["wars_left"] > 0:
+                #- GESTION DES ABSENTS
+                if tag in absent_tags:
                     continue
 
-                if tag in clan_members:
-                    join_date = datetime.strptime(clan_members[tag]["join_date"], "%d-%m-%Y")
-                    if join_date >= war_start_date:
+                #- GESTION DES NOUVEAUX ARRIVANTS
+                join_date_str = clan_members_dict.get(tag, {}).get("join_date")
+
+                if join_date_str:
+                    try:
+                        join_date = datetime.strptime(join_date_str, "%Y-%m-%d").date()
+                    except ValueError:
+                        try:
+                            join_date = datetime.strptime(join_date_str, "%d-%m-%Y").date()
+                        except Exception:
+                            join_date = None
+
+                    if join_date and join_date >= war_start_date:
                         continue
 
                 if fame < quota:
-                    underperformers.append(player)
+                    underperformers.append({"name": name, "fame": fame})
 
             if underperformers:
-                message = f"**Liste des joueurs n'ayant pas atteint le quota de {quota} points:**\n"
+                message = f"**Liste des joueurs n'ayant pas atteint le quota**\n\n"
                 for player in underperformers:
                     message += f"- {player['name']} | Points : {player['fame']}\n"
                 await ctx.send(message)
             else:
-                await ctx.send(f"Tous les joueurs ont atteind le quota ! Félicitations à tous.")
+                await ctx.send(f"Tous les joueurs ont atteint le quota !")
 
-        except FileNotFoundError as e:
-            await ctx.send(f"Fichier introuvable : {e}")
         except Exception as e:
             await ctx.send(f"Une erreur est survenue: {e}")
 

@@ -124,3 +124,45 @@ async def get_all_clan_tags():
     rows = await conn.fetch("SELECT tag FROM clan_members;")
     await conn.close()
     return {row["tag"] for row in rows}
+
+
+#? RÉCUPÉRATION DES MEMBRES DU CLAN
+
+async def get_all_clan_members():
+    conn = await get_db_connection()
+    rows = await conn.fetch("SELECT * FROM clan_members;")
+    await conn.close()
+    return [dict(row) for row in rows]
+
+
+#? RÉCUPÉRATION DES ABSENCES EN COURS
+
+async def get_all_absences():
+    today = datetime.date.today()
+    conn = await get_db_connection()
+    rows = await conn.fetch(
+        "SELECT * FROM absences WHERE end_date >= $1;",
+        today
+    )
+    await conn.close()
+    return[dict(row) for row in rows]
+
+
+#? RÉCUPÉRATION DES LOGS DE LA DERNIÈRE GUERRE
+
+async def get_latest_war_logs():
+    conn = await get_db_connection()
+    row = await conn.fetchrow("SELECT war_id FROM war_logs ORDER BY war_date DESC limit 1.")
+
+    if not row:
+        await conn.close()
+        return []
+
+    war_id = row["war_id"]
+
+    rows = await conn.fetch(
+        "SELECT * FROM war_logs WHERE war_id = $1 ORDER BY fame DESC;",
+        war_id
+    )
+    await conn.close()
+    return [dict(row) for row in rows]

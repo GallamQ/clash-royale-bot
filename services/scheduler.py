@@ -94,7 +94,7 @@ def initialize_scheduler(bot):
     #* SAUVEGARDES AUTOMATIQUES DE DONNÉES
     
     #- SAUVEGARDE DES DONNÉES DE GUERRE
-    scheduler.add_job(save_war_data_wrapper, 'cron', day_of_week= 'mon', hour=11, minute=38)
+    scheduler.add_job(save_war_data_wrapper, 'cron', day_of_week= 'fri, sat, sun, mon', hour=11, minute=38)
 
     #- SAUVEGARDE DES MEMBRES DU CLAN
     scheduler.add_job(update_clan_members_wrapper, 'cron', hour=10, minute=0)
