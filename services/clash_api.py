@@ -6,7 +6,7 @@ import requests
 import datetime
 import asyncio
 from dotenv import load_dotenv
-from services.database import save_war_log
+from services.database import save_war_log, get_all_clan_tags
 
 
 
@@ -119,12 +119,13 @@ async def save_current_war_data():
         return
 
     #* GESTION DES DONNÉES RÉCUPÉRÉES
+    clan_tags = await get_all_clan_tags()
     participants_db = [
         {
             "tag": player.get("tag", "Inconnu"),
             "fame": player.get("fame", 0)
         }
-        for player in participants
+        for player in participants if player["tag"] in clan_tags
     ]
 
     #* GESTION DE LA DATE

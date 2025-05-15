@@ -113,3 +113,12 @@ async def save_war_log(war_date, participants):
             war_date, player["tag"], player["fame"]
         )
     await conn.close()
+
+
+#? FILTRE DES JOUEURS PARTICIPANT À LA GUERRE DE CLAN
+
+async def get_all_clan_tags():
+    conn = await get_db_connection()
+    rows = await conn.fetch("SELECT tag FROM clan_members;")
+    await conn.close()
+    return {row["tag"] for row in rows}
