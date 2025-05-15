@@ -1,18 +1,12 @@
 
 #! IMPORTS
 
-import os
-import json
 from discord.ext import commands
+from services.database import get_latest_war_logs, get_all_clan_members
 
 
 
 #! COMMANDE "!TOP5"
-
-#? INITIALISATION DES VARIABLES
-
-WAR_LOG_FILE = os.path.join(os.path.dirname(__file__), "../services/warlog_backup.json")
-
 
 #? INITIALISATION DE LA COMMANDE
 
@@ -23,21 +17,20 @@ class Top5(commands.Cog):
     @commands.command()
     @commands.has_any_role("Chef de clan", "Adjoint", "Clash Bot")
     async def top5(self, ctx):
-
         try:
             #* RÉCUPÉRATION DES DONNÉES DE LA DERNIÈRE GUERRE DE CLAN
-            with open (WAR_LOG_FILE, "r", encoding="utf-8") as f:
-                war_data = json.load(f)
+            war_logs = await get_latest_war_logs()
 
-            latest_war = war_data[0]
-            participants = latest_war["clan"]["participants"]
-
-            if not participants:
-                await ctx.send("Aucun participant trouvé pour la dernière guerre de clan !")
+            if not war_logs:
+                await ctx.send("Aucune donnée de guerre trouvée !")
                 return
 
+            #* RÉCUPÉRATION DES MEMBRES POUR LES RÔLES
+            clan_members = await get_all_clan_members()
+            clan_members_dict = {member["tag"]: member for member in clan_members}
+
             #* PARAMÉTRAGE DE LA COMMANDE
-            sorted_participants = sorted(participants, key=lambda x: x.get("game", 0), reverse=True)
+            sorted_participants = sorted(war_logs, key=lambda x: x.get("fame", 0), reverse=True)
             top_5 = sorted_participants[:5]
 
             pseudo_replacements = {"خير ان شاء الله": "Manel"}
@@ -49,15 +42,14 @@ class Top5(commands.Cog):
                 "leader": "Chef de clan"
             }
 
-            date = latest_war["date"]
-            week_label, month_year = date.split(" semaine de ")
-
-            message = f":crossed_swords:   **Top 5 de la semaine**   :date:   {month_year}   |   {week_label} semaine   :crossed_swords:\n\n"
+            war_id = war_logs[0]["war_id"]
+            message = f":crossed_swords:   **Top 5 de la semaine**   :date:   {war_id}   :crossed_swords:\n\n"
             medals = [":first_place:", ":second_place:", ":third_place:", ":medal:", ":medal:"]
             for i, player in enumerate(top_5):
-                name = player.get("name", "Inconnu")
+                tag = player.get("tag")
+                name = clan_members_dict.get(tag, {}).get("name", "Inconn")
                 fame = player.get("fame", 0)
-                role = player.get("role", "member")
+                role = clan_members_dict.get(tag, {}).get("role", "member")
                 role_name = role_translation.get(role, "Inconnu")
 
                 if name in pseudo_replacements:
@@ -69,8 +61,6 @@ class Top5(commands.Cog):
 
             await ctx.send(message)
 
-        except FileNotFoundError:
-            await ctx.send("Le fichier `warlog_backup.json` est introuvable ! Aucune donnée de guerre n'a été sauvegardée.")
         except Exception as e:
             await ctx.send(f"Une erreur est survenue : {e}")
 
