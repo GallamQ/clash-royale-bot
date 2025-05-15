@@ -30,10 +30,10 @@ class Kick(commands.Cog):
             #* RÉCUPÉRATION DE LA DATE DE LA DERNIÈRE GUERRE DE CLAN
             war_id = war_logs[0]["war_id"]
 
-            try:
+            if isinstance(war_id, str):
                 war_start_date = datetime.strptime(war_id, "%d-%m-%Y").date()
-            except ValueError:
-                war_start_date = datetime.strptime(war_id, "%Y-%m-%d").date()
+            else:
+                war_start_date = war_id
 
             #* RÉCUPÉRATION DES MEMBRES DU CLAN
             clan_members = await get_all_clan_members()
