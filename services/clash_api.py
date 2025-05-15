@@ -133,4 +133,3 @@ async def save_current_war_data():
     
     #* SAUVEGARDE DES DONNÉES
     await save_war_log(war_date, participants_db)
-    print("Résultats de guerre sauvegardés dans la DB !")

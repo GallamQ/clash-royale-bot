@@ -101,16 +101,18 @@ async def decrement_absences():
 
 #? SAUVEGARDE DES RÉSULTATS DE GUERRE DE CLAN
 
-async def save_war_log(war_date, participants):
+async def save_war_log(war_id, war_date, participants):
     conn = await get_db_connection()
 
     for player in participants:
         await conn.execute(
             """
-            INSERT INTO war_logs (war_date, tag, fame)
-            VALUES ($1, $2, $3)
+            INSERT INTO war_logs (war_id, war_date, tag, fame)
+            VALUES ($1, $2, $3, $4)
+            ON CONFLICT (war_id, tag) DO UPDATE
+            SET fame = EXCLUDED.fame, war_date = EXCLUDED.war_date
             """,
-            war_date, player["tag"], player["fame"]
+            war_id, war_date, player["tag"], player["fame"]
         )
     await conn.close()
 
