@@ -95,3 +95,19 @@ async def decrement_absences():
     )
     await conn.close()
     print("Absences expirées supprimées avec succès !")
+
+
+#? SAUVEGARDE DES RÉSULTATS DE GUERRE DE CLAN
+
+async def save_war_log(war_date, participants):
+    conn = await get_db_connection()
+
+    for player in participants:
+        await conn.execute(
+            """
+            INSERT INTO war_logs (war_date, tag, fame)
+            VALUES ($1, $2, $3)
+            """,
+            war_date, player["tag"], player["fame"]
+        )
+    await conn.close()

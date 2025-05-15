@@ -42,7 +42,7 @@ def initialize_scheduler(bot):
 
     async def save_war_data():
         print("Sauvegarde automatique des données de guerre en cours...")
-        save_current_war_data()
+        await save_current_war_data()
         print("Sauvegarde terminées !")
 
 
@@ -103,6 +103,6 @@ def initialize_scheduler(bot):
     scheduler.add_job(decrement_absences_wrapper, 'cron', day_of_week='mon', hour=14, minute=0)
 
     #* TEST DE PLANIFICATION
-    # scheduler.add_job(update_clan_members_wrapper, 'date', run_date=datetime.now() + timedelta(minutes=1))
+    scheduler.add_job(save_war_data_wrapper, 'date', run_date=datetime.now() + timedelta(minutes=1))
 
     return scheduler
