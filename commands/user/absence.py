@@ -1,19 +1,13 @@
 
 #! IMPORTS
 
-import json
-import os
+import datetime
 from discord.ext import commands
+from services.database import add_absence, get_clan_member_by_tag, remove_absence
 
 
 
 #! COMMANDE "!ABSENCE"
-
-#? INITIALISATION DES VARIABLES
-
-ABSENCE_FILE = os.path.join(os.path.dirname(__file__), "../data/absences.json")
-CLAN_MEMBERS_FILE = os.path.join(os.path.dirname(__file__), "../data/clan_members.json")
-
 
 #? INITIALISATION DE LA COMMANDE
 
@@ -22,43 +16,31 @@ class Absence(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def absence(self, ctx, tag: str, wars: int):
+    async def absence(self, ctx, tag: str, start: str = None, end: str = None):
         try:
-            #* RÉCUPÉRATION DES DONNÉES DES MEMBRES DU CLAN
-            if os.path.exists(CLAN_MEMBERS_FILE):
-                with open(CLAN_MEMBERS_FILE, "r", encoding="utf-8") as f:
-                    clan_data = json.load(f)
-                    clan_members = {member["tag"]: member for member in clan_data["members"]}
-            else:
-                await ctx.send("Le fichier clan_members.json est introuvable !")
-                return
-
-            #* PARAMÉTRAGE DE LA COMMANDE
-            if tag not in clan_members:
+            #* VÉRIFICATION DE L'EXISTENCE DU MEMBRE DANS LE CLAN
+            member = await get_clan_member_by_tag(tag)
+            if not member:
                 await ctx.send(f"Aucun membre avec le tag `{tag}` trouvé dans le clan !")
                 return
 
-            member = clan_members[tag]
-            name = member.get("name", "Inconnu")
-            role = member.get("role", "Inconnu")
-            
-            if os.path.exists(ABSENCE_FILE):
-                with open(ABSENCE_FILE, "r", encoding="utf-8") as f:
-                    absences = json.load(f)
+            #* SUPPRESION D'UNE ABSENCE
+            if start and start.lower() == "remove":
+                await remove_absence(tag)
+                await ctx.send(f"Toutes les absences du joueur `{member['name']}` ont été supprimées !")
+                return
+
+            #* GESTION DES DATES
+            if not start or not end:
+                today = datetime.date.today()
+                start_date = today - datetime.timedelta(days=today.weekday())
+                end_date = start_date + datetime.timedelta(days=6)
             else:
-                absences = {}
+                start_date = datetime.datetime.strptime(start, "%d-%m-%Y").date()
+                end_date = datetime.datetime.strptime(end, "%d-%m-%Y").date()
 
-            absences[tag] = {
-                "name": name,
-                "tag": tag,
-                "role": role,
-                "wars_left": wars
-            }
-
-            with open(ABSENCE_FILE, "w", encoding="utf-8") as f:
-                json.dump(absences, f, indent=4, ensure_ascii=False)
-
-            await ctx.send(f"Le joueur `{name}` a été marqué comme absent pour {wars} guerre(s).")
+            await add_absence(tag, start_date, end_date)
+            await ctx.send(f"Le joueur `{member['name']}` a été marqué absent du {start_date} au {end_date}.")
 
         except Exception as e:
             await ctx.send(f"Une erreur est survenue : {e}")

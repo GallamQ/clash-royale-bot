@@ -55,3 +55,43 @@ async def sync_clan_members():
         )
 
     await conn.close()
+
+
+#? RÉCUPÉRATION DES MEMBRES DU CLAN PAR TAG
+
+async def get_clan_member_by_tag(tag):
+    conn = await get_db_connection()
+    row = await conn.fetchrow("SELECT * FROM clan_members WHERE tag = $1;", tag)
+    await conn.close()
+    return dict(row) if row else None
+
+
+#? AJOUT DES ABSENCES
+
+async def add_absence(tag, start_date, end_date):
+    conn = await get_db_connection()
+    await conn.execute(
+        "INSERT INTO absences (tag, start_date, end_date) VALUES ($1, $2, $3);",
+        tag, start_date, end_date
+    )
+    await conn.close()
+
+
+#? RETRAIT DES ABSENCES
+
+async def remove_absence(tag):
+    conn = await get_db_connection()
+    await conn.execute("DELETE FROM absences WHERE tag = $1;", tag)
+    await conn.close()
+
+
+#? DÉCRÉMENTATION DES ABSENCES
+
+async def decrement_absences():
+    conn = await get_db_connection()
+    today = datetime.date.today()
+    await conn.execute(
+        "DELETE FROM absences WHERE end_date < $1;", today
+    )
+    await conn.close()
+    print("Absences expirées supprimées avec succès !")

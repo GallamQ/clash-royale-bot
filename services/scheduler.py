@@ -1,20 +1,19 @@
 
 #! IMPORT
 
-import os
-import json
+from pytz import timezone
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from datetime import datetime, timedelta
 from services.clash_api import save_current_war_data
-from services.clan_members import update_clan_members
-from services.database import sync_clan_members
+from services.database import sync_clan_members, decrement_absences
 
 
 
 #! INITIALISATION DU SCHEDULER
 
 def initialize_scheduler(bot):
-    scheduler = AsyncIOScheduler()
+    paris_tz = timezone('Europe/Paris')
+    scheduler = AsyncIOScheduler(timezone=paris_tz)
 
 
 #? FONCTION DE PUBLICATION AUTOMATIQUE DU TOP 5
@@ -53,37 +52,6 @@ def initialize_scheduler(bot):
         print("Mise à jour quotidienne des membres du clan en cours...")
         await sync_clan_members()
         print("Mise à jour des membres terminée !")
-
-
-#? FONCTION DE DÉCRÉMENTATION DES ABSENCES
-
-    #* INITIALISATION DES VARIABLES
-    ABSENCE_FILE = os.path.join(os.path.dirname(__file__), "../data/absences.json")
-
-    #* PARAMÉTRAGE DE LA FONCTION
-    async def decrement_absences():
-        try:
-            if os.path.exists(ABSENCE_FILE):
-                with open(ABSENCE_FILE, "r", encoding="utf-8") as f:
-                    absences = json.load(f)
-            else:
-                absences = {}
-
-            updated_absences = {}
-            for tag, info in absences.items():
-                if info["wars_left"] > 1:
-                    info["wars_left"] -= 1
-                    updated_absences[tag] = info
-                else:
-                    print(f"Le joueur {info['name']} n'est plus marqué comme absent !")
-
-            with open(ABSENCE_FILE, "w", encoding="utf-8") as f:
-                json.dump(updated_absences, f, indent=4, ensure_ascii=False)
-
-            print("Absences décrémentées avec succès !")
-
-        except Exception as e:
-            print(f"Erreur lors de la décrémentation des absences : {e}")
 
 
 #? WRAPPERS DES FONCTIONS
@@ -135,6 +103,6 @@ def initialize_scheduler(bot):
     scheduler.add_job(decrement_absences_wrapper, 'cron', day_of_week='mon', hour=14, minute=0)
 
     #* TEST DE PLANIFICATION
-    scheduler.add_job(update_clan_members_wrapper, 'date', run_date=datetime.now() + timedelta(minutes=1))
+    # scheduler.add_job(update_clan_members_wrapper, 'date', run_date=datetime.now() + timedelta(minutes=1))
 
     return scheduler
