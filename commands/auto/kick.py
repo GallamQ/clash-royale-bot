@@ -55,19 +55,23 @@ class Kick(commands.Cog):
                     continue
 
                 #- GESTION DES NOUVEAUX ARRIVANTS
-                join_date_str = clan_members_dict.get(tag, {}).get("join_date")
+                join_date_val = clan_members_dict.get(tag, {}).get("join_date")
 
-                if join_date_str:
+                if isinstance(join_date_val, datetime):
+                    join_date = join_date_val.date()
+                elif isinstance(join_date_val, str):
                     try:
-                        join_date = datetime.strptime(join_date_str, "%Y-%m-%d").date()
+                        join_date = datetime.strptime(join_date_val, "%Y-%m-%d").date()
                     except ValueError:
                         try:
-                            join_date = datetime.strptime(join_date_str, "%d-%m-%Y").date()
+                            join_date = datetime.strptime(join_date_val, "%d-%m-%Y").date()
                         except Exception:
                             join_date = None
+                else:
+                    join_date = None
 
-                    if join_date and join_date >= war_start_date:
-                        continue
+                if join_date and join_date >= war_start_date:
+                    continue
 
                 if fame < quota:
                     underperformers.append({"name": name, "fame": fame})
