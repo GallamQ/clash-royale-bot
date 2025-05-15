@@ -130,6 +130,11 @@ async def save_current_war_data():
 
     #* GESTION DE LA DATE
     war_date = datetime.datetime.now().date()
+
+    #* GESTION DE L'ID DE LA GUERRE EN COURS
+    today = war_date
+    thursday = today + datetime.timedelta((3 - today.weekday()) % 7)
+    war_id = thursday.strftime("%d-%m-%Y")
     
     #* SAUVEGARDE DES DONNÉES
-    await save_war_log(war_date, participants_db)
+    await save_war_log(war_id, war_date, participants_db)
