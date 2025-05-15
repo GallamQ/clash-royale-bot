@@ -16,7 +16,7 @@ class Kick(commands.Cog):
         self.bot = bot
 
     @commands.command(name="kick")
-    @commands.has_any_role("Clash Bot")
+    @commands.has_any_role("Chef de clan", "Adjoint", "Clash Bot")
     async def kick(self, ctx):
         quota = 1600
 
