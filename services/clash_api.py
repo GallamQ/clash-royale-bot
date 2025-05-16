@@ -74,19 +74,6 @@ def get_clan_members():
 
 #! FONCTION DE SAUVEGARDE DES DONNÉES DE GUERRE EN COURS
 
-#? INITIALISATION DES VARIABLES
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-WAR_LOG_FILE = os.path.join(BASE_DIR, "warlog_backup.json")
-
-MONTHS_FR = {
-    "January": "Janvier", "February": "Février", "March": "Mars",
-    "April": "Avril", "May": "Mai", "June": "Juin",
-    "July": "Juillet", "August": "Août", "September": "Septembre",
-    "October": "Octobre", "November": "Novembre", "December": "Décembre"
-}
-
-
 #? INITIALISATION DE LA FONCTION DE PRÉCISION DE LA SEMAINE EN COURS
 
 def get_week_of_month(date):
@@ -135,6 +122,6 @@ async def save_current_war_data():
     today = war_date
     thursday = today + datetime.timedelta((3 - today.weekday()) % 7)
     war_id = thursday.strftime("%d-%m-%Y")
-    
+
     #* SAUVEGARDE DES DONNÉES
     await save_war_log(war_id, war_date, participants_db)

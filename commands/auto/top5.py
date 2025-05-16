@@ -43,7 +43,7 @@ class Top5(commands.Cog):
             }
 
             war_id = war_logs[0]["war_id"]
-            message = f":crossed_swords:   **Top 5 de la semaine**   :date:   {war_id}   :crossed_swords:\n\n"
+            message = f"⚔️   **Top 5 de la semaine**   🗓   {war_id}   ⚔️\n\n"
             medals = [":first_place:", ":second_place:", ":third_place:", ":medal:", ":medal:"]
             for i, player in enumerate(top_5):
                 tag = player.get("tag")
@@ -55,9 +55,9 @@ class Top5(commands.Cog):
                 if name in pseudo_replacements:
                     name = pseudo_replacements[name]
 
-                promote_note = " :white_small_square: **Promotion :exclamation:**" if role == "member" else ""
+                promote_note = " ▫️ **Promotion ❗️**" if role == "member" else ""
 
-                message += f"{medals[i]} {name} :white_small_square: {fame} points :white_small_square: {role_name}{promote_note}\n\n"
+                message += f"{medals[i]} {name} ▫️ {fame} points ▫️ {role_name}{promote_note}\n\n"
 
             await ctx.send(message)
 
