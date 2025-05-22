@@ -49,7 +49,7 @@ class War(commands.Cog):
                 
                 message = f"⚔️ **Résultats de la guerre en cours** ⚔️\n\n "
                 message += "**Participants :**\n"
-                for participant in participants:
+                for participant in filtered_participants:
                     name = participant.get("name", "Inconnu")
                     fame = participant.get("fame", 0)
                     message += f"- {name} : {fame} points\n"
