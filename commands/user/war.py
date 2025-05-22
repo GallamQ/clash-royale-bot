@@ -22,12 +22,14 @@ class War(commands.Cog):
         paris_tz = pytz.timezone("Europe/Paris")
         now = datetime.datetime.now(paris_tz)
 
-        days_since_thursday = (now.weekday() - 3) % 7
+        weekday = now.weekday()
+        days_since_thursday = (weekday - 3) % 7
         start_of_war = (now - datetime.timedelta(days=days_since_thursday)).replace(hour=11, minute=40, second=0, microsecond=0)
         end_of_war = (start_of_war + datetime.timedelta(days=4)).replace(hour=11, minute=40, second=0, microsecond=0)
 
         if start_of_war <= now <= end_of_war:
             war_data = await get_clan_war_data()
+            print("DEBUT war_data:", war_data)
 
             if not war_data:
                 await ctx.send("Impossible de récupérer les données de la guerre en cours !")
