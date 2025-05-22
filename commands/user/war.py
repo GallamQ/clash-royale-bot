@@ -45,14 +45,17 @@ class War(commands.Cog):
                 
                 current_tags = await get_all_clan_tags()
                 
-                filtered_participants = [p for p in participants if p.get("tag") in current_tags]
+                filtered_participants = sorted(
+                    [p for p in participants if p.get("tag") in current_tags],
+                    key=lambda p: p.get("fame", 0),
+                    reverse=True
+                )
                 
                 message = f"⚔️ **Résultats de la guerre en cours** ⚔️\n\n "
-                message += "**Participants :**\n"
                 for participant in filtered_participants:
                     name = participant.get("name", "Inconnu")
                     fame = participant.get("fame", 0)
-                    message += f"- {name} : {fame} points\n"
+                    message += f"▫️ {name} ▫️ {fame} points\n"
 
                 if len(message) > 2000:
                     for i in range(0, len(message), 2000):
