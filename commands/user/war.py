@@ -38,23 +38,26 @@ class War(commands.Cog):
 
 #? PARAMÉTRAGE DE LA COMMANDE
                 participants = war_data.get("clan", {}).get("participants", [])
-                
+
                 if not participants:
                     await ctx.send("Aucun participant trouvé pour la guerre en cours.")
                     return
-                
+
                 current_tags = await get_all_clan_tags()
-                
+
                 filtered_participants = sorted(
                     [p for p in participants if p.get("tag") in current_tags],
                     key=lambda p: p.get("fame", 0),
                     reverse=True
                 )
-                
+
+                pseudo_replacements = {"خير ان شاء الله": "Manel"}
+
                 message = f"⚔️ **Résultats de la guerre en cours** ⚔️\n\n"
                 for participant in filtered_participants:
                     name = participant.get("name", "Inconnu")
                     fame = participant.get("fame", 0)
+                    name = pseudo_replacements.get(name, name)
                     message += f"{name} ▫️ {fame} points\n"
 
                 if len(message) > 2000:

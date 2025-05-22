@@ -77,9 +77,12 @@ class Kick(commands.Cog):
                     underperformers.append({"name": name, "fame": fame})
 
             if underperformers:
+                pseudo_replacements = {"خير ان شاء الله": "Manel"}
                 message = f"**Liste des joueurs n'ayant pas atteint le quota ➡️🚪**\n\n"
                 for player in underperformers:
-                    message += f"{player['name']} ▫️ Points : {player['fame']}\n"
+                    name = pseudo_replacements.get(player['name'], player['name'])
+                    fame = player['fame']
+                    message += f"{name} ▫️ Points : {fame}\n"
                 await ctx.send(message)
             else:
                 await ctx.send(f"Tous les joueurs ont atteint le quota !")
