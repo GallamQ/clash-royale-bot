@@ -2,6 +2,7 @@
 #! IMPORTS
 
 import datetime
+import pytz
 from discord.ext import commands
 from services.clash_api import get_clan_war_data
 
@@ -18,7 +19,8 @@ class War(commands.Cog):
 
 #? GESTION DE LA PÉRIODE D'UTILISATION DE LA COMMANDE
 
-        now = datetime.datetime.now()
+        paris_tz = pytz.timezone("Europe/Paris")
+        now = datetime.datetime.now(paris_tz)
         
         start_of_war = now.replace(hour=11, minute=40, second=0, microsecond=0) - datetime.timedelta(days=(now.weekday() - 3) % 7)
         end_of_war = now.replace(hour=11, minute=40, second=0, microsecond=0) + datetime.timedelta(days=(7 - now.weekday() + 0) % 7)
