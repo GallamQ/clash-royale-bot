@@ -38,6 +38,10 @@ class War(commands.Cog):
 #? PARAMÉTRAGE DE LA COMMANDE
             participants = war_data.get("clan", {}).get("participants", [])
             
+            if not participants:
+                await ctx.send("Aucun participant trouvé pour la guerre en cours.")
+                return
+            
             message = f"⚔️ **Résultats de la guerre en cours** ⚔️\n\n "
             message += "**Participants :**\n"
             for participant in participants:

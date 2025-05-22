@@ -5,6 +5,7 @@ import os
 import requests
 import datetime
 import asyncio
+import functools
 from dotenv import load_dotenv
 from services.database import save_war_log, get_all_clan_tags
 
@@ -53,9 +54,10 @@ def fetch_with_proxies(endpoint):
 
 #? INITIALISATION DE LA COMMANDE
 
-def get_clan_war_data():
+async def get_clan_war_data():
     endpoint = f"clans/%23{CLAN_TAG}/currentriverrace"
-    return fetch_with_proxies(endpoint)
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(None, functools.partial(fetch_with_proxies, endpoint))
 
 
 
