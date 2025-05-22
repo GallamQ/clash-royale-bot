@@ -26,7 +26,7 @@ class War(commands.Cog):
         end_of_war = now.replace(hour=11, minute=40, second=0, microsecond=0) + datetime.timedelta(days=(7 - now.weekday() + 0) % 7)
 
         if start_of_war <= now <= end_of_war:
-            war_data = get_clan_war_data()
+            war_data = await get_clan_war_data()
 
             if not war_data:
                 await ctx.send("Impossible de récupérer les données de la guerre en cours !")
