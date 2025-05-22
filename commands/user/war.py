@@ -51,11 +51,11 @@ class War(commands.Cog):
                     reverse=True
                 )
                 
-                message = f"⚔️ **Résultats de la guerre en cours** ⚔️\n\n "
+                message = f"⚔️ **Résultats de la guerre en cours** ⚔️\n\n"
                 for participant in filtered_participants:
                     name = participant.get("name", "Inconnu")
                     fame = participant.get("fame", 0)
-                    message += f"▫️ {name} ▫️ {fame} points\n"
+                    message += f"{name} ▫️ {fame} points\n"
 
                 if len(message) > 2000:
                     for i in range(0, len(message), 2000):
