@@ -2,7 +2,7 @@
 #! IMPORTS
 
 import datetime
-import pytz
+# from pytz import timezone
 from discord.ext import commands
 from services.clash_api import get_clan_war_data
 
@@ -19,8 +19,8 @@ class War(commands.Cog):
 
 #? GESTION DE LA PÉRIODE D'UTILISATION DE LA COMMANDE
 
-        paris_tz = pytz.timezone("Europe/Paris")
-        now = datetime.datetime.now(paris_tz)
+        # paris_tz = timezone("Europe/Paris")
+        now = datetime.datetime.now()
 
         weekday = now.weekday()
         days_since_thursday = (weekday - 3) % 7
