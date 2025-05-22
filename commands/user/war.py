@@ -33,7 +33,7 @@ class War(commands.Cog):
 #? PARAMÉTRAGE DE LA COMMANDE
             participants = war_data.get("clan", {}).get("participants", [])
             
-            message = f":crossed_swords: **Résultats de la guerre en cours** :crossed_swords:\n\n "
+            message = f"⚔️ **Résultats de la guerre en cours** ⚔️\n\n "
             message += "**Participants :**\n"
             for participant in participants:
                 name = participant.get("name", "Inconnu")
