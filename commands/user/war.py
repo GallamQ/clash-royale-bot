@@ -5,6 +5,7 @@ import datetime
 # from pytz import timezone
 from discord.ext import commands
 from services.clash_api import get_clan_war_data
+from services.database import get_all_clan_tags
 
 
 
@@ -42,6 +43,10 @@ class War(commands.Cog):
                     await ctx.send("Aucun participant trouvé pour la guerre en cours.")
                     return
                 
+                current_tags = await get_all_clan_tags()
+                
+                filtered_participants = [p for p in participants if p.get("tag") in current_tags]
+                
                 message = f"⚔️ **Résultats de la guerre en cours** ⚔️\n\n "
                 message += "**Participants :**\n"
                 for participant in participants:
@@ -49,7 +54,11 @@ class War(commands.Cog):
                     fame = participant.get("fame", 0)
                     message += f"- {name} : {fame} points\n"
 
-                await ctx.send(message)
+                if len(message) > 2000:
+                    for i in range(0, len(message), 2000):
+                        await ctx.send(message[i:i+2000])
+                else:
+                    await ctx.send(message)
             else:
                 await ctx.send("La guerre n'est pas en cours. Elle a lieu du jeudi au lundi !")
 
