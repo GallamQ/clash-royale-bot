@@ -7,7 +7,7 @@ import datetime
 import asyncio
 import functools
 from dotenv import load_dotenv
-from services.database import save_war_log, get_all_clan_tags
+from services.database import save_war_log, get_all_clan_tags, get_war_log
 
 
 
@@ -124,6 +124,20 @@ async def save_current_war_data():
     today = war_date
     days_since_thursday = (today.weekday() - 3) % 7
     war_id = (today - datetime.timedelta(days=days_since_thursday)).strftime("%d-%m-%Y")
+
+    #* GESTION DU RESET DES DONNÉES
+    if len(participants_db) > 0:
+        zero_count = sum(1 for p in participants_db if p["fame"] == 0)
+        if zero_count / len(participants_db) > 0.9:
+            print("Probable reset détecté, sauvegarde ignorée !")
+            return
+
+    old_log = await get_war_log(war_id) or []
+    old_scores = {p["tag"]: p["fame"] for p in old_log}
+    
+    for p in participants_db:
+        old_fame = old_scores.get(p["tag"], 0)
+        p["fame"] = max(old_fame, p["fame"])
 
     #* SAUVEGARDE DES DONNÉES
     await save_war_log(war_id, war_date, participants_db)

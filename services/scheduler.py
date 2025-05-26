@@ -1,11 +1,12 @@
 
 #! IMPORT
 
+import asyncio
+import datetime
 from pytz import timezone
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from datetime import datetime, timedelta
-from services.clash_api import save_current_war_data
-from services.database import sync_clan_members, decrement_absences
+from services.clash_api import save_current_war_data, get_clan_war_data
+from services.database import sync_clan_members, decrement_absences, get_all_clan_tags
 
 
 
@@ -54,6 +55,36 @@ def initialize_scheduler(bot):
         print("Mise à jour des membres terminée !")
 
 
+#? FONCTION DE VEILLE DES DONNÉES DE FIN DE GUERRE
+
+    async def war_watcher(start_time=None, end_time=None, interval=30):
+        if start_time is None:
+            start_time = datetime.time(11, 29)
+        if end_time is None:
+            end_time = datetime.time(11, 45)
+
+        print(f"[Watcher] Démarrage de la veille des données de fin de guerre ({start_time} -> {end_time})")
+
+        while True:
+            now = datetime.datetime.now().time()
+
+            if now >= end_time:
+                print("[Watcher] Fin de la veille des données de fin de guerre !")
+                break
+
+            await save_current_war_data()
+
+            war_data = await get_clan_war_data()
+            participants = war_data.get("clan", {}).get("participants", [])
+            clan_tags = await get_all_clan_tags()
+            participants_db = [p for p in participants if p["tag"] in clan_tags]
+
+            if participants_db and all(p.get("fame", 0) == 0 for p in participants_db):
+                print("[Watcher] Reset détecté : arrêt de la veille des données de fin de guerre !")
+                break
+
+            await asyncio.sleep(interval)
+
 #? WRAPPERS DES FONCTIONS
 
     #* COMMANDES AUTOMATIQUES
@@ -80,6 +111,10 @@ def initialize_scheduler(bot):
     def decrement_absences_wrapper():
         bot.loop.create_task(decrement_absences())
 
+    #- WRAPPER VEILLE DES DONNÉES DE FIN DE GUERRE
+    def war_watcher_wrapper():
+        bot.loop.create_task(war_watcher())
+
 
 #? PLANIFICATION DES FONCTIONS
 
@@ -94,13 +129,16 @@ def initialize_scheduler(bot):
     #* SAUVEGARDES AUTOMATIQUES DE DONNÉES
     
     #- SAUVEGARDE DES DONNÉES DE GUERRE
-    scheduler.add_job(save_war_data_wrapper, 'cron', day_of_week= 'fri, sat, sun, mon', hour=11, minute=38)
+    scheduler.add_job(save_war_data_wrapper, 'cron', day_of_week= 'fri, sat, sun, mon', hour=11, minute=25)
 
     #- SAUVEGARDE DES MEMBRES DU CLAN
     scheduler.add_job(update_clan_members_wrapper, 'cron', hour=10, minute=0)
 
     #- DÉCRÉMENTATION DES ABSENCES
     scheduler.add_job(decrement_absences_wrapper, 'cron', day_of_week='mon', hour=14, minute=0)
+
+    #- VEILLE DES DONNÉES DE FIN DE GUERRE
+    scheduler.add_job(war_watcher_wrapper, 'cron', day_of_week='mon', hour=11, minute=29)
 
     #* TEST DE PLANIFICATION
     # run_time = datetime.now(paris_tz) + timedelta(minutes=1)

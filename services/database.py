@@ -166,3 +166,15 @@ async def get_latest_war_logs():
     )
     await conn.close()
     return [dict(row) for row in rows]
+
+
+#? RÉCUPÉRATION DES LOGS D'UNE GUERRE DONNÉE
+
+async def get_war_log(war_id):
+    conn = await get_db_connection()
+    rows = await conn.fetch(
+        "SELECT tag, fame FROM war_logs WHERE war_id = $1:",
+        war_id
+    )
+    await conn.close()
+    return [dict(row) for row in rows]
