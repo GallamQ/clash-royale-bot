@@ -2,8 +2,7 @@
 #! IMPORT
 
 import asyncio
-import datetime
-from datetime import timedelta
+from datetime import timedelta, datetime
 from pytz import timezone
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from services.clash_api import save_current_war_data, get_clan_war_data
