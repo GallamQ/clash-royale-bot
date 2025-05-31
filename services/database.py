@@ -173,7 +173,7 @@ async def get_latest_war_logs():
 async def get_war_log(war_id):
     conn = await get_db_connection()
     rows = await conn.fetch(
-        "SELECT tag, fame FROM war_logs WHERE war_id = $1:",
+        "SELECT tag, fame FROM war_logs WHERE war_id = $1;",
         war_id
     )
     await conn.close()

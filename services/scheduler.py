@@ -3,6 +3,7 @@
 
 import asyncio
 import datetime
+from datetime import timedelta
 from pytz import timezone
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from services.clash_api import save_current_war_data, get_clan_war_data
@@ -141,7 +142,7 @@ def initialize_scheduler(bot):
     scheduler.add_job(war_watcher_wrapper, 'cron', day_of_week='mon', hour=11, minute=29)
 
     #* TEST DE PLANIFICATION
-    # run_time = datetime.now(paris_tz) + timedelta(minutes=1)
-    # scheduler.add_job(update_clan_members_wrapper, 'date', run_date=run_time)
+    run_time = datetime.now(paris_tz) + timedelta(minutes=1)
+    scheduler.add_job(update_clan_members_wrapper, 'date', run_date=run_time)
 
     return scheduler
