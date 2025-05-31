@@ -141,7 +141,7 @@ def initialize_scheduler(bot):
     scheduler.add_job(war_watcher_wrapper, 'cron', day_of_week='mon', hour=11, minute=29)
 
     #* TEST DE PLANIFICATION
-    run_time = datetime.now(paris_tz) + timedelta(minutes=1)
-    scheduler.add_job(save_war_data_wrapper, 'date', run_date=run_time)
+    # run_time = datetime.now(paris_tz) + timedelta(minutes=1)
+    # scheduler.add_job(save_war_data_wrapper, 'date', run_date=run_time)
 
     return scheduler
