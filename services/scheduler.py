@@ -142,6 +142,6 @@ def initialize_scheduler(bot):
 
     #* TEST DE PLANIFICATION
     run_time = datetime.now(paris_tz) + timedelta(minutes=1)
-    scheduler.add_job(update_clan_members_wrapper, 'date', run_date=run_time)
+    scheduler.add_job(save_war_data_wrapper, 'date', run_date=run_time)
 
     return scheduler
