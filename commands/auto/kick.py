@@ -70,7 +70,7 @@ class Kick(commands.Cog):
                 else:
                     join_date = None
 
-                if join_date and join_date >= war_start_date:
+                if not join_date or join_date >= war_start_date:
                     continue
 
                 if fame < quota:
