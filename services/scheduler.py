@@ -2,7 +2,7 @@
 #! IMPORT
 
 import asyncio
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, time
 from pytz import timezone
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from services.clash_api import save_current_war_data, get_clan_war_data
@@ -59,9 +59,9 @@ def initialize_scheduler(bot):
 
     async def war_watcher(start_time=None, end_time=None, interval=30):
         if start_time is None:
-            start_time = datetime.time(11, 29)
+            start_time = time(11, 29)
         if end_time is None:
-            end_time = datetime.time(11, 45)
+            end_time = time(11, 45)
 
         print(f"[Watcher] Démarrage de la veille des données de fin de guerre ({start_time} -> {end_time})")
 
