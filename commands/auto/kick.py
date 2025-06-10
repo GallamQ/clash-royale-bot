@@ -63,8 +63,13 @@ class Kick(commands.Cog):
                 #- GESTION DES NOUVEAUX ARRIVANTS
                 join_date_val = clan_members_dict.get(tag, {}).get("join_date")
 
+                if processed_count + new_members_count < 5:
+                    print(f"{name} - join_date_val: {join_date_val} (type: {type(join_date_val)})")
+
                 if isinstance(join_date_val, datetime):
                     join_date = join_date_val.date()
+                elif hasattr(join_date_val, 'date'):
+                    join_date = join_date_val
                 elif isinstance(join_date_val, str):
                     try:
                         join_date = datetime.strptime(join_date_val, "%Y-%m-%d").date()
