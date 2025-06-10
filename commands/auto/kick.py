@@ -45,6 +45,11 @@ class Kick(commands.Cog):
 
             #* PARAMÉTRAGE DE LA COMMANDE
             underperformers = []
+            total_players = len(war_logs)
+            absent_count = 0
+            new_members_count = 0
+            processed_count = 0
+
             for player in war_logs:
                 tag = player["tag"]
                 name = clan_members_dict.get(tag, {}).get("name", "Inconnu")
@@ -52,6 +57,7 @@ class Kick(commands.Cog):
 
                 #- GESTION DES ABSENTS
                 if tag in absent_tags:
+                    absent_count += 1
                     continue
 
                 #- GESTION DES NOUVEAUX ARRIVANTS
@@ -71,10 +77,23 @@ class Kick(commands.Cog):
                     join_date = None
 
                 if not join_date or join_date >= war_start_date:
+                    new_members_count += 1
                     continue
+
+                processed_count += 1
 
                 if fame < quota:
                     underperformers.append({"name": name, "fame": fame})
+
+            # Log de diagnostic
+            print(f"=== DIAGNOSTIC KICK ===")
+            print(f"Total joueurs: {total_players}")
+            print(f"Absents: {absent_count}")
+            print(f"Nouveaux membres: {new_members_count}")
+            print(f"Joueurs traités: {processed_count}")
+            print(f"Sous-performants: {len(underperformers)}")
+            print(f"War start date: {war_start_date}")
+            print(f"War ID: {war_id}")
 
             if underperformers:
                 pseudo_replacements = {"خير ان شاء الله": "Manel"}
