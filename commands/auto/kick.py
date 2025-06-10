@@ -76,13 +76,14 @@ class Kick(commands.Cog):
                 else:
                     join_date = None
 
+                if processed_count + new_members_count < 10:
+                    print(f"{name} - join_date_val: {join_date_val} -> join_date: {join_date} (war_start: {war_start_date})")
+
                 if not join_date or join_date >= war_start_date:
                     new_members_count += 1
                     continue
 
                 processed_count += 1
-                if processed_count < 5:
-                    print(f"{name} - join_date_val: {join_date_val} -> join_date: {join_date}")
 
                 if fame < quota:
                     underperformers.append({"name": name, "fame": fame})
