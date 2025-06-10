@@ -81,6 +81,8 @@ class Kick(commands.Cog):
                     continue
 
                 processed_count += 1
+                if processed_count < 5:
+                    print(f"{name} - join_date_val: {join_date_val} -> join_date: {join_date}")
 
                 if fame < quota:
                     underperformers.append({"name": name, "fame": fame})
