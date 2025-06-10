@@ -68,6 +68,8 @@ class Kick(commands.Cog):
 
                 if isinstance(join_date_val, datetime):
                     join_date = join_date_val.date()
+                elif isinstance(join_date_val, type(datetime.now().date())):
+                    join_date = join_date_val
                 elif hasattr(join_date_val, 'date'):
                     join_date = join_date_val
                 elif isinstance(join_date_val, str):
