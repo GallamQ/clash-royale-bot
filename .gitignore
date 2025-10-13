@@ -1,0 +1,11 @@
+#! FICHIERS IGNORÉS PAR GIT #!
+
+#? FICHIERS SENSIBLES ?#
+.env
+ideas.md
+
+
+#? FICHIERS GÉNÉRÉS ?#
+__pycache__/
+*.pyc
+*.log
