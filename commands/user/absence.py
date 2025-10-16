@@ -32,7 +32,7 @@ class Absence(commands.Cog):
                 await ctx.send(f"Toutes les absences du joueur `{member['name']}` ont été supprimées !")
 
                 #- AFFICHAGE DE LA LISTE DES ABSENTS APRÈS MISE À JOUR
-                await self.send_current_absences_list(ctx)
+                await self.call_absents_command(ctx)
                 return
 
             #* GESTION DES DATES
@@ -52,45 +52,25 @@ class Absence(commands.Cog):
             await ctx.send(confirmation_msg)
 
             #- AFFICHAGE DE LA LISTE DES ABSENTS APRÈS MISE À JOUR
-            await self.send_current_absences_list(ctx)
+            await self.call_absents_command(ctx)
 
         except Exception as e:
             await ctx.send(f"Une erreur est survenue : {e}")
 
 
-#? PARAMÈTRAGE DE LA COMMANDE D'AFFICHAGE DE LA LISTE DES ABSENTS
+#? APPEL DE LA COMMANDE !ABSENTS POUR AFFICHAGE DE LA LISTE DES ABSENTS
 
-    @commands.command()
-    @commands.has_any_role("Chef de clan", "Adjoint", "Clash Bot")
-
-    
-    #* AFFICHAGE DE LA LISTE DES ABSENTS
-    async def absents(self, ctx):
-        await self.send_current_absences_list(ctx)
-
-    #* CONSTRUCTION DU MESSAGE À AFFICHER
-    async def send_current_absences_list(self, ctx):
+    async def call_absents_command(self, ctx):
         try:
-            current_absences = await get_all_absences()
+            absents_command = self.bot.get_command("absents")
 
-            if not current_absences:
-                await ctx.send("📋 **Liste des absents :** Aucun absent actuellement !")
-                return
-
-            message = "📋 **Liste des absents actuels :**\n\n"
-
-            pseudo_replacements = {"خير ان شاء الله": "Manel"}
-
-            for absence in current_absences:
-                name = pseudo_replacements.get(absence['name'], absence['name'])
-                start_date = absence['start_date'].strftime('%d-%m-%Y')
-                end_date = absence['end_date'].strftime('%d-%m-%Y')
-                message += f"• **{name}** - Du {start_date} au {end_date}\n"
-
-            await ctx.send(message)
+            if absents_command:
+                await ctx.invoke(absents_command)
+            else:
+                await ctx.send("Impossible d'afficher la liste des absents !")
 
         except Exception as e:
-            await ctx.send(f"Erreur lors de la récupération des absences: {e}")
+            await ctx.send(f"Erreur lors de l'affichage de la liste : {e}")
 
 
 

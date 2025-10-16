@@ -48,6 +48,7 @@ async def load_extensions():
 #- COMMANDES AUTOMATIQUES
     await bot.load_extension("commands.auto.top5")
     await bot.load_extension("commands.auto.kick")
+    await bot.load_extension("commands.auto.absents")
     await bot.load_extension("events.welcome")
 
 #- COMMANDES USERS
