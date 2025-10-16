@@ -21,10 +21,12 @@ def initialize_scheduler(bot):
 
     async def publish_top5():
         channel = bot.get_channel(1361756327868629042)
+
         if channel:
             fake_message = await channel.send("Commande automatique : Top 5 !")
             ctx = await bot.get_context(fake_message)
             ctx.command = bot.get_command("top5")
+
             await bot.invoke(ctx)
 
 
@@ -32,10 +34,25 @@ def initialize_scheduler(bot):
 
     async def auto_kick():
         channel = bot.get_channel(1361756395510436162)
+
         if channel:
             fake_message = await channel.send("Commande automatique : Kick !")
             ctx = await bot.get_context(fake_message)
             ctx.command = bot.get_command("kick")
+
+            await bot.invoke(ctx)
+
+
+#? FONCTION DE PUBLICATION AUTOMATIQUE DE LA LISTE DES ABSENTS
+
+    async def publish_absents():
+        channel = bot.get_channel(1363138763970314472)
+
+        if channel:
+            fake_message = await channel.send("Commande automatique : Liste des absents !")
+            ctx = await bot.get_context(fake_message)
+            ctx.command = bot.get_command("absents")
+
             await bot.invoke(ctx)
 
 
@@ -97,6 +114,10 @@ def initialize_scheduler(bot):
     def auto_kick_wrapper():
         bot.loop.create_task(auto_kick())
 
+    #- WRAPPER ABSENTS
+    def publish_absents_wrapper():
+        bot.loop.create_task(publish_absents())
+
     #* SAUVEGARDES AUTOMATIQUES DE DONNÉES
 
     #- WRAPPER SAUVEGARDE DES DONNÉES DE GUERRE
@@ -124,8 +145,10 @@ def initialize_scheduler(bot):
     scheduler.add_job(publish_top5_wrapper, 'cron', day_of_week='mon', hour=12, minute=0)
 
     #- PUBLICATION DE LA LISTE DES MEMBRES À /KICK
-    scheduler.add_job(auto_kick_wrapper, 'cron', day_of_week='mon', hour=12, minute=00)
+    scheduler.add_job(auto_kick_wrapper, 'cron', day_of_week='mon', hour=12, minute=0)
 
+    #- PUBLICATION DE LA LISTE DES ABSENTS
+    scheduler.add_job(publish_absents_wrapper, 'cron', day_of_week='mon', hour=12, minute=0)
     #* SAUVEGARDES AUTOMATIQUES DE DONNÉES
     
     #- SAUVEGARDE DES DONNÉES DE GUERRE

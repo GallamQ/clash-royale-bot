@@ -141,7 +141,13 @@ async def get_all_absences():
     today = datetime.date.today()
     conn = await get_db_connection()
     rows = await conn.fetch(
-        "SELECT * FROM absences WHERE start_date <= $1 AND end_date >= $1;",
+        """
+        SELECT a.tag, a.start_date, a.end_date, cm.name
+        FROM absences a
+        JOIN clan_members cm ON a.tag = cm.tag
+        WHERE a.start_date <= $1 AND a.end_date >= $1
+        ORDER BY cm.name;
+        """,
         today
     )
     await conn.close()
