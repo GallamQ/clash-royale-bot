@@ -2,7 +2,7 @@
 
 > Bot Discord automatisé pour la gestion d'un clan Clash Royale
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org) [![Discord.py](https://img.shields.io/badge/discord.py-2.0+-blue.svg)](https://discordpy.readthedocs.io/) [![Version](https://img.shields.io/badge/version-1.2.0-green.svg)](https://github.com/GallamQ/clash-royale-bot/releases) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org) [![Discord.py](https://img.shields.io/badge/discord.py-2.0+-blue.svg)](https://discordpy.readthedocs.io/) [![Version](https://img.shields.io/badge/version-1.4.0-green.svg)](https://github.com/GallamQ/clash-royale-bot/releases) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
@@ -33,7 +33,7 @@ Chaque semaine, le bot effectue un travail de veille sur les performances des me
 - Synchronisation des données du clan
 - Sauvegarde des résultats de guerre
 - Notifications automatiques
-- Veille des fins de guerre
+- Veille des fins de guerre avec prise en compte du changement d'horaire été/hiver
 
 ---
 

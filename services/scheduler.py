@@ -75,15 +75,27 @@ def initialize_scheduler(bot):
 #? FONCTION DE VEILLE DES DONNÉES DE FIN DE GUERRE
 
     async def war_watcher(start_time=None, end_time=None, interval=30):
-        if start_time is None:
-            start_time = time(11, 29)
-        if end_time is None:
-            end_time = time(11, 45)
+        #* DÉTECTION AUTOMATIQUE DE L'HEURE D'ÉTÉ OU D'HIVER
+        if start_time is None or end_time is None:
+            now_paris = datetime.now(paris_tz)
+            is_dst = now_paris.dst() != timedelta(0)
+
+            if is_dst:
+                default_start = time(11, 25)
+                default_end = time(11, 45)
+                print(f"[Watcher] Heure d'été détectée !")
+            else:
+                default_start = time(10, 25)
+                default_end = time(10, 45)
+                print(f"[Watcher] Heure d'hiver détectée !")
+
+            start_time = default_start
+            end_time = default_end
 
         print(f"[Watcher] Démarrage de la veille des données de fin de guerre ({start_time} -> {end_time})")
 
         while True:
-            now = datetime.datetime.now().time()
+            now = datetime.now().time()
 
             if now >= end_time:
                 print("[Watcher] Fin de la veille des données de fin de guerre !")
@@ -92,7 +104,7 @@ def initialize_scheduler(bot):
             await save_current_war_data()
 
             war_data = await get_clan_war_data()
-            participants = war_data.get("clan", {}).get("participants", [])
+            participants = war_data.get("clan", {}).get("participants", []) if war_data else []
             clan_tags = await get_all_clan_tags()
             participants_db = [p for p in participants if p["tag"] in clan_tags]
 
@@ -132,9 +144,18 @@ def initialize_scheduler(bot):
     def decrement_absences_wrapper():
         bot.loop.create_task(decrement_absences())
 
-    #- WRAPPER VEILLE DES DONNÉES DE FIN DE GUERRE
+    #- WRAPPER VEILLE DES DONNÉES DE FIN DE GUERRE AVEC VÉRIFICATION SAISONNIÈRE
     def war_watcher_wrapper():
-        bot.loop.create_task(war_watcher())
+        now_paris = datetime.now(paris_tz)
+        is_dst = now_paris.dst() != timedelta(0)
+        current_hour = now_paris.hour
+
+        if current_hour == 10 and not is_dst:
+            bot.loop.create_task(war_watcher())
+        elif current_hour == 11 and is_dst:
+            bot.loop.create_task(war_watcher())
+        else:
+            print(f"[Watcher] Job ignoré : saison incorrecte !")
 
 
 #? PLANIFICATION DES FONCTIONS
@@ -160,8 +181,9 @@ def initialize_scheduler(bot):
     #- DÉCRÉMENTATION DES ABSENCES
     scheduler.add_job(decrement_absences_wrapper, 'cron', day_of_week='mon', hour=14, minute=0)
 
-    #- VEILLE DES DONNÉES DE FIN DE GUERRE
-    scheduler.add_job(war_watcher_wrapper, 'cron', day_of_week='mon', hour=11, minute=29)
+    #- VEILLE DES DONNÉES DE FIN DE GUERRE EN FONCTION DE L'HEURE SAISONNIÈRE
+    scheduler.add_job(war_watcher_wrapper, 'cron', day_of_week='mon', hour=10, minute=25)
+    scheduler.add_job(war_watcher_wrapper, 'cron', day_of_week='mon', hour=11, minute=25)
 
     #* TEST DE PLANIFICATION
     # run_time = datetime.now(paris_tz) + timedelta(minutes=1)
