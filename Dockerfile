@@ -7,14 +7,12 @@ WORKDIR /app
 # Copie les fichiers de dépendances
 COPY requirements.txt .
 
-# Met à jour pip et setuptools, puis installe les dépendances
-RUN pip install --upgrade pip setuptools && pip install -r requirements.txt
+# Met à jour pip et installe setuptools à une version précise avant les autres dépendances
+RUN pip install --upgrade pip && pip install setuptools==68.2.2
+RUN pip install -r requirements.txt
 
 # Affiche les versions de pip et setuptools pour debug
 RUN pip --version && pip show setuptools
-
-# Vérifie que pkg_resources est bien importable
-RUN python -c "import pkg_resources"
 
 # Copie le reste du code
 COPY . .
