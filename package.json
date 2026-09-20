@@ -12,6 +12,10 @@
   "type": "commonjs",
   "devDependencies": {
     "@types/node": "^26.6.2",
+    "@types/pg": "^8.23.1",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "pg": "^8.23.0"
   }
 }
