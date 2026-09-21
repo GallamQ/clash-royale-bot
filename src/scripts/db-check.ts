@@ -1,4 +1,4 @@
-import { getClanMemberByTag } from "../db/members";
+import { getAllClanMembers, getAllClanTags, getClanMemberByTag } from "../db/members";
 import { pool } from "../db/pool";
 
 async function main() {
@@ -8,7 +8,10 @@ async function main() {
   const count = await pool.query("SELECT count(*) FROM clan_members");
   console.log(count.rows[0]);
 
+  console.log(await getAllClanMembers());
+  console.log(await getAllClanTags());
   console.log(await getClanMemberByTag("#TEST"));
+  
 
   await pool.end();
 }
