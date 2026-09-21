@@ -5,7 +5,7 @@ export interface ClanMember {
   tag: string;
   name: string;
   role: string;
-  join_date: Date;
+  join_date: string;
 }
 
 export async function getClanMemberByTag(tag: string): Promise<ClanMember | null> {
