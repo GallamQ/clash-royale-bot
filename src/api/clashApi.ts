@@ -13,9 +13,9 @@ function requireEnv(name: string): string {
 }
 
 const API_KEY = requireEnv("API_KEY");
-const CLAN_TAG = requireEnv("CLAN_TAG");
+export const CLAN_TAG = requireEnv("CLAN_TAG");
 
-async function fetchFromApi<T>(endpoint: string): Promise<T> {
+export async function fetchFromApi<T>(endpoint: string): Promise<T> {
     const response = await fetch(`${BASE_URL}/${endpoint}`, {
         headers: { Authorization: `Bearer ${API_KEY}`},
     });
@@ -35,4 +35,21 @@ export async function getClanMembers(): Promise<ApiMember[]> {
     const data = await fetchFromApi<ClanResponse>(`clans/%23${CLAN_TAG}`);
 
     return data.memberList;
+}
+
+export interface WarParticipant {
+  tag: string;
+  fame: number;
+}
+
+interface RiverRaceResponse {
+  clan: {
+    participants: WarParticipant[];
+  };
+}
+
+export async function getClanWarData(): Promise<WarParticipant[]> {
+  const data = await fetchFromApi<RiverRaceResponse>(`clans/%23${CLAN_TAG}/currentriverrace`);
+
+  return data.clan.participants;
 }
