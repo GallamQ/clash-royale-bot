@@ -38,18 +38,51 @@ export async function getClanMembers(): Promise<ApiMember[]> {
 }
 
 export interface WarParticipant {
-  tag: string;
-  fame: number;
+    tag: string;
+    fame: number;
+}
+
+export interface PeriodLogItem {
+    clan: { tag: string };
+    pointsEarned: number;
+    progressStartOfDay: number;
+    progressEndOfDay: number;
+    endOfDayRank: number;
+}
+
+export interface PeriodLog {
+    items: PeriodLogItem[];
 }
 
 interface RiverRaceResponse {
-  clan: {
-    participants: WarParticipant[];
-  };
+    clan: {
+        fame: number;
+        participants: WarParticipant[];
+    };
+    periodType: string;
+    state: string;
+    periodLogs: PeriodLog[];
+    periodIndex: number;
 }
 
-export async function getClanWarData(): Promise<WarParticipant[]> {
-  const data = await fetchFromApi<RiverRaceResponse>(`clans/%23${CLAN_TAG}/currentriverrace`);
+export interface ClanWarData {
+    participants: WarParticipant[];
+    periodType: string;
+    state: string;
+    clanFame: number;
+    periodLogs: PeriodLog[];
+    periodIndex: number;
+}
 
-  return data.clan.participants;
+export async function getClanWarData(): Promise<ClanWarData> {
+    const data = await fetchFromApi<RiverRaceResponse>(`clans/%23${CLAN_TAG}/currentriverrace`);
+
+    return {
+        participants: data.clan.participants,
+        periodType: data.periodType,
+        state: data.state,
+        clanFame: data.clan.fame,
+        periodLogs: data.periodLogs,
+        periodIndex: data.periodIndex
+    };
 }

@@ -1,0 +1,30 @@
+import { CLAN_TAG, getClanWarData } from "../api/clashApi";
+import { getAllClanTags } from "../db/members";
+import { saveWarLogs } from "../db/warLogs";
+import { hasWarEnded } from "../rules/warStatus";
+
+async function main() {
+    console.log("Mise à jour des résultats de la guerre en cours...");
+
+    const warData = await getClanWarData();
+    const clanTag = `#${CLAN_TAG}`;
+
+    if (hasWarEnded(warData.periodLogs, clanTag)) {
+        console.log("Guerre terminée !");
+        return;
+    }
+
+    const warId = warData.periodIndex - ((warData.periodIndex - 3) % 7);
+    const warDate = new Date().toISOString().split("T")[0];
+    const participants = warData.participants;
+    const knownTags = await getAllClanTags();
+
+    await saveWarLogs(warId.toString(), warDate, participants, knownTags);
+
+    console.log("Mise à jour de la guerre en cours terminée !");
+}
+
+main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+});
