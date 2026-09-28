@@ -9,21 +9,24 @@ export interface WarLogRow extends WarLogEntry {
     id: number;
     war_id: string;
     war_date: string;
+    tag: string | null;
 }
 
-export async function saveWarLogs(warId: string, warDate: string, participants: WarLogEntry[]): Promise<void> {
+export async function saveWarLogs(warId: string, warDate: string, participants: WarLogEntry[], knownTags: Set<string>): Promise<void> {
     const client = await pool.connect();
 
     try {
         await client.query("BEGIN");
 
         for (const participant of participants) {
+            const tag = knownTags.has(participant.tag) ? participant.tag : null;
+            
             await client.query(
                 `INSERT INTO war_logs (war_id, war_date, tag, fame)
                 VALUES ($1, $2, $3, $4)
                 ON CONFLICT (war_id, tag) DO UPDATE
                 SET fame = EXCLUDED.fame, war_date = EXCLUDED.war_date`,
-                [warId, warDate, participant.tag, participant.fame]
+                [warId, warDate, tag, participant.fame]
             );
         }
 

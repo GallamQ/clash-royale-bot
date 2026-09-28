@@ -8,15 +8,17 @@ async function main() {
      ON CONFLICT (tag) DO NOTHING;`
   );
 
+  const knownTags = new Set(["#TEST1"]);
+
   await pool.query("DELETE FROM war_logs WHERE war_id LIKE 'TEST-%'");
 
   await saveWarLogs("TEST-WAR-1", "2026-09-10", [
     { tag: "#TEST1", fame: 1600 },
-  ]);
+  ], knownTags);
 
   await saveWarLogs("TEST-WAR-2", "2026-09-17", [
     { tag: "#TEST1", fame: 2200 },
-  ]);
+  ], knownTags);
 
   console.log("--- getWarLogsByWarId('TEST-WAR-1') (expected: fame 1600) ---");
   console.table(await getWarLogsByWarId("TEST-WAR-1"));
@@ -26,7 +28,7 @@ async function main() {
 
   await saveWarLogs("TEST-WAR-2", "2026-09-18", [
     { tag: "#TEST1", fame: 2500 },
-  ]);
+  ], knownTags);
 
   console.log("--- getWarLogsByWarId('TEST-WAR-2') après mise à jour (expected: 1 ligne, fame 2500) ---");
   console.table(await getWarLogsByWarId("TEST-WAR-2"));
