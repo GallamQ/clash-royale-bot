@@ -38,7 +38,7 @@ app.post(
 
         if (interaction.type === InteractionType.APPLICATION_COMMAND) {
             const options = interaction.data.options ?? [];
-            const getOption = (name: string) => options.find((option) => option.name === name);
+            const getOption = (name: string) => options.find((option) => option.name === name)?.value;
             const today = new Date().toISOString().slice(0, 10);
             const content = await handleAbsence(
                 {
@@ -54,7 +54,7 @@ app.post(
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: { content }
             });
-            
+
             return;
         }
 
