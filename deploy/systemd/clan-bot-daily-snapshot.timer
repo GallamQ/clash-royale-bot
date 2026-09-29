@@ -1,0 +1,9 @@
+[Unit]
+Description=Run the clan bot daily roster snapshot at 10:00 (Paris time)
+
+[Timer]
+OnCalendar=*-*-* 10:00:00 Europe/Paris
+Persistent=true
+
+[Install]
+WantedBy=timers.target
