@@ -28,7 +28,7 @@ export async function removeAbsencesByTag(tag: string): Promise<void> {
 export async function deleteExpiredAbsences(): Promise<void> {
     await pool.query(
         `DELETE FROM absences
-         WHERE end_date < CURRENT_DATE;`
+        WHERE end_date < CURRENT_DATE;`
     );
 }
 
