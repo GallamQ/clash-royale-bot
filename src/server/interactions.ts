@@ -1,5 +1,6 @@
 import { verifyKey, InteractionType, InteractionResponseType } from "discord-interactions";
 import express from "express";
+import { handleAbsence } from "./absenceCommand";
 
 const publicKey = process.env.DISCORD_PUBLIC_KEY;
 
@@ -32,6 +33,28 @@ app.post(
 
         if (interaction.type === InteractionType.PING) {
             res.json({ type: InteractionResponseType.PONG });
+            return;
+        }
+
+        if (interaction.type === InteractionType.APPLICATION_COMMAND) {
+            const options = interaction.data.options ?? [];
+            const getOption = (name: string) => options.find((option) => option.name === name);
+            const today = new Date().toISOString().slice(0, 10);
+            const content = await handleAbsence(
+                {
+                    tag: getOption("tag"),
+                    debut: getOption("debut"),
+                    fin: getOption("fin"),
+                    retirer: getOption("retirer")
+                },
+                today
+            );
+
+            res.json({
+                type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                data: { content }
+            });
+            
             return;
         }
 

@@ -32,9 +32,13 @@ async function main() {
 
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    await post({ type: 1 });        // attendu : 200 {"type":1}
-    await post({ type: 1 }, true);  // attendu : 401 (signature falsifiée)
-    await post({ type: 2 });        // attendu : 400 (type pas encore géré)
+    await post({ type: 1 });
+    await post({ type: 1 }, true);
+    await post({
+        type: 2,
+        data:  {name: "absence-test", options: [{ name: "tag", type: 3, value: "#ABC123" }] }
+    });
+    await post({ type: 99 });
 
     server.kill();
 }
