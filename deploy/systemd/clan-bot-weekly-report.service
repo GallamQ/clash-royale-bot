@@ -1,0 +1,8 @@
+[Unit]
+Description=Clan bot - weekly report
+
+[Service]
+Type=oneshot
+User=ubuntu
+WorkingDirectory=/home/ubuntu/clan-bot-ts
+ExecStart=/usr/bin/node --env-file=.env --import tsx src/jobs/weeklyReport.ts

@@ -1,0 +1,9 @@
+[Unit]
+Description=Delete expired absences every Monday at 14:00 (Paris time)
+
+[Timer]
+OnCalendar=Mon *-*-* 14:00:00 Europe/Paris
+Persistent=true
+
+[Install]
+WantedBy=timers.target

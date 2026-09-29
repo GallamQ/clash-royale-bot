@@ -1,0 +1,9 @@
+[Unit]
+Description=Send the clan bot weekly report every Monday at 12:00 (Paris time)
+
+[Timer]
+OnCalendar=Mon *-*-* 12:00:00 Europe/Paris
+Persistent=true
+
+[Install]
+WantedBy=timers.target
