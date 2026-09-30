@@ -1,6 +1,8 @@
 import { verifyKey, InteractionType, InteractionResponseType } from "discord-interactions";
 import express from "express";
 import { handleAbsence } from "./absenceCommand";
+import { getAllClanMembers } from "../db/members";
+import { buildMemberChoices } from "../rules/memberChoices";
 
 const publicKey = process.env.DISCORD_PUBLIC_KEY;
 
@@ -54,6 +56,28 @@ app.post(
                 type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                 data: { content }
             });
+
+            return;
+        }
+
+        if (interaction.type === InteractionType.APPLICATION_COMMAND_AUTOCOMPLETE) {
+            const focused = interaction.data.options.find((option) => option.focused);
+
+            try {
+                const members = await getAllClanMembers();
+                const choices = buildMemberChoices(members, focused?.value ?? "");
+
+                res.json({
+                    type: InteractionResponseType.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT,
+                    data: { choices }
+                });
+
+            } catch {
+                res.json({
+                    type: InteractionResponseType.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT,
+                    data: { choices: [] }
+                });
+            }
 
             return;
         }

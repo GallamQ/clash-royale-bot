@@ -12,7 +12,7 @@ const commands = [
         description: "Déclarer ou retirer une absence",
         type: 1,
         options: [
-            { type: 3, name: "tag", description: "Tag du joueur (ex. #ABC123)", required: true },
+            { type: 3, name: "tag", description: "Tag du joueur (ex. #ABC123)", required: true, autocomplete: true },
             { type: 3, name: "debut", description: "Début (JJ-MM-AAAA), par défaut le lundi de cette semaine", required: false },
             { type: 3, name: "fin", description: "Fin (JJ-MM-AAAA), par défaut le dimanche de cette semaine", required: false },
             { type: 5, name: "retirer", description: "Supprimer toutes les absences de ce joueur", required: false },
