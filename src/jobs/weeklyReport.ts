@@ -1,6 +1,7 @@
 import { getLatestWarLogs } from "../db/warLogs";
 import { type ClanMember, getAllClanMembers } from "../db/members";
 import { type PodiumStep, buildPodium } from "../rules/podium";
+import { safeName } from "../utils/safeName";
 
 const ROLE_LABELS: Record<string, string> = {
   member: "Membre",
@@ -10,10 +11,6 @@ const ROLE_LABELS: Record<string, string> = {
 }
 
 const MEDALS = [":first_place:", ":second_place:", ":third_place:"];
-
-function safeName(name: string): string {
-  return `\u2068${name}\u2069`;
-}
 
 function formatPlayer(member: ClanMember, fame: number): string {
   const roleLabel = ROLE_LABELS[member.role] ?? "Inconnu";
