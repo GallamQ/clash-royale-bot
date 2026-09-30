@@ -1,12 +1,22 @@
-import { addAbsence, removeAbsencesByTag } from "../db/absences";
+import { addAbsence, getActiveAbsences, removeAbsencesByTag } from "../db/absences";
 import { getClanMemberByTag } from "../db/members";
 import { resolveAbsenceDates } from "../rules/absenceDates";
+import { toFrenchDate } from "../utils/frenchDate";
+import { formatAbsencesList } from "../rules/absencesList";
+import { safeName } from "../utils/safeName";
 
 interface AbsenceOptions {
     tag: string,
     debut?: string,
     fin?: string,
     retirer?: boolean
+}
+
+async function withAbsencesList(confirmation: string): Promise<string> {
+    const absences = await getActiveAbsences();
+    const list = formatAbsencesList(absences);
+
+    return `${confirmation}\n\n${list}`;
 }
 
 export async function handleAbsence(options: AbsenceOptions, today: string): Promise<string> {
@@ -19,17 +29,17 @@ export async function handleAbsence(options: AbsenceOptions, today: string): Pro
 
         if (options.retirer) {
             await removeAbsencesByTag(options.tag);
-            return `Toutes les absences du joueur \`${member.name}\` ont été supprimées !`;
+            return await withAbsencesList(`Toutes les absences du joueur \`${safeName(member.name)}\` ont été supprimées !`);
         }
 
         const dates = resolveAbsenceDates(options.debut, options.fin, today);
 
         await addAbsence(options.tag, dates.startDate ,dates.endDate);
 
-        const frenchStartDate = dates.startDate.split("-").reverse().join("-");
-        const frenchEndDate = dates.endDate.split("-").reverse().join("-");
+        const frenchStartDate = toFrenchDate(dates.startDate);
+        const frenchEndDate = toFrenchDate(dates.endDate);
 
-        return `Le joueur ${member.name} a été marqué absent du ${frenchStartDate} au ${frenchEndDate}.`;
+        return await withAbsencesList(`Le joueur \`${safeName(member.name)}\` a été marqué absent du ${frenchStartDate} au ${frenchEndDate}.`);
         
     } catch (error) {
         return `Une erreur est survenue : ${(error as Error).message}`;
