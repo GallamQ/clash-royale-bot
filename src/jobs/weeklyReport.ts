@@ -2,6 +2,7 @@ import { getLatestWarLogs } from "../db/warLogs";
 import { type ClanMember, getAllClanMembers } from "../db/members";
 import { type PodiumStep, buildPodium } from "../rules/podium";
 import { safeName } from "../utils/safeName";
+import { sendWebhookMessage } from "../utils/discordWebhook";
 
 const ROLE_LABELS: Record<string, string> = {
   member: "Membre",
@@ -34,24 +35,6 @@ function formatStep(step: PodiumStep): string {
   return `${title}\n${lines.join("\n")}\n\n`;
 }
 
-async function sendReport(message: string): Promise<void> {
-  const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
-
-  if (!webhookUrl) {
-    throw new Error("DISCORD_WEBHOOK_URL is not defined.");
-  }
-
-  const response = await fetch(webhookUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content: message })
-  });
-
-  if (!response.ok) {
-    throw new Error(`Discord webhook request failed: ${response.status} ${response.statusText}`);
-  }
-}
-
 async function main() {
   console.log("Génération du rapport hebdomadaire en cours...");
 
@@ -69,7 +52,7 @@ async function main() {
   const podiumText = podium.map(formatStep).join("");
   const message = header + podiumText;
 
-  await sendReport(message);
+  await sendWebhookMessage(message);
 
   console.log("Rapport envoyé !");
 }
