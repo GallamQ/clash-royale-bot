@@ -19,14 +19,16 @@ export async function saveWarLogs(warId: string, warDate: string, participants: 
         await client.query("BEGIN");
 
         for (const participant of participants) {
-            const tag = knownTags.has(participant.tag) ? participant.tag : null;
+            if (!knownTags.has(participant.tag)) {
+                continue;
+            }
             
             await client.query(
                 `INSERT INTO war_logs (war_id, war_date, tag, fame)
                 VALUES ($1, $2, $3, $4)
                 ON CONFLICT (war_id, tag) DO UPDATE
                 SET fame = EXCLUDED.fame, war_date = EXCLUDED.war_date`,
-                [warId, warDate, tag, participant.fame]
+                [warId, warDate, participant.tag, participant.fame]
             );
         }
 
