@@ -8,13 +8,13 @@ async function main() {
 
     const warData = await getClanWarData();
     const clanTag = `#${CLAN_TAG}`;
+    const warId = warData.periodIndex - ((warData.periodIndex - 3) % 7);
 
-    if (hasWarEnded(warData.periodLogs, clanTag)) {
+    if (hasWarEnded(warData.periodLogs, clanTag, warId, warData.periodType)) {
         console.log("Guerre terminée !");
         return;
     }
 
-    const warId = warData.periodIndex - ((warData.periodIndex - 3) % 7);
     const warDate = new Date().toISOString().split("T")[0];
     const participants = warData.participants;
     const knownTags = await getAllClanTags();

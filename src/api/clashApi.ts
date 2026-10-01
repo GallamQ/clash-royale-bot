@@ -52,6 +52,7 @@ export interface PeriodLogItem {
 
 export interface PeriodLog {
     items: PeriodLogItem[];
+    periodIndex: number;
 }
 
 interface RiverRaceResponse {
