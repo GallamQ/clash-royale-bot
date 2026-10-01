@@ -1,0 +1,9 @@
+[Unit]
+Description=Send the clan bot kick list every Monday at 12:01 (Paris time)
+
+[Timer]
+OnCalendar=Mon *-*-* 12:01:00 Europe/Paris
+Persistent=true
+
+[Install]
+WantedBy=timers.target
