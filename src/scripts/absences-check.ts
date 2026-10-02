@@ -1,3 +1,4 @@
+import { requireTestDatabase } from "./requireTestDatabase";
 import {
   addAbsence,
   removeAbsencesByTag,
@@ -8,6 +9,14 @@ import {
 import { pool } from "../db/pool";
 
 async function main() {
+  requireTestDatabase();
+
+  await pool.query(
+    `INSERT INTO clan_members (tag, name, role, join_date)
+    VALUES ('#TEST1', 'Test Un', 'member', CURRENT_DATE)
+    ON CONFLICT (tag) DO NOTHING;`
+  );
+
   // Start from a clean state so the test can be re-run at any time
   await removeAbsencesByTag("#TEST1");
 
@@ -29,6 +38,7 @@ async function main() {
 
   // Leave nothing behind
   await removeAbsencesByTag("#TEST1");
+  await pool.query("DELETE FROM clan_members WHERE tag = '#TEST1'");
   await pool.end();
 }
 

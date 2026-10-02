@@ -1,7 +1,10 @@
+import { requireTestDatabase } from "./requireTestDatabase";
 import { syncClanMembers, getAllClanMembers } from "../db/members";
 import { pool } from "../db/pool";
 
 async function main() {
+  requireTestDatabase();
+
   console.log("--- Before ---");
   console.table(await getAllClanMembers());
 

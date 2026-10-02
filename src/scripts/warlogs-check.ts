@@ -1,11 +1,14 @@
+import { requireTestDatabase } from "./requireTestDatabase";
 import { saveWarLogs, getLatestWarLogs, getWarLogsByWarId } from "../db/warLogs";
 import { pool } from "../db/pool";
 
 async function main() {
+  requireTestDatabase();
+  
   await pool.query(
     `INSERT INTO clan_members (tag, name, role, join_date)
-     VALUES ('#TEST1', 'Test Un', 'member', CURRENT_DATE)
-     ON CONFLICT (tag) DO NOTHING;`
+    VALUES ('#TEST1', 'Test Un', 'member', CURRENT_DATE)
+    ON CONFLICT (tag) DO NOTHING;`
   );
 
   const knownTags = new Set(["#TEST1"]);
