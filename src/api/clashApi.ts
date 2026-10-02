@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "../utils/fetchWithTimeout";
 import { ApiMember } from "./types";
 
 const BASE_URL = "https://api.clashroyale.com/v1";
@@ -16,7 +17,7 @@ const API_KEY = requireEnv("API_KEY");
 export const CLAN_TAG = requireEnv("CLAN_TAG");
 
 export async function fetchFromApi<T>(endpoint: string): Promise<T> {
-    const response = await fetch(`${BASE_URL}/${endpoint}`, {
+    const response = await fetchWithTimeout(`${BASE_URL}/${endpoint}`, {
         headers: { Authorization: `Bearer ${API_KEY}`},
     });
 

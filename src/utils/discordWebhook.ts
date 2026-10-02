@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from "./fetchWithTimeout";
+
 async function postToWebhook(urlEnvName: string, message: string): Promise<void> {
     const webhookUrl = process.env[urlEnvName];
 
@@ -5,7 +7,7 @@ async function postToWebhook(urlEnvName: string, message: string): Promise<void>
         throw new Error(`${urlEnvName} is not defined.`);
     }
 
-    const response = await fetch(webhookUrl, {
+    const response = await fetchWithTimeout(webhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: message })
