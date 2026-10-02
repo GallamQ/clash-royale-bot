@@ -1,5 +1,6 @@
 [Unit]
 Description=Clan bot - kick list
+OnFailure=clan-bot-notify-failure@%n.service
 
 [Service]
 Type=oneshot

@@ -1,5 +1,6 @@
 [Unit]
 Description=Clan bot - weekly report
+OnFailure=clan-bot-notify-failure@%n.service
 
 [Service]
 Type=oneshot

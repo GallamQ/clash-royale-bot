@@ -1,5 +1,6 @@
 [Unit]
 Description=Clan bot - war data snapshot
+OnFailure=clan-bot-notify-failure@%n.service
 
 [Service]
 Type=oneshot

@@ -1,5 +1,6 @@
 [Unit]
 Description=Clan bot - delete expired absences
+OnFailure=clan-bot-notify-failure@%n.service
 
 [Service]
 Type=oneshot
