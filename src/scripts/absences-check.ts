@@ -8,6 +8,13 @@ import {
 } from "../db/absences";
 import { pool } from "../db/pool";
 
+function daysFromToday(offset: number): string {
+  const date = new Date();
+  date.setUTCDate(date.getUTCDate() + offset);
+
+  return date.toISOString().slice(0, 10);
+}
+
 async function main() {
   requireTestDatabase();
 
@@ -21,9 +28,9 @@ async function main() {
   await removeAbsencesByTag("#TEST1");
 
   // Three absences: expired, current, future
-  await addAbsence("#TEST1", "2026-09-01", "2026-09-05");
-  await addAbsence("#TEST1", "2026-09-20", "2026-09-22");
-  await addAbsence("#TEST1", "2026-10-15", "2026-10-20");
+  await addAbsence("#TEST1", daysFromToday(-10), daysFromToday(-5));
+  await addAbsence("#TEST1", daysFromToday(-1), daysFromToday(1));
+  await addAbsence("#TEST1", daysFromToday(5), daysFromToday(10));
 
   console.log("--- All absences (expected: 3 rows) ---");
   console.table(await getAllAbsences());
