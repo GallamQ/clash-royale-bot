@@ -42,4 +42,7 @@ async function main() {
     console.log(`${registered.length} commande(s) enregistrée(s).`);
 }
 
-main();
+main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+});
