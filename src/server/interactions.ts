@@ -87,7 +87,8 @@ app.post(
 );
 
 const port = Number(process.env.PORT ?? 3000);
+const host = "127.0.0.1";
 
-app.listen(port, () => {
-    console.log(`Serveur d'interactions à l'écoute sur le port ${port}.`);
+app.listen(port, host, () => {
+    console.log(`Serveur d'interactions à l'écoute sur ${host}:${port}.`);
 });
