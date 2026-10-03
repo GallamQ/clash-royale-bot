@@ -2,6 +2,7 @@ import { CLAN_TAG, getClanWarData } from "../api/clashApi";
 import { getAllClanTags } from "../db/members";
 import { saveWarLogs } from "../db/warLogs";
 import { hasWarEnded } from "../rules/warStatus";
+import { runJob } from "./runJob";
 
 async function main() {
     console.log("Mise à jour des résultats de la guerre en cours...");
@@ -24,7 +25,4 @@ async function main() {
     console.log("Mise à jour de la guerre en cours terminée !");
 }
 
-main().catch((err) => {
-    console.error(err);
-    process.exit(1);
-});
+runJob(main);

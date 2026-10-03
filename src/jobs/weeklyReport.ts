@@ -3,6 +3,7 @@ import { type ClanMember, getAllClanMembers } from "../db/members";
 import { type PodiumStep, buildPodium } from "../rules/podium";
 import { safeName } from "../utils/safeName";
 import { sendWebhookMessage } from "../utils/discordWebhook";
+import { runJob } from "./runJob";
 
 const ROLE_LABELS: Record<string, string> = {
   member: "Membre",
@@ -57,7 +58,4 @@ async function main() {
   console.log("Rapport envoyé !");
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+runJob(main);

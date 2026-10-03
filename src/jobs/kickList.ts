@@ -4,6 +4,7 @@ import { getAllAbsences } from "../db/absences";
 import { type KickList, buildKickList } from "../rules/kickList";
 import { safeName } from "../utils/safeName";
 import { sendWebhookMessage } from "../utils/discordWebhook";
+import { runJob } from "./runJob";
 
 function formatKickList(list: KickList): string {
     if (list.toKick.length === 0 && list.toDemote.length === 0) {
@@ -53,7 +54,4 @@ async function main() {
     console.log("Liste envoyée !");
 }
 
-main().catch((err) => {
-    console.error(err);
-    process.exit(1);
-});
+runJob(main);

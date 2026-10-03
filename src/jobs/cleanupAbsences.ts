@@ -1,6 +1,7 @@
 import { deleteExpiredAbsences, getAllAbsences } from "../db/absences";
 import { formatAbsencesList } from "../rules/absencesList";
 import { sendWebhookMessage } from "../utils/discordWebhook";
+import { runJob } from "./runJob";
 
 async function main() {
     console.log("Suppression des absences expirées des membres du clan en cours...");
@@ -17,7 +18,4 @@ async function main() {
     console.log("Liste des absents envoyée !");
 }
 
-main().catch((err) => {
-    console.error(err);
-    process.exit(1);
-});
+runJob(main);
