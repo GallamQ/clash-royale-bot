@@ -3,33 +3,33 @@ import { syncClanMembers, getAllClanMembers } from "../db/members";
 import { pool } from "../db/pool";
 
 async function main() {
-  requireTestDatabase();
+    requireTestDatabase();
 
-  console.log("--- Before ---");
-  console.table(await getAllClanMembers());
+    console.log("--- Before ---");
+    console.table(await getAllClanMembers());
 
-  await syncClanMembers([
-    { tag: "#TEST1", name: "Test Un Renamed", role: "elder" },
-    { tag: "#TEST3", name: "Test Trois", role: "member" },
-  ]);
+    await syncClanMembers([
+        { tag: "#TEST1", name: "Test Un Renamed", role: "elder" },
+        { tag: "#TEST3", name: "Test Trois", role: "member" },
+    ]);
 
-  console.log("--- After ---");
-  console.table(await getAllClanMembers());
+    console.log("--- After ---");
+    console.table(await getAllClanMembers());
 
-  const absences = await pool.query("SELECT * FROM absences WHERE tag LIKE '#TEST%'");
-  console.log("Remaining test absences:", absences.rows);
+    const absences = await pool.query("SELECT * FROM absences WHERE tag LIKE '#TEST%'");
+    console.log("Remaining test absences:", absences.rows);
 
-  try {
-    await syncClanMembers([]);
-    console.log("PROBLEM: an empty list was accepted");
-  } catch (error) {
-    console.log("Empty list rejected as expected:", (error as Error).message);
-  }
+    try {
+        await syncClanMembers([]);
+        console.log("PROBLEM: an empty list was accepted");
+    } catch (error) {
+        console.log("Empty list rejected as expected:", (error as Error).message);
+    }
 
-  await pool.end();
+    await pool.end();
 }
 
 main().catch((err) => {
-  console.error(err);
-  process.exit(1);
+    console.error(err);
+    process.exit(1);
 });

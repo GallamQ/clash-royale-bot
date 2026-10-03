@@ -8,6 +8,8 @@ export function requireTestDatabase(): void {
     const databaseName = new URL(databaseUrl).pathname.slice(1);
 
     if (!databaseName.endsWith("_test")) {
-        throw new Error(`Refusing to run: this check writes data, but DATABASE_URL points to "${databaseName}" instead of a database ending with "_test".`);
+        throw new Error(
+            `Refusing to run: this check writes data, but DATABASE_URL points to "${databaseName}" instead of a database ending with "_test".`,
+        );
     }
 }

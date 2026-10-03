@@ -8,9 +8,9 @@ async function main() {
     requireTestDatabase();
 
     await pool.query(
-    `INSERT INTO clan_members (tag, name, role, join_date)
+        `INSERT INTO clan_members (tag, name, role, join_date)
     VALUES ('#TEST1', 'Test Un', 'member', CURRENT_DATE)
-    ON CONFLICT (tag) DO NOTHING;`
+    ON CONFLICT (tag) DO NOTHING;`,
     );
 
     const today = new Date().toISOString().slice(0, 10);
@@ -22,7 +22,9 @@ async function main() {
     console.log(await handleAbsence({ tag: member.tag }, today));
     console.log("Après ajout :", await getAllAbsences());
 
-    console.log(await handleAbsence({ tag: member.tag, debut: "05-10-2026", fin: "11-10-2026" }, today));
+    console.log(
+        await handleAbsence({ tag: member.tag, debut: "05-10-2026", fin: "11-10-2026" }, today),
+    );
 
     console.log(await handleAbsence({ tag: member.tag, retirer: true }, today));
     console.log("Après retrait :", await getAllAbsences());

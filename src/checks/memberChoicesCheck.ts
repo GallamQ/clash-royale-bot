@@ -21,6 +21,9 @@ console.log(buildMemberChoices(members, "zzz"));
 
 console.log("\n--- Plus de 25 membres ---");
 const many = Array.from({ length: 40 }, (_, i) => ({
-    tag: `#T${i}`, name: `Joueur${i}`, role: "member", join_date: "2026-09-22",
+    tag: `#T${i}`,
+    name: `Joueur${i}`,
+    role: "member",
+    join_date: "2026-09-22",
 }));
 console.log(buildMemberChoices(many, "").length);

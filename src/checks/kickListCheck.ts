@@ -17,7 +17,7 @@ const roster = [
     member("#D", "David", "coLeader"),
     member("#E", "Émilie", "leader"),
     member("#F", "Fred", "member"),
-    member("#G", "Billy", "elder")
+    member("#G", "Billy", "elder"),
 ];
 const membersByTag = new Map(roster.map((m) => [m.tag, m]));
 
@@ -31,10 +31,16 @@ const warLogs = [
     log("#E", 0),
     log("#F", 0),
     log("#X", 0),
-    log("#G", 100)
+    log("#G", 100),
 ];
 
 const result = buildKickList(warLogs, membersByTag, absentTags);
 
-console.log("À exclure :", result.toKick.map((m) => m.name));
-console.log("À rétrograder :", result.toDemote.map((m) => m.name));
+console.log(
+    "À exclure :",
+    result.toKick.map((m) => m.name),
+);
+console.log(
+    "À rétrograder :",
+    result.toDemote.map((m) => m.name),
+);

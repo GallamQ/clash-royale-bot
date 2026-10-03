@@ -11,24 +11,25 @@ export interface AbsenceWithName extends Absence {
 }
 
 export async function addAbsence(tag: string, startDate: string, endDate: string): Promise<void> {
-    await pool.query(
-        `INSERT INTO absences (tag, start_date, end_date) VALUES ($1, $2, $3);`,
-        [tag, startDate, endDate]
-    );
+    await pool.query(`INSERT INTO absences (tag, start_date, end_date) VALUES ($1, $2, $3);`, [
+        tag,
+        startDate,
+        endDate,
+    ]);
 }
 
 export async function removeAbsencesByTag(tag: string): Promise<void> {
     await pool.query(
         `DELETE FROM absences
         WHERE tag = $1;`,
-        [tag]
+        [tag],
     );
 }
 
 export async function deleteExpiredAbsences(): Promise<void> {
     await pool.query(
         `DELETE FROM absences
-        WHERE end_date < CURRENT_DATE;`
+        WHERE end_date < CURRENT_DATE;`,
     );
 }
 
@@ -37,9 +38,9 @@ export async function getAllAbsences(): Promise<AbsenceWithName[]> {
         `SELECT a.tag, a.start_date, a.end_date, cm.name
         FROM absences a
         JOIN clan_members cm ON a.tag = cm.tag
-        ORDER BY a.start_date, cm.name;`
+        ORDER BY a.start_date, cm.name;`,
     );
-    
+
     return result.rows;
 }
 
@@ -49,8 +50,8 @@ export async function getActiveAbsences(): Promise<AbsenceWithName[]> {
         FROM absences a
         JOIN clan_members cm ON a.tag = cm.tag
         WHERE a.start_date <= CURRENT_DATE AND a.end_date >= CURRENT_DATE
-        ORDER BY cm.name;`
+        ORDER BY cm.name;`,
     );
-    
+
     return result.rows;
 }

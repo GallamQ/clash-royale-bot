@@ -18,7 +18,7 @@ export const CLAN_TAG = requireEnv("CLAN_TAG");
 
 export async function fetchFromApi<T>(endpoint: string): Promise<T> {
     const response = await fetchWithTimeout(`${BASE_URL}/${endpoint}`, {
-        headers: { Authorization: `Bearer ${API_KEY}`},
+        headers: { Authorization: `Bearer ${API_KEY}` },
     });
 
     if (!response.ok) {
@@ -85,6 +85,6 @@ export async function getClanWarData(): Promise<ClanWarData> {
         state: data.state,
         clanFame: data.clan.fame,
         periodLogs: data.periodLogs,
-        periodIndex: data.periodIndex
+        periodIndex: data.periodIndex,
     };
 }

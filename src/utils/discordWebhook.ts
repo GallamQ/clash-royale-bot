@@ -10,11 +10,13 @@ async function postToWebhook(urlEnvName: string, message: string): Promise<void>
     const response = await fetchWithTimeout(webhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: message })
+        body: JSON.stringify({ content: message }),
     });
 
     if (!response.ok) {
-        throw new Error(`Discord webhook request failed: ${response.status} ${response.statusText}`);
+        throw new Error(
+            `Discord webhook request failed: ${response.status} ${response.statusText}`,
+        );
     }
 }
 

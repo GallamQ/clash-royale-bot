@@ -6,10 +6,10 @@ import { formatAbsencesList } from "../rules/absencesList";
 import { safeName } from "../utils/safeName";
 
 interface AbsenceOptions {
-    tag: string,
-    debut?: string,
-    fin?: string,
-    retirer?: boolean
+    tag: string;
+    debut?: string;
+    fin?: string;
+    retirer?: boolean;
 }
 
 async function withAbsencesList(confirmation: string): Promise<string> {
@@ -29,18 +29,21 @@ export async function handleAbsence(options: AbsenceOptions, today: string): Pro
 
         if (options.retirer) {
             await removeAbsencesByTag(options.tag);
-            return await withAbsencesList(`Toutes les absences du joueur \`${safeName(member.name)}\` ont été supprimées !`);
+            return await withAbsencesList(
+                `Toutes les absences du joueur \`${safeName(member.name)}\` ont été supprimées !`,
+            );
         }
 
         const dates = resolveAbsenceDates(options.debut, options.fin, today);
 
-        await addAbsence(options.tag, dates.startDate ,dates.endDate);
+        await addAbsence(options.tag, dates.startDate, dates.endDate);
 
         const frenchStartDate = toFrenchDate(dates.startDate);
         const frenchEndDate = toFrenchDate(dates.endDate);
 
-        return await withAbsencesList(`Le joueur \`${safeName(member.name)}\` a été marqué absent du ${frenchStartDate} au ${frenchEndDate}.`);
-        
+        return await withAbsencesList(
+            `Le joueur \`${safeName(member.name)}\` a été marqué absent du ${frenchStartDate} au ${frenchEndDate}.`,
+        );
     } catch (error) {
         return `Une erreur est survenue : ${(error as Error).message}`;
     }

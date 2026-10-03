@@ -1,5 +1,5 @@
 export interface ApiMember {
-  tag: string;
-  name: string;
-  role: string;
+    tag: string;
+    name: string;
+    role: string;
 }

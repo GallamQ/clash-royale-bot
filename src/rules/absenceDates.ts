@@ -28,8 +28,8 @@ function toIso(date: Date): string {
 export function resolveAbsenceDates(
     debut: string | undefined,
     fin: string | undefined,
-    today: string
-): { startDate: string; endDate: string} {
+    today: string,
+): { startDate: string; endDate: string } {
     if (!debut || !fin) {
         const [year, month, day] = today.split("-").map(Number);
         const current = new Date(Date.UTC(year, month - 1, day));

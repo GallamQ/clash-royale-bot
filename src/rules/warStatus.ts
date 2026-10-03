@@ -13,6 +13,6 @@ export function hasWarEnded(
     const currentWarDays = periodLogs.filter((day) => day.periodIndex >= warStartIndex);
 
     return currentWarDays.some((day) =>
-        day.items.some((item) => item.clan.tag === clanTag && item.progressEndOfDay >= 10000)
+        day.items.some((item) => item.clan.tag === clanTag && item.progressEndOfDay >= 10000),
     );
 }

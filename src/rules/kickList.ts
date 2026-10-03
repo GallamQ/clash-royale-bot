@@ -9,7 +9,7 @@ export type KickList = {
 export function buildKickList(
     warLogs: WarLogRow[],
     membersByTag: Map<string, ClanMember>,
-    absentTags: Set<string>
+    absentTags: Set<string>,
 ): KickList {
     const toKick: ClanMember[] = [];
     const toDemote: ClanMember[] = [];

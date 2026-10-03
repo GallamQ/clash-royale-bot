@@ -7,7 +7,7 @@ async function main() {
     console.log("Suppression des absences expirées des membres du clan en cours...");
 
     await deleteExpiredAbsences();
-    
+
     console.log("Suppression des absences expirées terminée !");
 
     const updatedAbsencesList = await getAllAbsences();

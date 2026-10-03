@@ -12,7 +12,12 @@ export interface WarLogRow extends WarLogEntry {
     tag: string | null;
 }
 
-export async function saveWarLogs(warId: string, warDate: string, participants: WarLogEntry[], knownTags: Set<string>): Promise<void> {
+export async function saveWarLogs(
+    warId: string,
+    warDate: string,
+    participants: WarLogEntry[],
+    knownTags: Set<string>,
+): Promise<void> {
     const client = await pool.connect();
 
     try {
@@ -22,22 +27,20 @@ export async function saveWarLogs(warId: string, warDate: string, participants: 
             if (!knownTags.has(participant.tag)) {
                 continue;
             }
-            
+
             await client.query(
                 `INSERT INTO war_logs (war_id, war_date, tag, fame)
                 VALUES ($1, $2, $3, $4)
                 ON CONFLICT (war_id, tag) DO UPDATE
                 SET fame = EXCLUDED.fame, war_date = EXCLUDED.war_date`,
-                [warId, warDate, participant.tag, participant.fame]
+                [warId, warDate, participant.tag, participant.fame],
             );
         }
 
         await client.query("COMMIT");
-
     } catch (error) {
         await client.query("ROLLBACK");
         throw error;
-
     } finally {
         client.release();
     }
@@ -47,7 +50,7 @@ export async function getLatestWarLogs(): Promise<WarLogRow[]> {
     const latestWarId = await pool.query<{ war_id: string }>(
         `SELECT war_id
         FROM war_logs
-        ORDER BY war_date DESC limit 1;`
+        ORDER BY war_date DESC limit 1;`,
     );
 
     if (!latestWarId.rows[0]) return [];
@@ -58,7 +61,7 @@ export async function getLatestWarLogs(): Promise<WarLogRow[]> {
         FROM war_logs
         WHERE war_id = $1
         ORDER BY fame DESC;`,
-        [warId]
+        [warId],
     );
 
     return result.rows;
@@ -69,7 +72,7 @@ export async function getWarLogsByWarId(warId: string): Promise<WarLogEntry[]> {
         `SELECT tag, fame
         FROM war_logs
         WHERE war_id = $1;`,
-        [warId]
+        [warId],
     );
 
     return result.rows;

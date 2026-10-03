@@ -36,7 +36,7 @@ async function main() {
     await post({ type: 1 }, true);
     await post({
         type: 2,
-        data:  {name: "absence-test", options: [{ name: "tag", type: 3, value: "#ABC123" }] }
+        data: { name: "absence-test", options: [{ name: "tag", type: 3, value: "#ABC123" }] },
     });
     await post({ type: 99 });
 
