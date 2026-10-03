@@ -1,5 +1,6 @@
 import { getClanMembers } from "../api/clashApi";
 import { syncClanMembers } from "../db/members";
+import { runJob } from "./runJob";
 
 async function main() {
   console.log("Mise à jour quotidienne des membres du clan en cours...");
@@ -11,7 +12,4 @@ async function main() {
   console.log("Mise à jour des membres terminée !");
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+runJob(main);
