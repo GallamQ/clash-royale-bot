@@ -36,10 +36,10 @@ const warLogs = [
 const result = buildKickList(warLogs, membersByTag, absentTags);
 
 console.log(
-    "À exclure :",
+    "To kick:",
     result.toKick.map((m) => m.name),
 );
 console.log(
-    "À rétrograder :",
+    "To demote:",
     result.toDemote.map((m) => m.name),
 );

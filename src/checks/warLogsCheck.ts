@@ -28,7 +28,7 @@ async function main() {
     await saveWarLogs("TEST-WAR-2", "2026-09-18", [{ tag: "#TEST1", fame: 2500 }], knownTags);
 
     console.log(
-        "--- getWarLogsByWarId('TEST-WAR-2') après mise à jour (expected: 1 ligne, fame 2500) ---",
+        "--- getWarLogsByWarId('TEST-WAR-2') après mise à jour (expected: 1 row, fame 2500) ---",
     );
     console.table(await getWarLogsByWarId("TEST-WAR-2"));
 

@@ -7,19 +7,19 @@ const members = [
     { tag: "#DDD444", name: "خير ان شاء الله", role: "member", join_date: "2026-09-22" },
 ];
 
-console.log("--- Champ vide ---");
+console.log("--- Empty field ---");
 console.log(buildMemberChoices(members, ""));
 
-console.log("\n--- 'que' (nom, casse ignorée) ---");
+console.log("\n--- 'que' (name, case ignored) ---");
 console.log(buildMemberChoices(members, "que"));
 
-console.log("\n--- 'ccc' (recherche par tag) ---");
+console.log("\n--- 'ccc' (search by tag) ---");
 console.log(buildMemberChoices(members, "ccc"));
 
-console.log("\n--- 'zzz' (aucun résultat) ---");
+console.log("\n--- 'zzz' (no result) ---");
 console.log(buildMemberChoices(members, "zzz"));
 
-console.log("\n--- Plus de 25 membres ---");
+console.log("\n--- More than 25 members ---");
 const many = Array.from({ length: 40 }, (_, i) => ({
     tag: `#T${i}`,
     name: `Joueur${i}`,

@@ -1,16 +1,16 @@
 import { formatAbsencesList } from "../messages/absencesList";
 
-console.log("--- Cas 1 : liste vide ---");
+console.log("--- Case 1: empty list ---");
 console.log(formatAbsencesList([]));
 
-console.log("\n--- Cas 2 : une absence ---");
+console.log("\n--- Case 2: one absence ---");
 console.log(
     formatAbsencesList([
         { tag: "#AAA", name: "Quentin", start_date: "2026-09-28", end_date: "2026-10-04" },
     ]),
 );
 
-console.log("\n--- Cas 3 : pseudo arabe ---");
+console.log("\n--- Case 3: Arabic name ---");
 console.log(
     formatAbsencesList([
         { tag: "#BBB", name: "خير ان شاء الله", start_date: "2026-10-01", end_date: "2026-10-07" },

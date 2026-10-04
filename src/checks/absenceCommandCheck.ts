@@ -20,19 +20,19 @@ async function main() {
         throw new Error("Test member #TEST1 not found.");
     }
 
-    console.log("Membre de test :", member.name, member.tag);
+    console.log("Test member:", member.name, member.tag);
 
-    console.log("Absences avant :", await getAllAbsences());
+    console.log("Absences before:", await getAllAbsences());
 
     console.log(await handleAbsence({ tag: member.tag }, today));
-    console.log("Après ajout :", await getAllAbsences());
+    console.log("After adding:", await getAllAbsences());
 
     console.log(
         await handleAbsence({ tag: member.tag, debut: "05-10-2026", fin: "11-10-2026" }, today),
     );
 
     console.log(await handleAbsence({ tag: member.tag, retirer: true }, today));
-    console.log("Après retrait :", await getAllAbsences());
+    console.log("After removal:", await getAllAbsences());
 
     await pool.query("DELETE FROM clan_members WHERE tag = '#TEST1'");
     await pool.end();
