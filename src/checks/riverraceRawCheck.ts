@@ -1,8 +1,8 @@
-import { CLAN_TAG, fetchFromApi } from "../api/clashApi";
+import { CLAN_ENDPOINT, fetchFromApi } from "../api/clashApi";
 import { writeFileSync } from "fs";
 
 async function main() {
-    const data = await fetchFromApi<unknown>(`clans/%23${CLAN_TAG}/currentriverrace`);
+    const data = await fetchFromApi<unknown>(`${CLAN_ENDPOINT}/currentriverrace`);
 
     writeFileSync("riverrace-raw.json", JSON.stringify(data, null, 2));
     console.log("Written to riverrace-raw.json");

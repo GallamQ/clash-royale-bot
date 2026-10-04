@@ -1,5 +1,6 @@
 import { fetchWithTimeout } from "../utils/fetchWithTimeout";
 import type { ApiMember, ClanWarData, PeriodLog, WarParticipant } from "../types/api";
+import { getClanEndpoint, normalizeClanTag } from "../utils/clanTag";
 
 const BASE_URL = "https://api.clashroyale.com/v1";
 
@@ -14,7 +15,8 @@ function requireEnv(name: string): string {
 }
 
 const API_KEY = requireEnv("API_KEY");
-export const CLAN_TAG = requireEnv("CLAN_TAG");
+export const CLAN_TAG = normalizeClanTag(requireEnv("CLAN_TAG"));
+export const CLAN_ENDPOINT = getClanEndpoint(CLAN_TAG);
 
 export async function fetchFromApi<T>(endpoint: string): Promise<T> {
     const response = await fetchWithTimeout(`${BASE_URL}/${endpoint}`, {
@@ -33,7 +35,7 @@ interface ClanResponse {
 }
 
 export async function getClanMembers(): Promise<ApiMember[]> {
-    const data = await fetchFromApi<ClanResponse>(`clans/%23${CLAN_TAG}`);
+    const data = await fetchFromApi<ClanResponse>(CLAN_ENDPOINT);
 
     return data.memberList;
 }
@@ -50,7 +52,7 @@ interface RiverRaceResponse {
 }
 
 export async function getClanWarData(): Promise<ClanWarData> {
-    const data = await fetchFromApi<RiverRaceResponse>(`clans/%23${CLAN_TAG}/currentriverrace`);
+    const data = await fetchFromApi<RiverRaceResponse>(`${CLAN_ENDPOINT}/currentriverrace`);
 
     return {
         participants: data.clan.participants,
