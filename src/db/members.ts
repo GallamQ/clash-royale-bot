@@ -1,5 +1,5 @@
 import { pool } from "./pool";
-import type { ApiMember } from "../api/types";
+import type { ApiMember } from "../types/api";
 
 export interface ClanMember {
     tag: string;

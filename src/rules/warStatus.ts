@@ -1,4 +1,4 @@
-import type { PeriodLog } from "../api/clashApi";
+import type { PeriodLog } from "../types/api";
 
 const WAR_WEEK_LENGTH = 7;
 const TRAINING_DAYS = 3;

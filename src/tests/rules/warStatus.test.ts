@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import type { PeriodLog } from "../../api/clashApi";
+import type { PeriodLog } from "../../types/api";
 import { getWarStartIndex, hasWarEnded } from "../../rules/warStatus";
 
 const OUR_CLAN = "#OURCLAN";
