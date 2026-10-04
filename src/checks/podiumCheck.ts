@@ -10,7 +10,6 @@ function log(tag: string, fame: number): WarLogRow {
     return { id: 0, war_id: "test", war_date: "2026-09-21", tag, fame };
 }
 
-// Fred (#F) est volontairement absent du roster
 const roster = [
     member("#A", "Alice"),
     member("#B", "Bob"),

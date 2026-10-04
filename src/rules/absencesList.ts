@@ -10,8 +10,8 @@ export function formatAbsencesList(absences: AbsenceWithName[]): string {
     const messageStart = "📋 **Liste des absents actuels :**\n\n";
     let absencesListMessage = "";
 
-    for (let i = 0; i < absences.length; i++) {
-        absencesListMessage += `• **${safeName(absences[i].name)}** - Du ${toFrenchDate(absences[i].start_date)} au ${toFrenchDate(absences[i].end_date)}\n`;
+    for (const absence of absences) {
+        absencesListMessage += `• **${safeName(absence.name)}** - Du ${toFrenchDate(absence.start_date)} au ${toFrenchDate(absence.end_date)}\n`;
     }
 
     const message = messageStart + absencesListMessage;

@@ -24,10 +24,8 @@ async function main() {
     ON CONFLICT (tag) DO NOTHING;`,
     );
 
-    // Start from a clean state so the test can be re-run at any time
     await removeAbsencesByTag("#TEST1");
 
-    // Three absences: expired, current, future
     await addAbsence("#TEST1", daysFromToday(-10), daysFromToday(-5));
     await addAbsence("#TEST1", daysFromToday(-1), daysFromToday(1));
     await addAbsence("#TEST1", daysFromToday(5), daysFromToday(10));
@@ -43,7 +41,6 @@ async function main() {
     console.log("--- All absences after cleanup (expected: 2 rows) ---");
     console.table(await getAllAbsences());
 
-    // Leave nothing behind
     await removeAbsencesByTag("#TEST1");
     await pool.query("DELETE FROM clan_members WHERE tag = '#TEST1'");
     await pool.end();
