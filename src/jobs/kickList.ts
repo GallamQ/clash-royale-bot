@@ -10,7 +10,7 @@ async function main() {
     const warLogs = await getLatestWarLogs();
 
     if (!warLogs.length) {
-        console.log("Aucune donnée de guerre trouvée !");
+        console.log("No war data found.");
         return;
     }
 
@@ -23,7 +23,7 @@ async function main() {
 
     await sendWebhookMessage(message);
 
-    console.log("Liste envoyée !");
+    console.log("Kick list sent.");
 }
 
 runJob(main);

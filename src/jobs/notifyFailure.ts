@@ -39,7 +39,7 @@ async function main() {
 
     await sendAlertMessage(message);
 
-    console.log("Alerte envoyée !");
+    console.log("Failure alert sent.");
 }
 
 main().catch((err) => {

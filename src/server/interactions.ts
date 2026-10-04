@@ -7,7 +7,7 @@ import { buildMemberChoices } from "../rules/memberChoices";
 const publicKey = process.env.DISCORD_PUBLIC_KEY;
 
 if (!publicKey) {
-    throw new Error("DISCORD_PUBLIC_KEY manquante dans l'environnement !");
+    throw new Error("DISCORD_PUBLIC_KEY is not defined.");
 }
 
 const app = express();
@@ -85,5 +85,5 @@ const port = Number(process.env.PORT ?? 3000);
 const host = "127.0.0.1";
 
 app.listen(port, host, () => {
-    console.log(`Serveur d'interactions à l'écoute sur ${host}:${port}.`);
+    console.log(`Interactions server listening on ${host}:${port}.`);
 });

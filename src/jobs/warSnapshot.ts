@@ -5,14 +5,14 @@ import { getWarStartIndex, hasWarEnded } from "../rules/warStatus";
 import { runJob } from "./runJob";
 
 async function main() {
-    console.log("Mise à jour des résultats de la guerre en cours...");
+    console.log("Updating current war results...");
 
     const warData = await getClanWarData();
     const clanTag = `#${CLAN_TAG}`;
     const warId = getWarStartIndex(warData.periodIndex);
 
     if (hasWarEnded(warData.periodLogs, clanTag, warId, warData.periodType)) {
-        console.log("Guerre terminée !");
+        console.log("War is over, nothing to update.");
         return;
     }
 
@@ -22,7 +22,7 @@ async function main() {
 
     await saveWarLogs(warId.toString(), warDate, participants, knownTags);
 
-    console.log("Mise à jour de la guerre en cours terminée !");
+    console.log("Current war results updated.");
 }
 
 runJob(main);

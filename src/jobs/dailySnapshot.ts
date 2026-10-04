@@ -3,13 +3,13 @@ import { syncClanMembers } from "../db/members";
 import { runJob } from "./runJob";
 
 async function main() {
-    console.log("Mise à jour quotidienne des membres du clan en cours...");
+    console.log("Updating clan members...");
 
     const members = await getClanMembers();
 
     await syncClanMembers(members);
 
-    console.log("Mise à jour des membres terminée !");
+    console.log("Clan members updated.");
 }
 
 runJob(main);

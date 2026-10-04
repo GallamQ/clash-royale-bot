@@ -3,7 +3,7 @@ const guildId = process.env.DISCORD_GUILD_ID;
 const token = process.env.DISCORD_BOT_TOKEN;
 
 if (!appId || !guildId || !token) {
-    throw new Error("DISCORD_APP_ID, DISCORD_GUILD_ID et DISCORD_BOT_TOKEN sont requis");
+    throw new Error("DISCORD_APP_ID, DISCORD_GUILD_ID and DISCORD_BOT_TOKEN are required.");
 }
 
 const commands = [
@@ -60,7 +60,7 @@ async function main() {
     }
 
     const registered = (await response.json()) as unknown[];
-    console.log(`${registered.length} commande(s) enregistrée(s).`);
+    console.log(`${registered.length} command(s) registered.`);
 }
 
 main().catch((err) => {

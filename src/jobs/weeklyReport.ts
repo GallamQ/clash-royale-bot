@@ -6,12 +6,12 @@ import { runJob } from "./runJob";
 import { formatPodium } from "../messages/podium";
 
 async function main() {
-    console.log("Génération du rapport hebdomadaire en cours...");
+    console.log("Generating weekly report...");
 
     const warLogs = await getLatestWarLogs();
 
     if (!warLogs.length) {
-        console.log("Aucune donnée de guerre trouvée !");
+        console.log("No war data found.");
         return;
     }
 
@@ -22,7 +22,7 @@ async function main() {
 
     await sendWebhookMessage(message);
 
-    console.log("Rapport envoyé !");
+    console.log("Weekly report sent.");
 }
 
 runJob(main);

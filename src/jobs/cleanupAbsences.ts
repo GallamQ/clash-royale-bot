@@ -4,18 +4,18 @@ import { sendWebhookMessage } from "../utils/discordWebhook";
 import { runJob } from "./runJob";
 
 async function main() {
-    console.log("Suppression des absences expirées des membres du clan en cours...");
+    console.log("Deleting expired absences...");
 
     await deleteExpiredAbsences();
 
-    console.log("Suppression des absences expirées terminée !");
+    console.log("Expired absences deleted.");
 
     const updatedAbsencesList = await getAllAbsences();
     const message = formatAbsencesList(updatedAbsencesList);
 
     await sendWebhookMessage(message);
 
-    console.log("Liste des absents envoyée !");
+    console.log("Absences list sent.");
 }
 
 runJob(main);
