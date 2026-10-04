@@ -1,8 +1,10 @@
 node_modules
 dist
 .env
+.env.*
 AVANCEMENT.md
 PLAN-MIGRATION.md
 README-SUIVI.md
 REGLES-CLAN.md
 riverrace-raw.json
+AUDIT-*.md
