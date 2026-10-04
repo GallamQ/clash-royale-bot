@@ -1,5 +1,5 @@
 import { fetchWithTimeout } from "../utils/fetchWithTimeout";
-import { ApiMember } from "./types";
+import type { ApiMember } from "./types";
 
 const BASE_URL = "https://api.clashroyale.com/v1";
 

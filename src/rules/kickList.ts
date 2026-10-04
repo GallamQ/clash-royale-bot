@@ -1,5 +1,5 @@
-import { ClanMember } from "../db/members";
-import { WarLogRow } from "../db/warLogs";
+import type { ClanMember } from "../db/members";
+import type { WarLogRow } from "../db/warLogs";
 
 export type KickList = {
     toKick: ClanMember[];

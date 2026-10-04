@@ -1,4 +1,4 @@
-import { PeriodLog } from "../api/clashApi";
+import type { PeriodLog } from "../api/clashApi";
 
 export function hasWarEnded(
     periodLogs: PeriodLog[],
