@@ -1,8 +1,10 @@
+import { UserError } from "../utils/userError";
+
 function parseFrenchDate(text: string): Date {
     const match = /^(\d{2})-(\d{2})-(\d{4})$/.exec(text);
 
     if (!match) {
-        throw new Error(`Date invalide « ${text} » : utilise le format JJ-MM-AAAA.`);
+        throw new UserError(`Date invalide « ${text} » : utilise le format JJ-MM-AAAA.`);
     }
 
     const day = Number(match[1]);
@@ -15,7 +17,7 @@ function parseFrenchDate(text: string): Date {
         date.getUTCMonth() !== month - 1 ||
         date.getUTCDate() !== day
     ) {
-        throw new Error(`La date ${text} n'existe pas.`);
+        throw new UserError(`La date ${text} n'existe pas.`);
     }
 
     return date;
@@ -49,7 +51,7 @@ export function resolveAbsenceDates(
     const end = parseFrenchDate(fin);
 
     if (end < start) {
-        throw new Error("La date de fin est antérieure à la date de début.");
+        throw new UserError("La date de fin est antérieure à la date de début.");
     }
 
     return { startDate: toIso(start), endDate: toIso(end) };

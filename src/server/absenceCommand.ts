@@ -4,6 +4,7 @@ import { resolveAbsenceDates } from "../rules/absenceDates";
 import { toFrenchDate } from "../utils/frenchDate";
 import { formatAbsencesList } from "../messages/absencesList";
 import { safeName } from "../utils/safeName";
+import { UserError } from "../utils/userError";
 
 interface AbsenceOptions {
     tag: string;
@@ -45,6 +46,12 @@ export async function handleAbsence(options: AbsenceOptions, today: string): Pro
             `Le joueur \`${safeName(member.name)}\` a été marqué absent du ${frenchStartDate} au ${frenchEndDate}.`,
         );
     } catch (error) {
-        return `Une erreur est survenue : ${(error as Error).message}`;
+        if (error instanceof UserError) {
+            return `Une erreur est survenue : ${error.message}`;
+        }
+
+        console.error("Absence command failed:", error);
+
+        return "Une erreur technique est survenue, réessaie plus tard.";
     }
 }
