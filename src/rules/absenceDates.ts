@@ -32,7 +32,7 @@ export function resolveAbsenceDates(
     fin: string | undefined,
     today: string,
 ): { startDate: string; endDate: string } {
-    if (!debut || !fin) {
+    if (!debut && !fin) {
         const [year, month, day] = today.split("-").map(Number);
         const current = new Date(Date.UTC(year, month - 1, day));
         const daysSinceMonday = (current.getUTCDay() + 6) % 7;
@@ -45,6 +45,12 @@ export function resolveAbsenceDates(
         sunday.setUTCDate(monday.getUTCDate() + 6);
 
         return { startDate: toIso(monday), endDate: toIso(sunday) };
+    }
+
+    if (!debut || !fin) {
+        throw new UserError(
+            "Renseigne les deux dates (début et fin), ou aucune pour la semaine en cours.",
+        );
     }
 
     const start = parseFrenchDate(debut);

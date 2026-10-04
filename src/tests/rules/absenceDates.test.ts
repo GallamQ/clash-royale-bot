@@ -76,3 +76,13 @@ describe("resolveAbsenceDates with explicit dates", () => {
         );
     });
 });
+
+describe("resolveAbsenceDates with only one date", () => {
+    it("rejects a start date without an end date", () => {
+        assert.throws(() => resolveAbsenceDates("05-10-2026", undefined, "2026-09-29"), UserError);
+    });
+
+    it("rejects an end date without a start date", () => {
+        assert.throws(() => resolveAbsenceDates(undefined, "11-10-2026", "2026-09-29"), UserError);
+    });
+});
