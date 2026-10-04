@@ -5,11 +5,12 @@ export interface WarLogEntry {
     fame: number;
 }
 
-export interface WarLogRow extends WarLogEntry {
+export interface WarLogRow {
     id: number;
     war_id: string;
     war_date: string;
     tag: string | null;
+    fame: number;
 }
 
 export async function saveWarLogs(

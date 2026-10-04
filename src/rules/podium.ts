@@ -11,17 +11,23 @@ export function buildPodium(
     warLogs: WarLogRow[],
     membersByTag: Map<string, ClanMember>,
 ): PodiumStep[] {
-    const eligible = warLogs.filter((log) => log.fame > 0 && membersByTag.has(log.tag));
+    const eligible = warLogs.flatMap((log) => {
+        if (log.tag === null || log.fame <= 0) {
+            return [];
+        }
 
-    const topScores = Array.from(new Set(eligible.map((log) => log.fame)))
+        const member = membersByTag.get(log.tag);
+
+        return member ? [{ member, fame: log.fame }] : [];
+    });
+
+    const topScores = Array.from(new Set(eligible.map((entry) => entry.fame)))
         .sort((a, b) => b - a)
         .slice(0, 3);
 
     return topScores.map((score, index) => ({
         place: (index + 1) as 1 | 2 | 3,
         fame: score,
-        players: eligible
-            .filter((log) => log.fame === score)
-            .map((log) => membersByTag.get(log.tag)),
+        players: eligible.filter((entry) => entry.fame === score).map((entry) => entry.member),
     }));
 }

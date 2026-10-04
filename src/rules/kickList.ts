@@ -15,6 +15,10 @@ export function buildKickList(
     const toDemote: ClanMember[] = [];
 
     for (const log of warLogs) {
+        if (log.tag === null) {
+            continue;
+        }
+
         const member = membersByTag.get(log.tag);
 
         if (!member || absentTags.has(log.tag)) {

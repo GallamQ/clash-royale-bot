@@ -15,6 +15,11 @@ async function main() {
 
     const today = new Date().toISOString().slice(0, 10);
     const member = await getClanMemberByTag("#TEST1");
+
+    if (!member) {
+        throw new Error("Test member #TEST1 not found.");
+    }
+
     console.log("Membre de test :", member.name, member.tag);
 
     console.log("Absences avant :", await getAllAbsences());
