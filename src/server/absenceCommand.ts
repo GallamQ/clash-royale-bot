@@ -2,7 +2,7 @@ import { addAbsence, getActiveAbsences, removeAbsencesByTag } from "../db/absenc
 import { getClanMemberByTag } from "../db/members";
 import { resolveAbsenceDates } from "../rules/absenceDates";
 import { toFrenchDate } from "../utils/frenchDate";
-import { formatAbsencesList } from "../rules/absencesList";
+import { formatAbsencesList } from "../messages/absencesList";
 import { safeName } from "../utils/safeName";
 
 interface AbsenceOptions {

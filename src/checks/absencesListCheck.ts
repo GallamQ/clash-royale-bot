@@ -1,4 +1,4 @@
-import { formatAbsencesList } from "../rules/absencesList";
+import { formatAbsencesList } from "../messages/absencesList";
 
 console.log("--- Cas 1 : liste vide ---");
 console.log(formatAbsencesList([]));

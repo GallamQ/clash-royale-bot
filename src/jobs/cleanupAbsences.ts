@@ -1,5 +1,5 @@
 import { deleteExpiredAbsences, getAllAbsences } from "../db/absences";
-import { formatAbsencesList } from "../rules/absencesList";
+import { formatAbsencesList } from "../messages/absencesList";
 import { sendWebhookMessage } from "../utils/discordWebhook";
 import { runJob } from "./runJob";
 
