@@ -16,8 +16,8 @@ async function main() {
     }
 
     const clanMembers = await getAllClanMembers();
-    const clanMembersMap = new Map(clanMembers.map((member) => [member.tag, member]));
-    const podium = buildPodium(warLogs, clanMembersMap);
+    const membersByTag = new Map(clanMembers.map((member) => [member.tag, member]));
+    const podium = buildPodium(warLogs, membersByTag);
     const message = formatPodium(warLogs[0].war_id, podium);
 
     await sendWebhookMessage(message);

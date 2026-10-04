@@ -9,9 +9,9 @@ async function main() {
 
     const warData = await getClanWarData();
     const clanTag = `#${CLAN_TAG}`;
-    const warId = getWarStartIndex(warData.periodIndex);
+    const warStartIndex = getWarStartIndex(warData.periodIndex);
 
-    if (hasWarEnded(warData.periodLogs, clanTag, warId, warData.periodType)) {
+    if (hasWarEnded(warData.periodLogs, clanTag, warStartIndex, warData.periodType)) {
         console.log("War is over, nothing to update.");
         return;
     }
@@ -20,7 +20,7 @@ async function main() {
     const participants = warData.participants;
     const knownTags = await getAllClanTags();
 
-    await saveWarLogs(warId.toString(), warDate, participants, knownTags);
+    await saveWarLogs(warStartIndex.toString(), warDate, participants, knownTags);
 
     console.log("Current war results updated.");
 }
