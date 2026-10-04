@@ -1,6 +1,5 @@
 import { buildKickList } from "../rules/kickList";
-import type { ClanMember } from "../db/members";
-import type { WarLogRow } from "../db/warLogs";
+import type { ClanMember, WarLogRow } from "../types/db";
 
 function member(tag: string, name: string, role: string): ClanMember {
     return { tag, name, role, join_date: "2026-01-01" };

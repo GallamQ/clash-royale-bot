@@ -1,6 +1,5 @@
 import { buildPodium } from "../rules/podium";
-import type { ClanMember } from "../db/members";
-import type { WarLogRow } from "../db/warLogs";
+import type { ClanMember, WarLogRow } from "../types/db";
 
 function member(tag: string, name: string): ClanMember {
     return { tag, name, role: "member", join_date: "2026-01-01" };

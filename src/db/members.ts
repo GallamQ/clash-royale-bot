@@ -1,12 +1,6 @@
 import { pool } from "./pool";
 import type { ApiMember } from "../types/api";
-
-export interface ClanMember {
-    tag: string;
-    name: string;
-    role: string;
-    join_date: string;
-}
+import type { ClanMember } from "../types/db";
 
 export async function getClanMemberByTag(tag: string): Promise<ClanMember | null> {
     const result = await pool.query<ClanMember>("SELECT * FROM clan_members WHERE tag = $1;", [

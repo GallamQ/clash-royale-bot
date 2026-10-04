@@ -1,4 +1,4 @@
-import { type ClanMember } from "../db/members";
+import type { ClanMember } from "../types/db";
 
 export interface MemberChoice {
     name: string;

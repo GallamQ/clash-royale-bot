@@ -1,14 +1,5 @@
+import type { AbsenceWithName } from "../types/db";
 import { pool } from "./pool";
-
-export interface Absence {
-    tag: string;
-    start_date: string;
-    end_date: string;
-}
-
-export interface AbsenceWithName extends Absence {
-    name: string;
-}
 
 export async function addAbsence(tag: string, startDate: string, endDate: string): Promise<void> {
     await pool.query(`INSERT INTO absences (tag, start_date, end_date) VALUES ($1, $2, $3);`, [

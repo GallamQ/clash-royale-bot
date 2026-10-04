@@ -1,9 +1,10 @@
 import { getLatestWarLogs } from "../db/warLogs";
-import { type ClanMember, getAllClanMembers } from "../db/members";
+import { getAllClanMembers } from "../db/members";
 import { type PodiumStep, buildPodium } from "../rules/podium";
 import { safeName } from "../utils/safeName";
 import { sendWebhookMessage } from "../utils/discordWebhook";
 import { runJob } from "./runJob";
+import type { ClanMember } from "../types/db";
 
 const ROLE_LABELS: Record<string, string> = {
     member: "Membre",

@@ -1,4 +1,4 @@
-import { type AbsenceWithName } from "../db/absences";
+import type { AbsenceWithName } from "../types/db";
 import { toFrenchDate } from "../utils/frenchDate";
 import { safeName } from "../utils/safeName";
 

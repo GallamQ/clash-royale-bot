@@ -1,17 +1,5 @@
+import type { WarLogEntry, WarLogRow } from "../types/db";
 import { pool } from "./pool";
-
-export interface WarLogEntry {
-    tag: string;
-    fame: number;
-}
-
-export interface WarLogRow {
-    id: number;
-    war_id: string;
-    war_date: string;
-    tag: string | null;
-    fame: number;
-}
 
 export async function saveWarLogs(
     warId: string,
