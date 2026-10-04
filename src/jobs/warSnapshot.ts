@@ -1,7 +1,7 @@
 import { CLAN_TAG, getClanWarData } from "../api/clashApi";
 import { getAllClanTags } from "../db/members";
 import { saveWarLogs } from "../db/warLogs";
-import { hasWarEnded } from "../rules/warStatus";
+import { getWarStartIndex, hasWarEnded } from "../rules/warStatus";
 import { runJob } from "./runJob";
 
 async function main() {
@@ -9,7 +9,7 @@ async function main() {
 
     const warData = await getClanWarData();
     const clanTag = `#${CLAN_TAG}`;
-    const warId = warData.periodIndex - ((warData.periodIndex - 3) % 7);
+    const warId = getWarStartIndex(warData.periodIndex);
 
     if (hasWarEnded(warData.periodLogs, clanTag, warId, warData.periodType)) {
         console.log("Guerre terminée !");
