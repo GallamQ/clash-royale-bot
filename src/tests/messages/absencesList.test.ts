@@ -5,7 +5,7 @@ import type { AbsenceWithName } from "../../types/db";
 import { safeName } from "../../utils/safeName";
 
 function absence(name: string, startDate: string, endDate: string): AbsenceWithName {
-    return { tag: `#${name}`, name, start_date: startDate, end_date: endDate };
+    return { tag: `#${name}`, name, startDate, endDate };
 }
 
 describe("formatAbsencesList", () => {

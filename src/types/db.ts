@@ -7,8 +7,8 @@ export interface ClanMember {
 
 export interface Absence {
     tag: string;
-    start_date: string;
-    end_date: string;
+    startDate: string;
+    endDate: string;
 }
 
 export interface AbsenceWithName extends Absence {

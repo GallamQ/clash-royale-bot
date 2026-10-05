@@ -11,7 +11,7 @@ export function formatAbsencesList(absences: AbsenceWithName[]): string {
     let absencesListMessage = "";
 
     for (const absence of absences) {
-        absencesListMessage += `• **${safeName(absence.name)}** - Du ${toFrenchDate(absence.start_date)} au ${toFrenchDate(absence.end_date)}\n`;
+        absencesListMessage += `• **${safeName(absence.name)}** - Du ${toFrenchDate(absence.startDate)} au ${toFrenchDate(absence.endDate)}\n`;
     }
 
     const message = messageStart + absencesListMessage;

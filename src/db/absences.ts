@@ -26,7 +26,7 @@ export async function deleteExpiredAbsences(): Promise<void> {
 
 export async function getAllAbsences(): Promise<AbsenceWithName[]> {
     const result = await pool.query<AbsenceWithName>(
-        `SELECT a.tag, a.start_date, a.end_date, cm.name
+        `SELECT a.tag, a.start_date AS "startDate", a.end_date AS "endDate", cm.name
         FROM absences a
         JOIN clan_members cm ON a.tag = cm.tag
         ORDER BY a.start_date, cm.name;`,
@@ -37,7 +37,7 @@ export async function getAllAbsences(): Promise<AbsenceWithName[]> {
 
 export async function getActiveAbsences(): Promise<AbsenceWithName[]> {
     const result = await pool.query<AbsenceWithName>(
-        `SELECT a.tag, a.start_date, a.end_date, cm.name
+        `SELECT a.tag, a.start_date AS "startDate", a.end_date AS "endDate", cm.name
         FROM absences a
         JOIN clan_members cm ON a.tag = cm.tag
         WHERE a.start_date <= CURRENT_DATE AND a.end_date >= CURRENT_DATE
