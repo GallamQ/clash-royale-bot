@@ -1,10 +1,10 @@
 import { buildMemberChoices } from "../rules/memberChoices";
 
 const members = [
-    { tag: "#AAA111", name: "Quentin", role: "leader", join_date: "2026-09-22" },
-    { tag: "#BBB222", name: "quentin_2", role: "member", join_date: "2026-09-22" },
-    { tag: "#CCC333", name: "Alice", role: "elder", join_date: "2026-09-22" },
-    { tag: "#DDD444", name: "خير ان شاء الله", role: "member", join_date: "2026-09-22" },
+    { tag: "#AAA111", name: "Quentin", role: "leader", joinDate: "2026-09-22" },
+    { tag: "#BBB222", name: "quentin_2", role: "member", joinDate: "2026-09-22" },
+    { tag: "#CCC333", name: "Alice", role: "elder", joinDate: "2026-09-22" },
+    { tag: "#DDD444", name: "خير ان شاء الله", role: "member", joinDate: "2026-09-22" },
 ];
 
 console.log("--- Empty field ---");
@@ -24,6 +24,6 @@ const many = Array.from({ length: 40 }, (_, i) => ({
     tag: `#T${i}`,
     name: `Joueur${i}`,
     role: "member",
-    join_date: "2026-09-22",
+    joinDate: "2026-09-22",
 }));
 console.log(buildMemberChoices(many, "").length);

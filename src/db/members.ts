@@ -2,16 +2,19 @@ import { pool } from "./pool";
 import type { ApiMember } from "../types/api";
 import type { ClanMember } from "../types/db";
 
+const MEMBER_COLUMNS = `tag, name, role, join_date AS "joinDate"`;
+
 export async function getClanMemberByTag(tag: string): Promise<ClanMember | null> {
-    const result = await pool.query<ClanMember>("SELECT * FROM clan_members WHERE tag = $1;", [
-        tag,
-    ]);
+    const result = await pool.query<ClanMember>(
+        `SELECT ${MEMBER_COLUMNS} FROM clan_members WHERE tag = $1;`,
+        [tag],
+    );
 
     return result.rows[0] ?? null;
 }
 
 export async function getAllClanMembers(): Promise<ClanMember[]> {
-    const result = await pool.query<ClanMember>("SELECT * FROM clan_members;");
+    const result = await pool.query<ClanMember>(`SELECT ${MEMBER_COLUMNS} FROM clan_members;`);
 
     return result.rows;
 }
@@ -39,16 +42,16 @@ export async function syncClanMembers(members: ApiMember[]): Promise<void> {
         for (const member of members) {
             await client.query(
                 `INSERT INTO clan_members (tag, name, role, join_date)
-          VALUES ($1, $2, $3, CURRENT_DATE)
-          ON CONFLICT (tag) DO UPDATE
-          SET name = EXCLUDED.name, role = EXCLUDED.role`,
+                VALUES ($1, $2, $3, CURRENT_DATE)
+                ON CONFLICT (tag) DO UPDATE
+                SET name = EXCLUDED.name, role = EXCLUDED.role`,
                 [member.tag, member.name, member.role],
             );
         }
 
         await client.query(
             `DELETE FROM absences
-        WHERE tag IN (SELECT tag FROM clan_members WHERE tag <> ALL($1::varchar[]));`,
+            WHERE tag IN (SELECT tag FROM clan_members WHERE tag <> ALL ($1::varchar[]));`,
             [apiTags],
         );
 

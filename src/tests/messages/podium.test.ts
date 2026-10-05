@@ -6,7 +6,7 @@ import type { ClanMember } from "../../types/db";
 import { safeName } from "../../utils/safeName";
 
 function member(name: string, role: string): ClanMember {
-    return { tag: `#${name}`, name, role, join_date: "2026-01-01" };
+    return { tag: `#${name}`, name, role, joinDate: "2026-01-01" };
 }
 
 describe("formatPodium", () => {

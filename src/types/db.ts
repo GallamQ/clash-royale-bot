@@ -2,7 +2,7 @@ export interface ClanMember {
     tag: string;
     name: string;
     role: string;
-    join_date: string;
+    joinDate: string;
 }
 
 export interface Absence {

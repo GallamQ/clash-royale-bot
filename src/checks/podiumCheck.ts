@@ -2,7 +2,7 @@ import { buildPodium } from "../rules/podium";
 import type { ClanMember, WarLogRow } from "../types/db";
 
 function member(tag: string, name: string): ClanMember {
-    return { tag, name, role: "member", join_date: "2026-01-01" };
+    return { tag, name, role: "member", joinDate: "2026-01-01" };
 }
 
 function log(tag: string, fame: number): WarLogRow {
