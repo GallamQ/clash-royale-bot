@@ -3,6 +3,7 @@ import express from "express";
 import { handleAbsence } from "./absenceCommand";
 import { getAllClanMembers } from "../db/members";
 import { buildMemberChoices } from "../rules/memberChoices";
+import { getClanToday } from "../utils/clanToday";
 
 const publicKey = process.env.DISCORD_PUBLIC_KEY;
 
@@ -38,7 +39,7 @@ app.post("/interactions", express.raw({ type: "application/json" }), async (req,
     if (interaction.type === InteractionType.APPLICATION_COMMAND) {
         const options = interaction.data.options ?? [];
         const getOption = (name: string) => options.find((option) => option.name === name)?.value;
-        const today = new Date().toISOString().slice(0, 10);
+        const today = getClanToday();
         const content = await handleAbsence(
             {
                 tag: getOption("tag"),

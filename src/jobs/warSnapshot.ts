@@ -3,6 +3,7 @@ import { getAllClanTags } from "../db/members";
 import { saveWarLogs } from "../db/warLogs";
 import { getWarStartIndex, hasWarEnded } from "../rules/warStatus";
 import { runJob } from "./runJob";
+import { getClanToday } from "../utils/clanToday";
 
 async function main() {
     console.log("Updating current war results...");
@@ -15,7 +16,7 @@ async function main() {
         return;
     }
 
-    const warDate = new Date().toISOString().split("T")[0];
+    const warDate = getClanToday();
     const participants = warData.participants;
     const knownTags = await getAllClanTags();
 
