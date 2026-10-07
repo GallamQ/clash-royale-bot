@@ -1,5 +1,6 @@
 import { getClanMembers } from "../api/clashApi";
 import { syncClanMembers } from "../db/members";
+import { getClanToday } from "../utils/clanToday";
 import { runJob } from "./runJob";
 
 async function main() {
@@ -7,7 +8,7 @@ async function main() {
 
     const members = await getClanMembers();
 
-    await syncClanMembers(members);
+    await syncClanMembers(members, getClanToday());
 
     console.log("Clan members updated.");
 }

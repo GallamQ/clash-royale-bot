@@ -1,17 +1,23 @@
 import { requireTestDatabase } from "./requireTestDatabase";
 import { syncClanMembers, getAllClanMembers } from "../db/members";
 import { pool } from "../db/pool";
+import { getClanToday } from "../utils/clanToday";
 
 async function main() {
     requireTestDatabase();
 
+    const today = getClanToday();
+
     console.log("--- Before ---");
     console.table(await getAllClanMembers());
 
-    await syncClanMembers([
-        { tag: "#TEST1", name: "Test Un Renamed", role: "elder" },
-        { tag: "#TEST3", name: "Test Trois", role: "member" },
-    ]);
+    await syncClanMembers(
+        [
+            { tag: "#TEST1", name: "Test Un Renamed", role: "elder" },
+            { tag: "#TEST3", name: "Test Trois", role: "member" },
+        ],
+        today,
+    );
 
     console.log("--- After ---");
     console.table(await getAllClanMembers());
@@ -20,7 +26,7 @@ async function main() {
     console.log("Remaining test absences:", absences.rows);
 
     try {
-        await syncClanMembers([]);
+        await syncClanMembers([], today);
         console.log("PROBLEM: an empty list was accepted");
     } catch (error) {
         console.log("Empty list rejected as expected:", (error as Error).message);

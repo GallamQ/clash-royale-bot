@@ -28,7 +28,7 @@ export async function getAllClanTags(): Promise<Set<string>> {
     return uniqueTags;
 }
 
-export async function syncClanMembers(members: ApiMember[]): Promise<void> {
+export async function syncClanMembers(members: ApiMember[], today: string): Promise<void> {
     if (members.length === 0) {
         throw new Error("syncClanMembers received an empty list, aborting.");
     }
@@ -42,10 +42,10 @@ export async function syncClanMembers(members: ApiMember[]): Promise<void> {
         for (const member of members) {
             await client.query(
                 `INSERT INTO clan_members (tag, name, role, join_date)
-                VALUES ($1, $2, $3, CURRENT_DATE)
+                VALUES ($1, $2, $3, $4)
                 ON CONFLICT (tag) DO UPDATE
                 SET name = EXCLUDED.name, role = EXCLUDED.role`,
-                [member.tag, member.name, member.role],
+                [member.tag, member.name, member.role, today],
             );
         }
 

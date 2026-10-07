@@ -17,10 +17,11 @@ export async function removeAbsencesByTag(tag: string): Promise<void> {
     );
 }
 
-export async function deleteExpiredAbsences(): Promise<void> {
+export async function deleteExpiredAbsences(today: string): Promise<void> {
     await pool.query(
         `DELETE FROM absences
-        WHERE end_date < CURRENT_DATE;`,
+        WHERE end_date < $1;`,
+        [today],
     );
 }
 
@@ -35,13 +36,14 @@ export async function getAllAbsences(): Promise<AbsenceWithName[]> {
     return result.rows;
 }
 
-export async function getActiveAbsences(): Promise<AbsenceWithName[]> {
+export async function getActiveAbsences(today: string): Promise<AbsenceWithName[]> {
     const result = await pool.query<AbsenceWithName>(
         `SELECT a.tag, a.start_date AS "startDate", a.end_date AS "endDate", cm.name
         FROM absences a
         JOIN clan_members cm ON a.tag = cm.tag
-        WHERE a.start_date <= CURRENT_DATE AND a.end_date >= CURRENT_DATE
+        WHERE a.start_date <= $1 AND a.end_date >= $1
         ORDER BY cm.name;`,
+        [today],
     );
 
     return result.rows;

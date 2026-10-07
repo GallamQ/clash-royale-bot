@@ -13,8 +13,8 @@ interface AbsenceOptions {
     retirer?: boolean;
 }
 
-async function withAbsencesList(confirmation: string): Promise<string> {
-    const absences = await getActiveAbsences();
+async function withAbsencesList(confirmation: string, today: string): Promise<string> {
+    const absences = await getActiveAbsences(today);
     const list = formatAbsencesList(absences);
 
     return `${confirmation}\n\n${list}`;
@@ -32,6 +32,7 @@ export async function handleAbsence(options: AbsenceOptions, today: string): Pro
             await removeAbsencesByTag(options.tag);
             return await withAbsencesList(
                 `Toutes les absences du joueur \`${safeName(member.name)}\` ont été supprimées !`,
+                today,
             );
         }
 
@@ -44,6 +45,7 @@ export async function handleAbsence(options: AbsenceOptions, today: string): Pro
 
         return await withAbsencesList(
             `Le joueur \`${safeName(member.name)}\` a été marqué absent du ${frenchStartDate} au ${frenchEndDate}.`,
+            today,
         );
     } catch (error) {
         if (error instanceof UserError) {
