@@ -46,3 +46,5 @@ FOREIGN KEY (war_start_date) REFERENCES wars (start_date);
 
 CREATE UNIQUE INDEX war_logs_war_start_date_tag_idx
 ON war_logs (war_start_date, tag);
+
+ALTER TABLE wars OWNER TO clanbot;
