@@ -47,7 +47,7 @@ interface RiverRaceResponse {
     };
     periodType: string;
     state: string;
-    periodLogs: PeriodLog[];
+    periodLogs?: PeriodLog[];
     periodIndex: number;
 }
 
@@ -59,7 +59,7 @@ export async function getClanWarData(): Promise<ClanWarData> {
         periodType: data.periodType,
         state: data.state,
         clanFame: data.clan.fame,
-        periodLogs: data.periodLogs,
+        periodLogs: data.periodLogs ?? [],
         periodIndex: data.periodIndex,
     };
 }
