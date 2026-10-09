@@ -27,3 +27,9 @@ export interface WarLogRow {
     tag: string | null;
     fame: number;
 }
+
+export interface War {
+    startDate: string;
+    startIndex: number;
+    periodType: string;
+}

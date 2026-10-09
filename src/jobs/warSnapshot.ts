@@ -1,7 +1,9 @@
 import { CLAN_TAG, getClanWarData } from "../api/clashApi";
 import { getAllClanTags } from "../db/members";
 import { saveWarLogs } from "../db/warLogs";
-import { getWarStartIndex, hasWarEnded } from "../rules/warStatus";
+import { saveWar } from "../db/wars";
+import type { War } from "../types/db";
+import { getWarStartIndex, getWarStartDate, hasWarEnded } from "../rules/warStatus";
 import { runJob } from "./runJob";
 import { getClanToday } from "../utils/clanToday";
 
@@ -16,11 +18,18 @@ async function main() {
         return;
     }
 
+    const war: War = {
+        startDate: getWarStartDate(new Date(), warData.periodIndex, warStartIndex),
+        startIndex: warStartIndex,
+        periodType: warData.periodType,
+    };
+
     const warDate = getClanToday();
     const participants = warData.participants;
     const knownTags = await getAllClanTags();
 
-    await saveWarLogs(warStartIndex.toString(), warDate, participants, knownTags);
+    await saveWar(war);
+    await saveWarLogs(war, warDate, participants, knownTags);
 
     console.log("Current war results updated.");
 }

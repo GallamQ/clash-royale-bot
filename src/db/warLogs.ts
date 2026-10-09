@@ -1,12 +1,13 @@
-import type { WarLogEntry, WarLogRow } from "../types/db";
+import type { War, WarLogEntry, WarLogRow } from "../types/db";
 import { pool } from "./pool";
 
 export async function saveWarLogs(
-    warId: string,
+    war: War,
     warDate: string,
     participants: WarLogEntry[],
     knownTags: Set<string>,
 ): Promise<void> {
+    const warId = war.startIndex.toString();
     const client = await pool.connect();
 
     try {
@@ -18,11 +19,11 @@ export async function saveWarLogs(
             }
 
             await client.query(
-                `INSERT INTO war_logs (war_id, war_date, tag, fame)
-                VALUES ($1, $2, $3, $4)
-                ON CONFLICT (war_id, tag) DO UPDATE
+                `INSERT INTO war_logs (war_id, war_start_date, war_date, tag, fame)
+                VALUES ($1, $2, $3, $4, $5)
+                ON CONFLICT (war_start_date, tag) DO UPDATE
                 SET fame = EXCLUDED.fame, war_date = EXCLUDED.war_date`,
-                [warId, warDate, participant.tag, participant.fame],
+                [warId, war.startDate, warDate, participant.tag, participant.fame],
             );
         }
 
