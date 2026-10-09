@@ -30,7 +30,7 @@ export function buildKickList(
         }
 
         const fame = fameByTag.get(member.tag) ?? 0;
-        
+
         if (fame > 0) {
             continue;
         }
