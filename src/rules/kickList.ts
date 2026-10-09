@@ -12,15 +12,16 @@ export function buildKickList(
 ): KickList {
     const toKick: ClanMember[] = [];
     const toDemote: ClanMember[] = [];
+    const fameByTag = new Map<string, number>();
 
     for (const log of warLogs) {
-        if (log.tag === null) {
-            continue;
+        if (log.tag !== null) {
+            fameByTag.set(log.tag, log.fame);
         }
+    }
 
-        const member = membersByTag.get(log.tag);
-
-        if (!member || absentTags.has(log.tag)) {
+    for (const member of membersByTag.values()) {
+        if (absentTags.has(member.tag)) {
             continue;
         }
 
@@ -28,7 +29,9 @@ export function buildKickList(
             continue;
         }
 
-        if (log.fame > 0) {
+        const fame = fameByTag.get(member.tag) ?? 0;
+        
+        if (fame > 0) {
             continue;
         }
 
