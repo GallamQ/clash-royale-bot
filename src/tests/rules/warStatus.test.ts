@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import type { PeriodLog } from "../../types/api";
-import { getWarStartDate, getWarStartIndex, hasWarEnded } from "../../rules/warStatus";
+import { getGameDay, getWarStartDate, getWarStartIndex, hasWarEnded } from "../../rules/warStatus";
 
 const OUR_CLAN = "#OURCLAN";
 const OTHER_CLAN = "#OTHER";
@@ -135,5 +135,23 @@ describe("hasWarEnded", () => {
         const logs = [day(24, OUR_CLAN, 10000)];
 
         assert.equal(hasWarEnded(logs, OUR_CLAN, 24, "colosseum"), false);
+    });
+});
+
+describe("getGameDay", () => {
+    it("returns the previous day in the last second before the day change", () => {
+        assert.equal(getGameDay(new Date("2026-10-12T09:29:59Z")), "2026-10-11");
+    });
+
+    it("returns the current day exactly at the day change", () => {
+        assert.equal(getGameDay(new Date("2026-10-12T09:30:00Z")), "2026-10-12");
+    });
+
+    it("returns the previous day just after midnight UTC", () => {
+        assert.equal(getGameDay(new Date("2026-10-12T00:00:00Z")), "2026-10-11");
+    });
+
+    it("returns the current day late in the evening", () => {
+        assert.equal(getGameDay(new Date("2026-10-12T23:59:00Z")), "2026-10-12");
     });
 });
