@@ -67,3 +67,15 @@ export async function getWarLogsByWarId(warId: string): Promise<WarLogEntry[]> {
 
     return result.rows;
 }
+
+export async function getWarLogsByStartDate(startDate: string): Promise<WarLogRow[]> {
+    const result = await pool.query<WarLogRow>(
+        `SELECT id, war_id, war_date, tag, fame
+        FROM war_logs
+        WHERE war_start_date = $1
+        ORDER BY fame DESC;`,
+        [startDate],
+    );
+
+    return result.rows;
+}
