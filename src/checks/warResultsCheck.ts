@@ -1,12 +1,12 @@
 import { requireTestDatabase } from "./requireTestDatabase";
 import { saveWar } from "../db/wars";
-import { saveWarResults } from "../db/warResults";
+import { getLatestFrozenWar, saveWarResults } from "../db/warResults";
 import { pool } from "../db/pool";
 import type { War } from "../types/db";
 import type { WarResult } from "../rules/warResults";
 
-const WAR_1: War = { startDate: "2026-08-06", startIndex: 903, periodType: "warDay" };
-const WAR_2: War = { startDate: "2026-08-13", startIndex: 910, periodType: "warDay" };
+const WAR_1: War = { startDate: "2090-01-03", startIndex: 903, periodType: "warDay" };
+const WAR_2: War = { startDate: "2090-01-10", startIndex: 910, periodType: "warDay" };
 const TEST_START_DATES = [WAR_1.startDate, WAR_2.startDate];
 const TEST_TAGS = ["#TESTRES1", "#TESTRES2"];
 
@@ -80,6 +80,24 @@ async function main() {
     const rolledBack = await readResults(WAR_2.startDate);
 
     console.log(`--- rows after the failed freeze (expected: 0): ${rolledBack.length} ---`);
+
+    const firstFrozen = await getLatestFrozenWar();
+
+    console.log(
+        `--- latest frozen war (expected: ${WAR_1.startDate}): ${firstFrozen?.startDate} ---`,
+    );
+    console.table(firstFrozen?.results);
+
+    await saveWarResults(WAR_2.startDate, [
+        { tag: "#TESTRES2", fame: 1200, exempt: false, role: "elder" },
+    ]);
+
+    const secondFrozen = await getLatestFrozenWar();
+
+    console.log(
+        `--- latest frozen war (expected: ${WAR_2.startDate}): ${secondFrozen?.startDate} ---`,
+    );
+    console.table(secondFrozen?.results);
 
     await cleanup();
     await pool.end();

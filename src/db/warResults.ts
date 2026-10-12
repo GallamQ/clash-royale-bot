@@ -1,6 +1,35 @@
 import type { WarResult } from "../rules/warResults";
 import { pool } from "./pool";
 
+export interface FrozenWar {
+    startDate: string;
+    results: WarResult[];
+}
+
+export async function getLatestFrozenWar(): Promise<FrozenWar | null> {
+    const latest = await pool.query<{ startDate: string }>(
+        `SELECT war_start_date AS "startDate"
+        FROM war_results
+        ORDER BY war_start_date DESC
+        LIMIT 1;`,
+    );
+
+    if (!latest.rows[0]) {
+        return null;
+    }
+
+    const startDate = latest.rows[0].startDate;
+    const rows = await pool.query<WarResult>(
+        `SELECT tag, fame, exempt, role
+        FROM war_results
+        WHERE war_start_date = $1
+        ORDER BY fame DESC;`,
+        [startDate],
+    );
+
+    return { startDate, results: rows.rows };
+}
+
 export async function saveWarResults(warStartDate: string, results: WarResult[]): Promise<void> {
     const client = await pool.connect();
 
