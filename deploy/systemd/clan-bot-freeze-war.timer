@@ -1,0 +1,9 @@
+[Unit]
+Description=Freeze the clan bot war results every Monday at 09:35 UTC, just after the day change
+
+[Timer]
+OnCalendar=Mon *-*-* 09:35:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target
