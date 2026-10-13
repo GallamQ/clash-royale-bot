@@ -1,24 +1,21 @@
-import { getLatestWarLogs } from "../db/warLogs";
+import { getLatestFrozenWar } from "../db/warResults";
 import { getAllClanMembers } from "../db/members";
-import { getAllAbsences } from "../db/absences";
 import { buildKickList } from "../rules/kickList";
 import { sendWebhookMessage } from "../utils/discordWebhook";
 import { runJob } from "./runJob";
 import { formatKickList } from "../messages/kickList";
 
 async function main() {
-    const warLogs = await getLatestWarLogs();
+    const frozenWar = await getLatestFrozenWar();
 
-    if (!warLogs.length) {
-        console.log("No war data found.");
+    if (!frozenWar) {
+        console.log("No frozen war found.");
         return;
     }
 
     const clanMembers = await getAllClanMembers();
     const membersByTag = new Map(clanMembers.map((member) => [member.tag, member]));
-    const absences = await getAllAbsences();
-    const absentTags = new Set(absences.map((absence) => absence.tag));
-    const list = buildKickList(warLogs, membersByTag, absentTags);
+    const list = buildKickList(frozenWar.results, membersByTag);
     const message = formatKickList(list);
 
     await sendWebhookMessage(message);

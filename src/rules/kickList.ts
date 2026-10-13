@@ -1,4 +1,5 @@
-import type { ClanMember, WarLogRow } from "../types/db";
+import type { ClanMember } from "../types/db";
+import type { WarResult } from "./warResults";
 
 export type KickList = {
     toKick: ClanMember[];
@@ -6,38 +7,26 @@ export type KickList = {
 };
 
 export function buildKickList(
-    warLogs: WarLogRow[],
+    results: WarResult[],
     membersByTag: Map<string, ClanMember>,
-    absentTags: Set<string>,
 ): KickList {
     const toKick: ClanMember[] = [];
     const toDemote: ClanMember[] = [];
-    const fameByTag = new Map<string, number>();
 
-    for (const log of warLogs) {
-        if (log.tag !== null) {
-            fameByTag.set(log.tag, log.fame);
-        }
-    }
-
-    for (const member of membersByTag.values()) {
-        if (absentTags.has(member.tag)) {
+    for (const result of results) {
+        if (result.exempt || result.fame > 0) {
             continue;
         }
 
-        if (member.role === "coLeader" || member.role === "leader") {
+        const member = membersByTag.get(result.tag);
+
+        if (!member) {
             continue;
         }
 
-        const fame = fameByTag.get(member.tag) ?? 0;
-
-        if (fame > 0) {
-            continue;
-        }
-
-        if (member.role === "member") {
+        if (result.role === "member") {
             toKick.push(member);
-        } else if (member.role === "elder") {
+        } else if (result.role === "elder") {
             toDemote.push(member);
         }
     }
