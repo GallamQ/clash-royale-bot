@@ -1,4 +1,6 @@
-import type { ClanMember, WarLogRow } from "../types/db";
+import type { ClanMember } from "../types/db";
+
+export type PodiumEntry = { tag: string | null; fame: number };
 
 export type PodiumStep = {
     place: 1 | 2 | 3;
@@ -7,17 +9,17 @@ export type PodiumStep = {
 };
 
 export function buildPodium(
-    warLogs: WarLogRow[],
+    entries: PodiumEntry[],
     membersByTag: Map<string, ClanMember>,
 ): PodiumStep[] {
-    const eligible = warLogs.flatMap((log) => {
-        if (log.tag === null || log.fame <= 0) {
+    const eligible = entries.flatMap((entry) => {
+        if (entry.tag === null || entry.fame <= 0) {
             return [];
         }
 
-        const member = membersByTag.get(log.tag);
+        const member = membersByTag.get(entry.tag);
 
-        return member ? [{ member, fame: log.fame }] : [];
+        return member ? [{ member, fame: entry.fame }] : [];
     });
 
     const topScores = Array.from(new Set(eligible.map((entry) => entry.fame)))
