@@ -1,24 +1,25 @@
-import { getLatestWarLogs } from "../db/warLogs";
+import { getLatestFrozenWar } from "../db/warResults";
 import { getAllClanMembers } from "../db/members";
 import { buildPodium } from "../rules/podium";
 import { sendWebhookMessage } from "../utils/discordWebhook";
 import { runJob } from "./runJob";
 import { formatPodium } from "../messages/podium";
+import { toFrenchDate } from "../utils/frenchDate";
 
 async function main() {
     console.log("Generating weekly report...");
 
-    const warLogs = await getLatestWarLogs();
+    const frozenWar = await getLatestFrozenWar();
 
-    if (!warLogs.length) {
-        console.log("No war data found.");
+    if (!frozenWar) {
+        console.log("No frozen war found.");
         return;
     }
 
     const clanMembers = await getAllClanMembers();
     const membersByTag = new Map(clanMembers.map((member) => [member.tag, member]));
-    const podium = buildPodium(warLogs, membersByTag);
-    const message = formatPodium(warLogs[0].war_id, podium);
+    const podium = buildPodium(frozenWar.results, membersByTag);
+    const message = formatPodium(toFrenchDate(frozenWar.startDate), podium);
 
     await sendWebhookMessage(message);
 

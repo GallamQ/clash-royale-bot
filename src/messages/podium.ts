@@ -31,8 +31,8 @@ function formatStep(step: PodiumStep): string {
     return `${title}\n${lines.join("\n")}\n\n`;
 }
 
-export function formatPodium(warId: string, podium: PodiumStep[]): string {
-    const header = `⚔️   Top 3 de la semaine   🗓   ${warId}   ⚔️\n\n`;
+export function formatPodium(warLabel: string, podium: PodiumStep[]): string {
+    const header = `⚔️   Top 3 de la semaine   🗓   ${warLabel}   ⚔️\n\n`;
     const podiumText = podium.map(formatStep).join("");
 
     return header + podiumText;
