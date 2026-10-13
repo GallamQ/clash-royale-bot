@@ -8,6 +8,14 @@ export type PodiumStep = {
     players: ClanMember[];
 };
 
+export function getTopScores(entries: { fame: number }[]): number[] {
+    const scores = entries.filter((entry) => entry.fame > 0).map((entry) => entry.fame);
+
+    return Array.from(new Set(scores))
+        .sort((a, b) => b - a)
+        .slice(0, 3);
+}
+
 export function buildPodium(
     entries: PodiumEntry[],
     membersByTag: Map<string, ClanMember>,
@@ -22,9 +30,7 @@ export function buildPodium(
         return member ? [{ member, fame: entry.fame }] : [];
     });
 
-    const topScores = Array.from(new Set(eligible.map((entry) => entry.fame)))
-        .sort((a, b) => b - a)
-        .slice(0, 3);
+    const topScores = getTopScores(eligible);
 
     return topScores.map((score, index) => ({
         place: (index + 1) as 1 | 2 | 3,
