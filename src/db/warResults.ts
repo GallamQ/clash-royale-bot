@@ -54,3 +54,26 @@ export async function saveWarResults(warStartDate: string, results: WarResult[])
         client.release();
     }
 }
+
+export async function getFrozenWars(): Promise<FrozenWar[]> {
+    const result = await pool.query<WarResult & { startDate: string }>(
+        `SELECT war_start_date AS "startDate", tag, fame, exempt, role
+        FROM war_results
+        ORDER BY war_start_date ASC, fame DESC;`,
+    );
+
+    const wars: FrozenWar[] = [];
+
+    for (const row of result.rows) {
+        const warResult = { tag: row.tag, fame: row.fame, exempt: row.exempt, role: row.role };
+        const lastWar = wars[wars.length - 1];
+
+        if (lastWar && lastWar.startDate === row.startDate) {
+            lastWar.results.push(warResult);
+        } else {
+            wars.push({ startDate: row.startDate, results: [warResult] });
+        }
+    }
+
+    return wars;
+}

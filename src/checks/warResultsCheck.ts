@@ -1,6 +1,7 @@
+import { deepStrictEqual } from "node:assert/strict";
 import { requireTestDatabase } from "./requireTestDatabase";
 import { saveWar } from "../db/wars";
-import { getLatestFrozenWar, saveWarResults } from "../db/warResults";
+import { getFrozenWars, getLatestFrozenWar, saveWarResults } from "../db/warResults";
 import { pool } from "../db/pool";
 import type { War } from "../types/db";
 import type { WarResult } from "../rules/warResults";
@@ -14,6 +15,20 @@ const RESULTS: WarResult[] = [
     { tag: "#TESTRES1", fame: 500, exempt: false, role: "member" },
     { tag: "#TESTRES2", fame: 0, exempt: true, role: "elder" },
 ];
+
+let failures = 0;
+
+function expectEqual(label: string, actual: unknown, expected: unknown) {
+    try {
+        deepStrictEqual(actual, expected);
+        console.log(`OK   ${label}`);
+    } catch {
+        failures += 1;
+        console.log(`FAIL ${label}`);
+        console.log("  expected:", expected);
+        console.log("  actual:  ", actual);
+    }
+}
 
 async function cleanup() {
     await pool.query("DELETE FROM war_results WHERE war_start_date = ANY($1)", [TEST_START_DATES]);
@@ -99,8 +114,30 @@ async function main() {
     );
     console.table(secondFrozen?.results);
 
+    console.log("--- all frozen wars (the two test wars must be the last two) ---");
+
+    const frozenWars = await getFrozenWars();
+    const testWars = frozenWars.slice(-2);
+
+    expectEqual(
+        "test wars come last, oldest first",
+        testWars.map((war) => war.startDate),
+        TEST_START_DATES,
+    );
+    expectEqual("first test war results", testWars[0]?.results, RESULTS);
+    expectEqual("second test war results", testWars[1]?.results, [
+        { tag: "#TESTRES2", fame: 1200, exempt: false, role: "elder" },
+    ]);
+
     await cleanup();
     await pool.end();
+
+    if (failures > 0) {
+        console.log(`${failures} check(s) failed.`);
+        process.exit(1);
+    }
+
+    console.log("All checks passed.");
 }
 
 main().catch((err) => {
