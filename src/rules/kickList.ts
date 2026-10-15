@@ -1,5 +1,5 @@
 import type { ClanMember } from "../types/db";
-import type { WarResult } from "./warResults";
+import type { JokerState } from "./jokers";
 
 export type KickList = {
     toKick: ClanMember[];
@@ -7,26 +7,22 @@ export type KickList = {
 };
 
 export function buildKickList(
-    results: WarResult[],
+    states: Map<string, JokerState>,
     membersByTag: Map<string, ClanMember>,
 ): KickList {
     const toKick: ClanMember[] = [];
     const toDemote: ClanMember[] = [];
 
-    for (const result of results) {
-        if (result.exempt || result.fame > 0) {
-            continue;
-        }
-
-        const member = membersByTag.get(result.tag);
+    for (const [tag, state] of states) {
+        const member = membersByTag.get(tag);
 
         if (!member) {
             continue;
         }
 
-        if (result.role === "member") {
+        if (state.outcome === "kick") {
             toKick.push(member);
-        } else if (result.role === "elder") {
+        } else if (state.outcome === "demote") {
             toDemote.push(member);
         }
     }
