@@ -30,3 +30,8 @@ export interface ClanWarData {
     periodLogs: PeriodLog[];
     periodIndex: number;
 }
+
+export interface ClanRoster {
+    announcedCount: number;
+    members: ApiMember[];
+}

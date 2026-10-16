@@ -1,5 +1,5 @@
 import { fetchWithTimeout } from "../utils/fetchWithTimeout";
-import type { ApiMember, ClanWarData, PeriodLog, WarParticipant } from "../types/api";
+import type { ApiMember, ClanRoster, ClanWarData, PeriodLog, WarParticipant } from "../types/api";
 import { getClanEndpoint, normalizeClanTag } from "../utils/clanTag";
 
 const BASE_URL = "https://api.clashroyale.com/v1";
@@ -32,6 +32,7 @@ export async function fetchFromApi<T>(endpoint: string): Promise<T> {
 
 interface ClanResponse {
     memberList: ApiMember[];
+    members: number;
 }
 
 export async function getClanMembers(): Promise<ApiMember[]> {
@@ -62,4 +63,10 @@ export async function getClanWarData(): Promise<ClanWarData> {
         periodLogs: data.periodLogs ?? [],
         periodIndex: data.periodIndex,
     };
+}
+
+export async function getClanRoster(): Promise<ClanRoster> {
+    const data = await fetchFromApi<ClanResponse>(CLAN_ENDPOINT);
+
+    return { members: data.memberList, announcedCount: data.members };
 }
