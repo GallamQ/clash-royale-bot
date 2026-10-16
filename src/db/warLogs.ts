@@ -36,38 +36,6 @@ export async function saveWarLogs(
     }
 }
 
-export async function getLatestWarLogs(): Promise<WarLogRow[]> {
-    const latestWarId = await pool.query<{ war_id: string }>(
-        `SELECT war_id
-        FROM war_logs
-        ORDER BY war_date DESC limit 1;`,
-    );
-
-    if (!latestWarId.rows[0]) return [];
-
-    const warId = latestWarId.rows[0].war_id;
-    const result = await pool.query<WarLogRow>(
-        `SELECT *
-        FROM war_logs
-        WHERE war_id = $1
-        ORDER BY fame DESC;`,
-        [warId],
-    );
-
-    return result.rows;
-}
-
-export async function getWarLogsByWarId(warId: string): Promise<WarLogEntry[]> {
-    const result = await pool.query<WarLogEntry>(
-        `SELECT tag, fame
-        FROM war_logs
-        WHERE war_id = $1;`,
-        [warId],
-    );
-
-    return result.rows;
-}
-
 export async function getWarLogsByStartDate(startDate: string): Promise<WarLogRow[]> {
     const result = await pool.query<WarLogRow>(
         `SELECT id, war_id, war_date, tag, fame
