@@ -11,7 +11,7 @@ function member(tag: string, role: string, joinDate: string = LONG_AGO): ClanMem
 }
 
 function log(tag: string | null, fame: number): WarLogRow {
-    return { id: 0, war_id: "test", war_date: "2026-10-11", tag, fame };
+    return { id: 0, tag, fame };
 }
 
 function absence(tag: string, startDate: string, endDate: string): Absence {

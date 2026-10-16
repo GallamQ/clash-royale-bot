@@ -6,7 +6,7 @@ function member(tag: string, name: string): ClanMember {
 }
 
 function log(tag: string, fame: number): WarLogRow {
-    return { id: 0, war_id: "test", war_date: "2026-09-21", tag, fame };
+    return { id: 0, tag, fame };
 }
 
 const roster = [

@@ -22,8 +22,6 @@ export interface WarLogEntry {
 
 export interface WarLogRow {
     id: number;
-    war_id: string;
-    war_date: string;
     tag: string | null;
     fame: number;
 }

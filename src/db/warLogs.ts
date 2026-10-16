@@ -38,7 +38,7 @@ export async function saveWarLogs(
 
 export async function getWarLogsByStartDate(startDate: string): Promise<WarLogRow[]> {
     const result = await pool.query<WarLogRow>(
-        `SELECT id, war_id, war_date, tag, fame
+        `SELECT id, tag, fame
         FROM war_logs
         WHERE war_start_date = $1
         ORDER BY fame DESC;`,
