@@ -3,10 +3,10 @@ import { safeName } from "../utils/safeName";
 
 export function formatKickList(list: KickList): string {
     if (list.toKick.length === 0 && list.toDemote.length === 0) {
-        return "✅ Tous les joueurs ont marqué des points !";
+        return "✅ Aucune sanction cette semaine !";
     }
 
-    let message = "**Liste des joueurs sans aucun point ➡️🚪**\n\n";
+    let message = "**Sanctions de la semaine ➡️🚪**\n\n";
 
     if (list.toKick.length > 0) {
         message += `**🚪 À KICKER (${list.toKick.length}) :**\n`;

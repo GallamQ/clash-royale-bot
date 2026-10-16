@@ -9,16 +9,17 @@ function member(name: string, role: string): ClanMember {
 }
 
 describe("formatKickList", () => {
-    it("congratulates everybody when nobody is listed", () => {
+    it("says that there is no sanction when nobody is listed", () => {
         const message = formatKickList({ toKick: [], toDemote: [] });
 
-        assert.ok(message.includes("Tous les joueurs ont marqué des points"));
+        assert.ok(message.includes("Aucune sanction cette semaine"));
         assert.ok(!message.includes("KICKER"));
     });
 
     it("lists only the players to kick", () => {
         const message = formatKickList({ toKick: [member("Alice", "member")], toDemote: [] });
 
+        assert.ok(message.includes("Sanctions de la semaine"));
         assert.ok(message.includes("À KICKER (1)"));
         assert.ok(message.includes(`❌ ${safeName("Alice")}`));
         assert.ok(!message.includes("RÉTROGRADER"));
