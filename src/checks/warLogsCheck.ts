@@ -39,8 +39,8 @@ async function main() {
 
     await pool.query(
         `INSERT INTO clan_members (tag, name, role, join_date)
-    VALUES ('#TEST1', 'Test Un', 'member', CURRENT_DATE)
-    ON CONFLICT (tag) DO NOTHING;`,
+        VALUES ('#TEST1', 'Test Un', 'member', CURRENT_DATE)
+        ON CONFLICT (tag) DO NOTHING;`,
     );
 
     const knownTags = new Set(["#TEST1"]);
@@ -51,14 +51,13 @@ async function main() {
     await saveWar(WAR_2);
     await saveWarLogs(
         WAR_1,
-        "2026-09-10",
         [
             { tag: "#TEST1", fame: 1600 },
             { tag: "#UNKNOWN", fame: 50 },
         ],
         knownTags,
     );
-    await saveWarLogs(WAR_2, "2026-09-17", [{ tag: "#TEST1", fame: 2200 }], knownTags);
+    await saveWarLogs(WAR_2, [{ tag: "#TEST1", fame: 2200 }], knownTags);
 
     expectEqual("logs of the first war (unknown tag ignored)", await readFames(WAR_1.startDate), [
         { tag: "#TEST1", fame: 1600 },
@@ -67,7 +66,7 @@ async function main() {
         { tag: "#TEST1", fame: 2200 },
     ]);
 
-    await saveWarLogs(WAR_2, "2026-09-18", [{ tag: "#TEST1", fame: 2500 }], knownTags);
+    await saveWarLogs(WAR_2, [{ tag: "#TEST1", fame: 2500 }], knownTags);
 
     expectEqual("logs of the second war after an update", await readFames(WAR_2.startDate), [
         { tag: "#TEST1", fame: 2500 },

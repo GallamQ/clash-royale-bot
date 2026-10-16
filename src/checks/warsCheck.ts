@@ -55,14 +55,13 @@ async function main() {
 
     await saveWarLogs(
         WAR_1,
-        "2026-07-03",
         [
             { tag: "#TESTWARS1", fame: 700 },
             { tag: "#TESTWARS2", fame: 1200 },
         ],
         knownTags,
     );
-    await saveWarLogs(WAR_2, "2026-07-10", [{ tag: "#TESTWARS1", fame: 50 }], knownTags);
+    await saveWarLogs(WAR_2, [{ tag: "#TESTWARS1", fame: 50 }], knownTags);
 
     console.log("--- getWarLogsByStartDate(2026-07-02) (expected: 2 rows, 1200 then 700) ---");
     console.table(await getWarLogsByStartDate(WAR_1.startDate));

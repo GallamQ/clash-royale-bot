@@ -3,11 +3,9 @@ import { pool } from "./pool";
 
 export async function saveWarLogs(
     war: War,
-    warDate: string,
     participants: WarLogEntry[],
     knownTags: Set<string>,
 ): Promise<void> {
-    const warId = war.startIndex.toString();
     const client = await pool.connect();
 
     try {
@@ -19,11 +17,11 @@ export async function saveWarLogs(
             }
 
             await client.query(
-                `INSERT INTO war_logs (war_id, war_start_date, war_date, tag, fame)
-                VALUES ($1, $2, $3, $4, $5)
+                `INSERT INTO war_logs (war_start_date, tag, fame)
+                VALUES ($1, $2, $3)
                 ON CONFLICT (war_start_date, tag) DO UPDATE
-                SET fame = EXCLUDED.fame, war_date = EXCLUDED.war_date`,
-                [warId, war.startDate, warDate, participant.tag, participant.fame],
+                SET fame = EXCLUDED.fame`,
+                [war.startDate, participant.tag, participant.fame],
             );
         }
 

@@ -5,7 +5,6 @@ import { saveWar } from "../db/wars";
 import type { War } from "../types/db";
 import { getWarStartIndex, getWarStartDate, hasWarEnded } from "../rules/warStatus";
 import { runJob } from "./runJob";
-import { getClanToday } from "../utils/clanToday";
 
 async function main() {
     console.log("Updating current war results...");
@@ -24,12 +23,11 @@ async function main() {
         periodType: warData.periodType,
     };
 
-    const warDate = getClanToday();
     const participants = warData.participants;
     const knownTags = await getAllClanTags();
 
     await saveWar(war);
-    await saveWarLogs(war, warDate, participants, knownTags);
+    await saveWarLogs(war, participants, knownTags);
 
     console.log("Current war results updated.");
 }
