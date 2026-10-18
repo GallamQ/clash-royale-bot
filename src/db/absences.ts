@@ -1,12 +1,19 @@
 import type { AbsenceWithName } from "../types/db";
 import { pool } from "./pool";
 
-export async function addAbsence(tag: string, startDate: string, endDate: string): Promise<void> {
-    await pool.query(`INSERT INTO absences (tag, start_date, end_date) VALUES ($1, $2, $3);`, [
-        tag,
-        startDate,
-        endDate,
-    ]);
+export async function addAbsence(
+    tag: string,
+    startDate: string,
+    endDate: string,
+): Promise<boolean> {
+    const result = await pool.query(
+        `INSERT INTO absences (tag, start_date, end_date)
+        VALUES ($1, $2, $3)
+        ON CONFLICT (tag, start_date, end_date) DO NOTHING;`,
+        [tag, startDate, endDate],
+    );
+
+    return result.rowCount === 1;
 }
 
 export async function removeAbsencesByTag(tag: string): Promise<void> {
