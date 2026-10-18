@@ -37,11 +37,16 @@ export async function handleAbsence(options: AbsenceOptions, today: string): Pro
         }
 
         const dates = resolveAbsenceDates(options.debut, options.fin, today);
-
-        await addAbsence(options.tag, dates.startDate, dates.endDate);
-
+        const absenceAdded = await addAbsence(options.tag, dates.startDate, dates.endDate);
         const frenchStartDate = toFrenchDate(dates.startDate);
         const frenchEndDate = toFrenchDate(dates.endDate);
+
+        if (!absenceAdded) {
+            return await withAbsencesList(
+                `Absence déjà enregistrée pour le joueur \`${safeName(member.name)}\` du ${frenchStartDate} au ${frenchEndDate}.`,
+                today,
+            );
+        }
 
         return await withAbsencesList(
             `Le joueur \`${safeName(member.name)}\` a été marqué absent du ${frenchStartDate} au ${frenchEndDate}.`,
