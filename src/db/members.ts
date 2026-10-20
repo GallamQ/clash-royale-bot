@@ -48,18 +48,32 @@ export async function syncClanMembers(members: ApiMember[], today: string): Prom
                 `INSERT INTO clan_members (tag, name, role, join_date)
                 VALUES ($1, $2, $3, $4)
                 ON CONFLICT (tag) DO UPDATE
-                SET name = EXCLUDED.name, role = EXCLUDED.role`,
+                SET name = EXCLUDED.name, role = EXCLUDED.role, left_at = NULL`,
                 [member.tag, member.name, member.role, today],
             );
         }
 
-        await client.query(
-            `DELETE FROM absences
-            WHERE tag IN (SELECT tag FROM clan_members WHERE tag <> ALL ($1::varchar[]));`,
+        const vanished = await client.query<{ tag: string }>(
+            `SELECT tag
+            FROM clan_members
+            WHERE left_at IS NULL
+                AND tag <> ALL ($1::varchar[])
+                AND NOT EXISTS (SELECT 1 FROM war_results WHERE war_results.tag = clan_members.tag)
+                AND NOT EXISTS (SELECT 1 FROM war_logs WHERE war_logs.tag = clan_members.tag);`,
             [apiTags],
         );
+        const vanishedTags = vanished.rows.map((row) => row.tag);
 
-        await client.query("DELETE FROM clan_members WHERE tag <> ALL($1::varchar[]);", [apiTags]);
+        await client.query("DELETE FROM absences WHERE tag = ANY($1);", [vanishedTags]);
+        await client.query("DELETE FROM clan_members WHERE tag = ANY($1);", [vanishedTags]);
+
+        await client.query(
+            `UPDATE clan_members
+            SET left_at = $1
+            WHERE left_at IS NULL
+                AND tag <> ALL ($2::varchar[]);`,
+            [today, apiTags],
+        );
 
         await client.query("COMMIT");
     } catch (error) {
