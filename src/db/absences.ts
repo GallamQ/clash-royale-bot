@@ -37,6 +37,7 @@ export async function getAllAbsences(): Promise<AbsenceWithName[]> {
         `SELECT a.tag, a.start_date AS "startDate", a.end_date AS "endDate", cm.name
         FROM absences a
         JOIN clan_members cm ON a.tag = cm.tag
+        WHERE cm.left_at IS NULL
         ORDER BY a.start_date, cm.name;`,
     );
 
@@ -48,7 +49,7 @@ export async function getActiveAbsences(today: string): Promise<AbsenceWithName[
         `SELECT a.tag, a.start_date AS "startDate", a.end_date AS "endDate", cm.name
         FROM absences a
         JOIN clan_members cm ON a.tag = cm.tag
-        WHERE a.start_date <= $1 AND a.end_date >= $1
+        WHERE a.start_date <= $1 AND a.end_date >= $1 AND cm.left_at IS NULL
         ORDER BY cm.name;`,
         [today],
     );

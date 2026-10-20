@@ -6,7 +6,7 @@ const MEMBER_COLUMNS = `tag, name, role, join_date AS "joinDate"`;
 
 export async function getClanMemberByTag(tag: string): Promise<ClanMember | null> {
     const result = await pool.query<ClanMember>(
-        `SELECT ${MEMBER_COLUMNS} FROM clan_members WHERE tag = $1;`,
+        `SELECT ${MEMBER_COLUMNS} FROM clan_members WHERE tag = $1 AND left_at IS NULL;`,
         [tag],
     );
 
@@ -14,13 +14,17 @@ export async function getClanMemberByTag(tag: string): Promise<ClanMember | null
 }
 
 export async function getAllClanMembers(): Promise<ClanMember[]> {
-    const result = await pool.query<ClanMember>(`SELECT ${MEMBER_COLUMNS} FROM clan_members;`);
+    const result = await pool.query<ClanMember>(
+        `SELECT ${MEMBER_COLUMNS} FROM clan_members WHERE left_at IS NULL;`,
+    );
 
     return result.rows;
 }
 
 export async function getAllClanTags(): Promise<Set<string>> {
-    const result = await pool.query<{ tag: string }>("SELECT tag FROM clan_members;");
+    const result = await pool.query<{ tag: string }>(
+        "SELECT tag FROM clan_members WHERE left_at IS NULL;",
+    );
     const rows = result.rows;
     const tags = rows.map((row) => row.tag);
     const uniqueTags = new Set(tags);
