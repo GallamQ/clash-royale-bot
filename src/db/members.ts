@@ -83,3 +83,52 @@ export async function syncClanMembers(members: ApiMember[], today: string): Prom
         client.release();
     }
 }
+
+export async function purgeDepartedMembers(cutoffDate: string): Promise<string[]> {
+    const client = await pool.connect();
+
+    try {
+        await client.query("BEGIN");
+
+        const departed = await client.query<{ tag: string }>(
+            `SELECT tag
+            FROM clan_members
+            WHERE left_at < $1;`,
+            [cutoffDate],
+        );
+        const departedTags = departed.rows.map((row) => row.tag);
+
+        await client.query(
+            `DELETE FROM absences
+            WHERE tag = ANY($1);`,
+            [departedTags],
+        );
+
+        await client.query(
+            `DELETE FROM war_logs
+            WHERE tag = ANY($1);`,
+            [departedTags],
+        );
+
+        await client.query(
+            `DELETE FROM war_results
+            WHERE tag = ANY($1);`,
+            [departedTags],
+        );
+
+        await client.query(
+            `DELETE FROM clan_members
+            WHERE tag = ANY($1);`,
+            [departedTags],
+        );
+
+        await client.query("COMMIT");
+
+        return departedTags;
+    } catch (error) {
+        await client.query("ROLLBACK");
+        throw error;
+    } finally {
+        client.release();
+    }
+}
