@@ -1,5 +1,6 @@
 import { getClanRoster } from "../api/clashApi";
-import { syncClanMembers } from "../db/members";
+import { purgeDepartedMembers, syncClanMembers } from "../db/members";
+import { getPurgeCutoffDate } from "../rules/departedMembers";
 import { isRosterComplete } from "../rules/rosterCompleteness";
 import { getClanToday } from "../utils/clanToday";
 import { runJob } from "./runJob";
@@ -16,8 +17,14 @@ async function main() {
         );
     }
 
-    await syncClanMembers(roster.members, getClanToday());
+    const today = getClanToday();
 
+    await syncClanMembers(roster.members, today);
+
+    const cutoffDate = getPurgeCutoffDate(today);
+    const purgedTags = await purgeDepartedMembers(cutoffDate);
+
+    console.log(`Purged ${purgedTags.length} departed members.`);
     console.log("Clan members updated.");
 }
 
