@@ -5,16 +5,18 @@ import { sendWebhookMessage } from "../utils/discordWebhook";
 import { runJob } from "./runJob";
 import { formatKickList } from "../messages/kickList";
 import { replayJokers } from "../rules/jokers";
+import { filterCountedWars } from "../rules/countedWars";
 
 async function main() {
     const frozenWars = await getFrozenWars();
+    const countedWars = filterCountedWars(frozenWars);
 
-    if (frozenWars.length === 0) {
-        console.log("No frozen war found.");
+    if (countedWars.length === 0) {
+        console.log("No counted war found.");
         return;
     }
 
-    const states = replayJokers(frozenWars);
+    const states = replayJokers(countedWars);
 
     const clanMembers = await getAllClanMembers();
     const membersByTag = new Map(clanMembers.map((member) => [member.tag, member]));
