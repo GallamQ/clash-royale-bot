@@ -308,4 +308,25 @@ describe("replayJokers with the history", () => {
         assert.equal(replayJokers(wars).has("#A"), false);
         assert.equal(replayJokers(wars).has("#B"), true);
     });
+
+    it("keeps the state of a member who left the clan and came back", () => {
+        const wars = [
+            {
+                startDate: WAR_DATES[0],
+                results: [result("#A", 0, "member"), result("#B", 100, "member")],
+            },
+            { startDate: WAR_DATES[1], results: [result("#B", 100, "member")] },
+            {
+                startDate: WAR_DATES[2],
+                results: [result("#A", 0, "member"), result("#B", 100, "member")],
+            },
+        ];
+
+        assert.deepEqual(stateOf(wars), {
+            role: "member",
+            jokers: 1,
+            streak: 0,
+            outcome: "jokerUsed",
+        });
+    });
 });
