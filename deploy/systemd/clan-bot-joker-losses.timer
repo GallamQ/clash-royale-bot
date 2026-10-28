@@ -1,0 +1,9 @@
+[Unit]
+Description=Send the clan bot joker losses every Monday at 12:02 (Paris time)
+
+[Timer]
+OnCalendar=Mon *-*-* 12:02:00 Europe/Paris
+Persistent=true
+
+[Install]
+WantedBy=timers.target
