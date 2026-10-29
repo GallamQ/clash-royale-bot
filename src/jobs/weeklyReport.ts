@@ -5,9 +5,12 @@ import { sendWebhookMessage } from "../utils/discordWebhook";
 import { runJob } from "./runJob";
 import { formatPodium } from "../messages/podium";
 import { toFrenchDate } from "../utils/frenchDate";
+import { assertWarsFrozen } from "./assertWarsFrozen";
 
 async function main() {
     console.log("Generating weekly report...");
+
+    await assertWarsFrozen();
 
     const frozenWar = await getLatestFrozenWar();
 

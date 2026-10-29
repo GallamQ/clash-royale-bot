@@ -4,6 +4,7 @@ import { filterCountedWars } from "../rules/countedWars";
 import { replayJokers } from "../rules/jokers";
 import type { JokerState } from "../rules/jokers";
 import type { ClanMember } from "../types/db";
+import { assertWarsFrozen } from "./assertWarsFrozen";
 
 export type JokerData = {
     states: Map<string, JokerState>;
@@ -11,6 +12,8 @@ export type JokerData = {
 };
 
 export async function loadJokerStates(): Promise<JokerData | undefined> {
+    await assertWarsFrozen();
+
     const frozenWars = await getFrozenWars();
     const countedWars = filterCountedWars(frozenWars);
 
