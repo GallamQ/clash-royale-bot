@@ -1,6 +1,12 @@
 import { fetchWithTimeout } from "./fetchWithTimeout";
 
 async function postToWebhook(urlEnvName: string, message: string): Promise<void> {
+    if (process.env.DRY_RUN === "1") {
+        console.log(`[DRY_RUN] ${urlEnvName}`);
+        console.log(message);
+        return;
+    }
+
     const webhookUrl = process.env[urlEnvName];
 
     if (!webhookUrl) {
