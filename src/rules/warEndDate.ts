@@ -1,7 +1,7 @@
 import type { PeriodLog } from "../types/api";
 import { addDays } from "../utils/addDays";
 
-const WAR_LENGTH_DAYS = 4;
+export const WAR_LENGTH_DAYS = 4;
 const WAR_END_POINTS = 10000;
 
 export function getWarEndDate(
