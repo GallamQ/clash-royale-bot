@@ -24,7 +24,7 @@ async function main() {
     const podium = buildPodium(frozenWar.results, membersByTag);
     const message = formatPodium(toFrenchDate(frozenWar.startDate), podium);
 
-    await sendWebhookMessage(message);
+    await sendWebhookMessage(message, "podium");
 
     console.log("Weekly report sent.");
 }

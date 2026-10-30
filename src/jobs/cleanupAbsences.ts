@@ -16,7 +16,7 @@ async function main() {
     const updatedAbsencesList = await getAllAbsences();
     const message = formatAbsencesList(updatedAbsencesList);
 
-    await sendWebhookMessage(message);
+    await sendWebhookMessage(message, "absences");
 
     console.log("Absences list sent.");
 }

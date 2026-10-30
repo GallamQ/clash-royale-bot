@@ -14,7 +14,7 @@ async function main() {
     const list = buildKickList(data.states, data.membersByTag);
     const message = formatKickList(list);
 
-    await sendWebhookMessage(message);
+    await sendWebhookMessage(message, "kickList");
 
     console.log("Kick list sent.");
 }

@@ -14,7 +14,7 @@ async function main() {
     const losses = buildJokerLossList(data.states, data.membersByTag);
     const message = formatJokerLosses(losses);
 
-    await sendWebhookMessage(message);
+    await sendWebhookMessage(message, "jokerLosses");
 
     console.log("Joker losses sent.");
 }

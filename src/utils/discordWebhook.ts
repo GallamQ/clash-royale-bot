@@ -1,4 +1,6 @@
 import { fetchWithTimeout } from "./fetchWithTimeout";
+import { getWebhookEnvName } from "./webhookChannel";
+import type { WebhookChannel } from "./webhookChannel";
 
 async function postToWebhook(urlEnvName: string, message: string): Promise<void> {
     if (process.env.DRY_RUN === "1") {
@@ -26,8 +28,8 @@ async function postToWebhook(urlEnvName: string, message: string): Promise<void>
     }
 }
 
-export async function sendWebhookMessage(message: string): Promise<void> {
-    await postToWebhook("DISCORD_WEBHOOK_URL", message);
+export async function sendWebhookMessage(message: string, channel: WebhookChannel): Promise<void> {
+    await postToWebhook(getWebhookEnvName(channel, process.env), message);
 }
 
 export async function sendAlertMessage(message: string): Promise<void> {
