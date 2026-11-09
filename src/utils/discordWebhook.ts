@@ -1,9 +1,8 @@
+import { DISCORD_MESSAGE_LIMIT } from "./discordLimits";
 import { fetchWithTimeout } from "./fetchWithTimeout";
 import { splitMessage } from "./splitMessage";
 import { getWebhookEnvName } from "./webhookChannel";
 import type { WebhookChannel } from "./webhookChannel";
-
-const DISCORD_MESSAGE_LIMIT = 2000;
 
 async function postChunk(urlEnvName: string, message: string): Promise<void> {
     if (process.env.DRY_RUN === "1") {

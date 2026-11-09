@@ -5,6 +5,8 @@ import { toFrenchDate } from "../utils/frenchDate";
 import { formatAbsencesList } from "../messages/absencesList";
 import { safeName } from "../utils/safeName";
 import { UserError } from "../utils/userError";
+import { truncateMessage } from "../messages/truncateMessage";
+import { DISCORD_MESSAGE_LIMIT } from "../utils/discordLimits";
 
 interface AbsenceOptions {
     tag: string;
@@ -17,7 +19,7 @@ async function withAbsencesList(confirmation: string, today: string): Promise<st
     const absences = await getActiveAbsences(today);
     const list = formatAbsencesList(absences);
 
-    return `${confirmation}\n\n${list}`;
+    return truncateMessage(`${confirmation}\n\n${list}`, DISCORD_MESSAGE_LIMIT);
 }
 
 export async function handleAbsence(options: AbsenceOptions, today: string): Promise<string> {

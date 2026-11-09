@@ -1,0 +1,1 @@
+export const DISCORD_MESSAGE_LIMIT = 2000;
