@@ -8,9 +8,10 @@ if (!appId || !guildId || !token) {
 
 const commands = [
     {
-        name: "absence-test",
+        name: "absence",
         description: "Déclarer ou retirer une absence",
         type: 1,
+        default_member_permissions: "8",
         options: [
             {
                 type: 3,
