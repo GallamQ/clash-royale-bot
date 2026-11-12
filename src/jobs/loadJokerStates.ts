@@ -29,5 +29,5 @@ export async function loadJokerStates(): Promise<JokerData | undefined> {
     const clanMembers = await getAllClanMembers();
     const membersByTag = new Map(clanMembers.map((member) => [member.tag, member]));
 
-    return { states: allStates, membersByTag };
+    return { states: states, membersByTag };
 }
