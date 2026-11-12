@@ -5,6 +5,7 @@ import { replayJokers } from "../rules/jokers";
 import type { JokerState } from "../rules/jokers";
 import type { ClanMember } from "../types/db";
 import { assertWarsFrozen } from "./assertWarsFrozen";
+import { parseProtectedTags, removeProtectedStates } from "../rules/protectedMembers";
 
 export type JokerData = {
     states: Map<string, JokerState>;
@@ -22,9 +23,11 @@ export async function loadJokerStates(): Promise<JokerData | undefined> {
         return;
     }
 
-    const states = replayJokers(countedWars);
+    const allStates = replayJokers(countedWars);
+    const protectedTags = parseProtectedTags(process.env.PROTECTED_TAGS);
+    const states = removeProtectedStates(allStates, protectedTags);
     const clanMembers = await getAllClanMembers();
     const membersByTag = new Map(clanMembers.map((member) => [member.tag, member]));
 
-    return { states, membersByTag };
+    return { states: allStates, membersByTag };
 }
