@@ -1,128 +1,196 @@
-# Clash Royale Bot
+# Clash Royale Clan Bot
 
-> Bot Discord automatisé pour la gestion d'un clan Clash Royale
+> A Discord bot that automates the weekly administration of a Clash Royale clan.
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org) [![Discord.py](https://img.shields.io/badge/discord.py-2.0+-blue.svg)](https://discordpy.readthedocs.io/) [![Version](https://img.shields.io/badge/version-1.4.0-green.svg)](https://github.com/GallamQ/clash-royale-bot/releases) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-7-blue.svg)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-24-green.svg)](https://nodejs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-database-blue.svg)](https://www.postgresql.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
----
-
-## Description
-
-La gestion d'un clan implique un investissement personnel et du temps, mais ce dernier manque parfois à l'appel. Alors, lorsque j'ai entamé mon périple sur les sentiers de la programmation et que j'y ai découvert les API, il m'est venu l'idée de joindre l'utile à l'agréable : me donner la possibilité de gagner du temps grâce à l'automatisation.
-
-Après quelques recherches et beaucoup d'interrogations, c'est sous la forme d'un bot Discord que j'allais mettre ce projet en place, me permettant également, au passage, de fournir un canal de discussion supplémentaire aux membres du clan désireux de s'y joindre.
-
-Chaque semaine, le bot effectue un travail de veille sur les performances des membres durant la "guerre de clans". Une règle régit ceux-ci : chacun se doit de réaliser un minimum de 1600 points de guerre, sous peine de se voir exclure (ou rétrograder au rang inférieur). Une fois les résultats obtenus, je n'ai plus qu'à m'occuper des promotions et des exclusions au sein du clan.
+🇫🇷 [Version française](#version-française) en bas de page.
 
 ---
 
-## Fonctionnalités
+## About
 
-### Commandes automatiques (tous les lundis)
-- **Top 5 hebdomadaire** - Classement des meilleurs joueurs avec gestion des égalités
-- **Analyse des performances** - Liste des joueurs à exclure ou rétrograder
-- **Rapport des absents** - Suivi des membres en absence justifiée
+Running a clan takes time and personal investment, and that time is not always available. When I started learning to program and discovered APIs, I saw a chance to combine the useful with the enjoyable: automate the tedious part of clan management.
 
-### Commandes manuelles
-- `!top5` - Affiche le podium de la semaine
-- `!kick` - Analyse les performances et suggère les sanctions
-- `!absence <tag> [date_début] [date_fin]` - Gestion des absences
-- `!absents` - Liste des absents actuels
+The result is a Discord bot that watches the clan's performance during the weekly "clan war" and posts ready-to-use reports in Discord. It also gives clan members one more place to talk. I now only have to act on the results (promotions, demotions, kicks).
 
-### Automatisations
-- Synchronisation des données du clan
-- Sauvegarde des résultats de guerre
-- Notifications automatiques
-- Veille des fins de guerre avec prise en compte du changement d'horaire été/hiver
+The project started in Python and was rewritten in TypeScript, with the business rules extracted into small pure functions covered by tests.
 
 ---
 
-## Installation
+## Features
 
-### Prérequis
-- Python 3.8+
+**Automatic, every week**
+- War podium: top 3 with ties handled
+- Sanction list: who gets demoted or kicked, based on a joker system
+- Joker losses report
+- Cleanup of expired absences
+
+**Automatic, behind the scenes**
+- Daily snapshot of the clan roster (joins and departures)
+- Several captures of the war scores during the day change, then a freeze of the final results. The bot looks at the data instead of trusting a fixed hour, because the war can end at a different time each week (and summer/winter time moves it too)
+
+**Manual**
+- `/absence` slash command to declare, change or remove a member's absence
+
+---
+
+## How it works
+
+There is no always-on Discord gateway bot. Scheduled jobs run small scripts, and a minimal web server answers Discord's slash command requests.
+
+```
+systemd timers ──► jobs (src/jobs) ──► Clash Royale API
+                        │
+                        ├──► PostgreSQL (src/db)
+                        └──► Discord webhooks (reports)
+
+Discord /absence ──► Express server (src/server) ──► PostgreSQL
+```
+
+- **Timers**: the schedule lives in `deploy/systemd/` (one `.service` and one `.timer` per job, plus a failure notifier).
+- **Business rules**: everything that decides something (podium, jokers, exemptions, war dates...) lives in `src/rules/` as pure functions with no network or database access, which makes them easy to test.
+- **Messages**: `src/messages/` formats the Discord messages.
+- **Failures**: a job that fails sends an alert to a dedicated webhook.
+
+---
+
+## Clan rules in short
+
+- **Podium**: the top 3 scores of the war (ties included). Zero points never reach the podium. Members on the podium are promoted to elder.
+- **Sanction**: scoring strictly 0 points in a war.
+- **Jokers**: an elder has 1 joker, a member has 3. Each zero consumes one; the sanction falls on the next one (demotion for an elder, kick for a member).
+- **Recovery**: a member earns a joker back after 4 consecutive wars with points. An elder gets it back by reaching the podium again.
+- **Neutral wars**: a declared absence, or joining the clan during the war, neither consumes a joker nor counts toward a streak.
+
+---
+
+## Project structure
+
+```
+clan-bot-ts/
+├── src/
+│   ├── api/        # Clash Royale API client
+│   ├── db/         # PostgreSQL queries
+│   ├── jobs/       # Scheduled scripts (snapshot, freeze, reports...)
+│   ├── rules/      # Pure business rules
+│   ├── messages/   # Discord message formatting
+│   ├── server/     # Express server for slash commands
+│   ├── checks/     # Manual verification scripts
+│   ├── admin/      # Slash command registration
+│   ├── types/      # Shared types
+│   └── utils/      # Small helpers
+├── tests/          # Unit tests (mirror of src/)
+├── sql/            # Numbered database migrations
+└── deploy/systemd/ # Timers and services
+```
+
+---
+
+## Getting started
+
+### Requirements
+
+- Node.js 24 (the version the bot runs on)
 - PostgreSQL
-- Token Discord Bot
-- Clé API Clash Royale
+- A [Clash Royale API](https://developer.clashroyale.com/) key (bound to the IP address that calls it)
+- A Discord application (bot token, public key) and webhook URLs
 
-### Configuration
-1. Clonez le repository
+### Installation
+
 ```bash
 git clone https://github.com/GallamQ/clash-royale-bot.git
 cd clash-royale-bot
+npm install
 ```
 
-2. Installez les dépendances
-```bash
-pip install -r requirements.txt
-```
+### Configuration
 
-3. Configurez les variables d'environnement
+Create a `.env` file:
+
 ```env
-DISCORD_TOKEN=votre_token_discord
-CLASH_API_TOKEN=votre_token_clash_royale
+# Clash Royale
+API_KEY=your_clash_royale_api_key
+CLAN_TAG=#YOURCLANTAG
+
+# Database
 DATABASE_URL=postgresql://user:password@localhost/dbname
-CLAN_TAG=#votre_tag_clan
+
+# Discord application (slash commands)
+DISCORD_APP_ID=...
+DISCORD_PUBLIC_KEY=...
+DISCORD_BOT_TOKEN=...
+DISCORD_GUILD_ID=...
+PORT=3000
+
+# Discord webhooks: DISCORD_WEBHOOK_URL is the default channel,
+# the others are optional and override it per report
+DISCORD_WEBHOOK_URL=...
+PODIUM_WEBHOOK_URL=...
+KICK_LIST_WEBHOOK_URL=...
+JOKER_LOSSES_WEBHOOK_URL=...
+ABSENCES_WEBHOOK_URL=...
+ALERT_WEBHOOK_URL=...
+
+# Optional: print messages instead of sending them
+# DRY_RUN=1
 ```
 
-4. Lancez le bot
+### Database
+
+Apply the migrations of `sql/` in numerical order:
+
 ```bash
-python main.py
+for f in sql/*.sql; do psql "$DATABASE_URL" -f "$f"; done
 ```
 
----
+### Development
 
-## Structure du projet
-
-```
-clash-royale-bot/
-├── commands/
-│   ├── auto/          # Commandes automatiques
-│   └── user/          # Commandes utilisateur
-├── services/
-│   ├── clash_api.py   # Interface API Clash Royale
-│   ├── database.py    # Gestion base de données
-│   └── scheduler.py   # Tâches automatiques
-├── main.py           # Point d'entrée
-└── requirements.txt  # Dépendances
-```
-
----
-
-## Utilisation
-
-### Gestion des absences
 ```bash
-# Marquer un joueur absent cette semaine
-!absence #TAG
-
-# Marquer absent avec dates spécifiques
-!absence #TAG 15-10-2024 21-10-2024
-
-# Retirer une absence
-!absence #TAG remove
+npm test          # run the tests
+npm run typecheck # TypeScript check
+npm run format    # Prettier check
 ```
-
-### Consultation des rapports
-Les rapports sont publiés automatiquement chaque lundi, mais peuvent être consultés à tout moment avec les commandes manuelles.
 
 ---
 
 ## License
 
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+This project is released under the MIT license. See [LICENSE](LICENSE).
+
+## Author
+
+**Quentin "Gallam" Detré**, [GitHub](https://github.com/GallamQ)
+
+## Acknowledgements
+
+- [Clash Royale API](https://developer.clashroyale.com/) for the game data
+- [Discord](https://discord.com/developers/docs) for the interactions and webhooks
 
 ---
 
-## Auteur
+<details>
+<summary id="version-française">🇫🇷 Version française</summary>
 
-**GallamQ** - [GitHub](https://github.com/GallamQ)
+## À propos
 
-## Remerciements
+Gérer un clan demande du temps et de l'investissement personnel, et ce temps manque parfois. Quand j'ai commencé à apprendre la programmation et découvert les API, j'ai voulu joindre l'utile à l'agréable : automatiser la partie fastidieuse de la gestion du clan.
 
-- [discord.py](https://discordpy.readthedocs.io/) pour l'interface Discord
-- [Clash Royale API](https://developer.clashroyale.com/) pour les données du jeu
+Le résultat est un bot Discord qui surveille les performances du clan pendant la « guerre de clans » hebdomadaire et publie des rapports prêts à l'emploi. Il offre aussi aux membres un canal de discussion de plus. Il ne me reste qu'à agir sur les résultats (promotions, rétrogradations, exclusions).
 
----
+Le projet est né en Python avant d'être réécrit en TypeScript, avec les règles de gestion isolées dans de petites fonctions pures couvertes par des tests.
 
-N'hésitez pas à star ⭐ le projet s'il vous est utile !
+## Fonctionnement
+
+Pas de bot connecté en permanence à Discord : des tâches planifiées (timers systemd) lancent de petits scripts, et un mini serveur web répond à la commande `/absence`.
+
+- **Chaque semaine** : podium (top 3, égalités comprises), liste des sanctions selon le système de jokers, jokers perdus, nettoyage des absences terminées.
+- **En coulisses** : photo quotidienne du roster, captures répétées des scores pendant le changement de jour puis gel des résultats finaux. Le bot se fie aux données plutôt qu'à une heure fixe, car la fin de guerre tombe à des instants différents d'une semaine à l'autre.
+- **Règles** : 0 point en guerre = un joker consommé (1 pour un aîné, 3 pour un membre), sanction au suivant. Un membre récupère un joker après 4 guerres consécutives avec des points ; un aîné en refaisant un podium. Absence déclarée ou arrivée en cours de guerre = guerre neutre.
+
+Pour l'installation, voir les sections *Getting started* et *Project structure* ci-dessus.
+
+</details>
