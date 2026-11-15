@@ -24,12 +24,14 @@
   "scripts": {
     "test": "tsx --test \"tests/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
-    "format": "prettier --check src tests"
+    "format": "prettier --check src tests",
+    "release": "commit-and-tag-version"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.2",
     "@types/pg": "^8.23.1",
+    "commit-and-tag-version": "^13.3.0",
     "prettier": "3.9.9",
     "typescript": "^7.0.2"
   },
