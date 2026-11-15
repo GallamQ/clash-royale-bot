@@ -4,7 +4,7 @@
   "description": "Discord bot for a Clash Royale clan: war tracking, podium, sanctions and joker system, written in TypeScript.",
   "private": true,
   "license": "MIT",
-  "author": "GallamQ",
+  "author": "Quentin \"Gallam\" Detré",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/GallamQ/clash-royale-bot.git"
