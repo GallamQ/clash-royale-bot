@@ -1,15 +1,31 @@
 {
   "name": "clan-bot-ts",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "tsx --test \"tests/**/*.test.ts\""
+  "description": "Discord bot for a Clash Royale clan: war tracking, podium, sanctions and joker system, written in TypeScript.",
+  "private": true,
+  "license": "MIT",
+  "author": "GallamQ",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GallamQ/clash-royale-bot.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GallamQ/clash-royale-bot/issues"
+  },
+  "homepage": "https://github.com/GallamQ/clash-royale-bot#readme",
+  "keywords": [
+    "discord",
+    "discord-bot",
+    "clash-royale",
+    "typescript",
+    "postgresql"
+  ],
   "type": "commonjs",
+  "scripts": {
+    "test": "tsx --test \"tests/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --check src tests"
+  },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.2",
