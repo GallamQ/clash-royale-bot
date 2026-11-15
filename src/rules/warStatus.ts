@@ -1,5 +1,7 @@
 import type { PeriodLog } from "../types/api";
+import type { War } from "../types/db";
 import { addDays } from "../utils/addDays";
+import { WAR_LENGTH_DAYS } from "./warEndDate";
 
 const WAR_WEEK_LENGTH = 7;
 const TRAINING_DAYS = 3;
@@ -35,4 +37,20 @@ export function getGameDay(now: Date): string {
 
 export function getWarStartDate(now: Date, periodIndex: number, warStartIndex: number): string {
     return addDays(getGameDay(now), warStartIndex - periodIndex);
+}
+
+export function isWarPeriodOver(periodIndex: number, warStartIndex: number): boolean {
+    return periodIndex >= warStartIndex + WAR_LENGTH_DAYS;
+}
+
+export function pickWarStartDate(
+    openWar: War | null,
+    warStartIndex: number,
+    computedDate: string,
+): string {
+    if (openWar !== null && openWar.startIndex === warStartIndex) {
+        return openWar.startDate;
+    }
+
+    return computedDate;
 }

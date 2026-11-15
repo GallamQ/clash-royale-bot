@@ -1,7 +1,15 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import type { PeriodLog } from "../../types/api";
-import { getGameDay, getWarStartDate, getWarStartIndex, hasWarEnded } from "../../rules/warStatus";
+import type { War } from "../../types/db";
+import {
+    getGameDay,
+    getWarStartDate,
+    getWarStartIndex,
+    hasWarEnded,
+    isWarPeriodOver,
+    pickWarStartDate,
+} from "../../rules/warStatus";
 
 const OUR_CLAN = "#OURCLAN";
 const OTHER_CLAN = "#OTHER";
@@ -153,5 +161,39 @@ describe("getGameDay", () => {
 
     it("returns the current day late in the evening", () => {
         assert.equal(getGameDay(new Date("2026-10-12T23:59:00Z")), "2026-10-12");
+    });
+});
+
+describe("isWarPeriodOver", () => {
+    it("is false during the four war days", () => {
+        for (const periodIndex of [10, 11, 12, 13]) {
+            assert.equal(isWarPeriodOver(periodIndex, 10), false);
+        }
+    });
+
+    it("is true on the training days after the war", () => {
+        for (const periodIndex of [14, 15, 16]) {
+            assert.equal(isWarPeriodOver(periodIndex, 10), true);
+        }
+    });
+
+    it("is false on the first day of the next war", () => {
+        assert.equal(isWarPeriodOver(17, 17), false);
+    });
+});
+
+describe("pickWarStartDate", () => {
+    const openWar: War = { startDate: "2026-11-12", startIndex: 10, periodType: "warDay" };
+
+    it("keeps the start date of the open war when it has the same index", () => {
+        assert.equal(pickWarStartDate(openWar, 10, "2026-11-13"), "2026-11-12");
+    });
+
+    it("uses the computed date when there is no open war", () => {
+        assert.equal(pickWarStartDate(null, 10, "2026-11-12"), "2026-11-12");
+    });
+
+    it("uses the computed date when the open war has another index", () => {
+        assert.equal(pickWarStartDate(openWar, 17, "2026-11-19"), "2026-11-19");
     });
 });
