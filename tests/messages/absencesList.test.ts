@@ -1,8 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { formatAbsencesList } from "../../messages/absencesList";
-import type { AbsenceWithName } from "../../types/db";
-import { safeName } from "../../utils/safeName";
+import { formatAbsencesList } from "../../src/messages/absencesList";
+import type { AbsenceWithName } from "../../src/types/db";
+import { safeName } from "../../src/utils/safeName";
 
 function absence(name: string, startDate: string, endDate: string): AbsenceWithName {
     return { tag: `#${name}`, name, startDate, endDate };

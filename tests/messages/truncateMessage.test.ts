@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { truncateMessage } from "../../messages/truncateMessage";
+import { truncateMessage } from "../../src/messages/truncateMessage";
 
 describe("truncateMessage", () => {
     it("returns the message unchanged when it fits", () => {

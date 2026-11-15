@@ -1,6 +1,9 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { DEPARTED_MEMBER_RETENTION_DAYS, getPurgeCutoffDate } from "../../rules/departedMembers";
+import {
+    DEPARTED_MEMBER_RETENTION_DAYS,
+    getPurgeCutoffDate,
+} from "../../src/rules/departedMembers";
 
 describe("getPurgeCutoffDate", () => {
     it("keeps departed members for 90 days", () => {

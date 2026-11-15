@@ -1,8 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { formatJokerLosses } from "../../messages/jokerLosses";
-import type { JokerLoss } from "../../rules/jokerLosses";
-import { safeName } from "../../utils/safeName";
+import { formatJokerLosses } from "../../src/messages/jokerLosses";
+import type { JokerLoss } from "../../src/rules/jokerLosses";
+import { safeName } from "../../src/utils/safeName";
 
 function loss(name: string, jokersLeft: number, role: string = "member"): JokerLoss {
     return {

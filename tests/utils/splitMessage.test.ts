@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { splitMessage } from "../../utils/splitMessage";
+import { splitMessage } from "../../src/utils/splitMessage";
 
 describe("splitMessage", () => {
     it("returns the message unchanged when it fits", () => {

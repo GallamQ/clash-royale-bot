@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { isFreezeOverdue } from "../../rules/freezeGuard";
+import { isFreezeOverdue } from "../../src/rules/freezeGuard";
 
 describe("isFreezeOverdue", () => {
     it("is false when no war is open", () => {

@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { getClanToday } from "../../utils/clanToday";
+import { getClanToday } from "../../src/utils/clanToday";
 
 describe("getClanToday", () => {
     it("returns the same day at midday", () => {

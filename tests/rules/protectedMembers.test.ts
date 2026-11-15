@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import type { JokerState } from "../../rules/jokers";
-import { parseProtectedTags, removeProtectedStates } from "../../rules/protectedMembers";
+import type { JokerState } from "../../src/rules/jokers";
+import { parseProtectedTags, removeProtectedStates } from "../../src/rules/protectedMembers";
 
 describe("parseProtectedTags", () => {
     it("returns an empty set when the variable is missing", () => {

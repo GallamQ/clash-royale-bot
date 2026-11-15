@@ -1,8 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import type { WarResult } from "../../rules/warResults";
-import type { JokerState, WarHistoryEntry } from "../../rules/jokers";
-import { replayJokers } from "../../rules/jokers";
+import type { WarResult } from "../../src/rules/warResults";
+import type { JokerState, WarHistoryEntry } from "../../src/rules/jokers";
+import { replayJokers } from "../../src/rules/jokers";
 
 const WAR_DATES = [
     "2026-10-08",

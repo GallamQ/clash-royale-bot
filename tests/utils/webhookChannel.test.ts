@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { getWebhookEnvName } from "../../utils/webhookChannel";
+import { getWebhookEnvName } from "../../src/utils/webhookChannel";
 
 describe("getWebhookEnvName", () => {
     it("uses the dedicated variable of each channel when it is defined", () => {

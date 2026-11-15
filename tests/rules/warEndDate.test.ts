@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import type { PeriodLog } from "../../types/api";
-import { getWarEndDate } from "../../rules/warEndDate";
+import type { PeriodLog } from "../../src/types/api";
+import { getWarEndDate } from "../../src/rules/warEndDate";
 
 const OUR_CLAN = "#OURCLAN";
 const OTHER_CLAN = "#OTHER";

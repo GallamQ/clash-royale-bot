@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { getClanEndpoint, normalizeClanTag } from "../../utils/clanTag";
+import { getClanEndpoint, normalizeClanTag } from "../../src/utils/clanTag";
 
 describe("normalizeClanTag", () => {
     it("adds the # when it is missing", () => {

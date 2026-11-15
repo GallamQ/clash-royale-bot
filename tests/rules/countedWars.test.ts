@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { FIRST_COUNTED_WAR_DATE, filterCountedWars } from "../../rules/countedWars";
-import type { WarHistoryEntry } from "../../rules/jokers";
+import { FIRST_COUNTED_WAR_DATE, filterCountedWars } from "../../src/rules/countedWars";
+import type { WarHistoryEntry } from "../../src/rules/jokers";
 
 function buildWar(startDate: string): WarHistoryEntry {
     return { startDate, results: [] };

@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { resolveAbsenceDates } from "../../rules/absenceDates";
-import { UserError } from "../../utils/userError";
+import { resolveAbsenceDates } from "../../src/rules/absenceDates";
+import { UserError } from "../../src/utils/userError";
 
 describe("resolveAbsenceDates without explicit dates", () => {
     it("returns the current week from Monday to Sunday", () => {

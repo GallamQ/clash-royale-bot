@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import type { PeriodLog } from "../../types/api";
-import type { War } from "../../types/db";
+import type { PeriodLog } from "../../src/types/api";
+import type { War } from "../../src/types/db";
 import {
     getGameDay,
     getWarStartDate,
@@ -9,7 +9,7 @@ import {
     hasWarEnded,
     isWarPeriodOver,
     pickWarStartDate,
-} from "../../rules/warStatus";
+} from "../../src/rules/warStatus";
 
 const OUR_CLAN = "#OURCLAN";
 const OTHER_CLAN = "#OTHER";

@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { isWarExempt } from "../../rules/warExemption";
+import { isWarExempt } from "../../src/rules/warExemption";
 
 const WAR_START = "2026-10-08";
 const LONG_AGO = "2026-01-01";

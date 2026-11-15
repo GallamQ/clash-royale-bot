@@ -1,8 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import type { ClanMember } from "../../types/db";
-import type { JokerOutcome, JokerState } from "../../rules/jokers";
-import { buildJokerLossList } from "../../rules/jokerLosses";
+import type { ClanMember } from "../../src/types/db";
+import type { JokerOutcome, JokerState } from "../../src/rules/jokers";
+import { buildJokerLossList } from "../../src/rules/jokerLosses";
 
 function member(tag: string, name: string, role: string): ClanMember {
     return { tag, name, role, joinDate: "2026-01-01" };

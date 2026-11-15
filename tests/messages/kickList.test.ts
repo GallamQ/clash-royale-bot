@@ -1,8 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { formatKickList } from "../../messages/kickList";
-import type { ClanMember } from "../../types/db";
-import { safeName } from "../../utils/safeName";
+import { formatKickList } from "../../src/messages/kickList";
+import type { ClanMember } from "../../src/types/db";
+import { safeName } from "../../src/utils/safeName";
 
 function member(name: string, role: string): ClanMember {
     return { tag: `#${name}`, name, role, joinDate: "2026-01-01" };

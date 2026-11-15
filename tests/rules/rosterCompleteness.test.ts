@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { isRosterComplete } from "../../rules/rosterCompleteness";
+import { isRosterComplete } from "../../src/rules/rosterCompleteness";
 
 describe("isRosterComplete", () => {
     it("accepts a list with as many members as announced", () => {

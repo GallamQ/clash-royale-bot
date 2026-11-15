@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import type { Absence, ClanMember, WarLogRow } from "../../types/db";
-import { buildWarResults } from "../../rules/warResults";
+import type { Absence, ClanMember, WarLogRow } from "../../src/types/db";
+import { buildWarResults } from "../../src/rules/warResults";
 
 const WAR_START = "2026-10-08";
 const LONG_AGO = "2026-01-01";

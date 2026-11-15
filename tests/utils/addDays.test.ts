@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { addDays } from "../../utils/addDays";
+import { addDays } from "../../src/utils/addDays";
 
 describe("addDays", () => {
     it("adds days inside a month", () => {
