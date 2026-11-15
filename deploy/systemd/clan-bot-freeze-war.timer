@@ -1,8 +1,8 @@
 [Unit]
-Description=Freeze the clan bot war results every Monday at 09:35 UTC, just after the day change
+Description=Freeze the clan bot war results every Monday at 10:50 UTC, after the last possible day change and before the podium
 
 [Timer]
-OnCalendar=Mon *-*-* 09:35:00 UTC
+OnCalendar=Mon *-*-* 10:50:00 UTC
 Persistent=true
 
 [Install]

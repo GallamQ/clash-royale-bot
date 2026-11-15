@@ -1,9 +1,10 @@
 [Unit]
-Description=Run the clan bot war snapshot once on Fri and Sat, and every minute on Sun and Mon, just before the daily reset (UTC)
+Description=Run the clan bot war snapshot once on Fri and Sat, and every minute on Sun and Mon from 09:15 to 10:45 UTC, around the daily reset
 
 [Timer]
 OnCalendar=Fri,Sat *-*-* 09:29:00 UTC
-OnCalendar=Sun,Mon *-*-* 09:15..29:00 UTC
+OnCalendar=Sun,Mon *-*-* 09:15..59:00 UTC
+OnCalendar=Sun,Mon *-*-* 10:00..45:00 UTC
 AccuracySec=1s
 
 [Install]
