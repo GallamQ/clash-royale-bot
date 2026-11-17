@@ -4,6 +4,7 @@ import { handleAbsence } from "./absenceCommand";
 import { getAllClanMembers } from "../db/members";
 import { buildMemberChoices } from "../rules/memberChoices";
 import { getClanToday } from "../utils/clanToday";
+import { buildMessagePayload } from "../utils/discordPayload";
 
 const publicKey = process.env.DISCORD_PUBLIC_KEY;
 
@@ -52,7 +53,7 @@ app.post("/interactions", express.raw({ type: "application/json" }), async (req,
 
         res.json({
             type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-            data: { content },
+            data: buildMessagePayload(content),
         });
 
         return;

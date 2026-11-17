@@ -1,4 +1,5 @@
 import { DISCORD_MESSAGE_LIMIT } from "./discordLimits";
+import { buildMessagePayload } from "./discordPayload";
 import { fetchWithTimeout } from "./fetchWithTimeout";
 import { splitMessage } from "./splitMessage";
 import { getWebhookEnvName } from "./webhookChannel";
@@ -20,7 +21,7 @@ async function postChunk(urlEnvName: string, message: string): Promise<void> {
     const response = await fetchWithTimeout(webhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: message }),
+        body: JSON.stringify(buildMessagePayload(message)),
     });
 
     if (!response.ok) {
