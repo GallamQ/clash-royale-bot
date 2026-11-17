@@ -1,0 +1,37 @@
+name: Bug report
+description: Something does not behave as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the unexpected behaviour.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - War snapshot / freeze
+        - Jokers and kick rules
+        - Absences and /absence
+        - Messages and webhooks
+        - Database and migrations
+        - systemd timers
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or steps to reproduce
+      description: Paste the relevant `journalctl` lines or the steps. Never paste tokens, webhook URLs or database credentials.
+      render: shell
