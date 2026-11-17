@@ -25,7 +25,8 @@
     "test": "tsx --test \"tests/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
     "format": "prettier --check src tests",
-    "release": "commit-and-tag-version"
+    "release": "commit-and-tag-version",
+    "register-commands": "node --env-file=.env --import tsx src/admin/registerCommands.ts"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
