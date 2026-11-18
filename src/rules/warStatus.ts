@@ -6,6 +6,7 @@ import { WAR_LENGTH_DAYS } from "./warEndDate";
 const WAR_WEEK_LENGTH = 7;
 const TRAINING_DAYS = 3;
 const WAR_END_POINTS = 10000;
+const THURSDAY = 4;
 const DAY_CHANGE_OFFSET_MS = (9 * 60 + 30) * 60 * 1000;
 
 export function getWarStartIndex(periodIndex: number): number {
@@ -53,4 +54,10 @@ export function pickWarStartDate(
     }
 
     return computedDate;
+}
+
+export function isThursday(isoDate: string): boolean {
+    const date = new Date(`${isoDate}T00:00:00Z`);
+
+    return date.getUTCDay() === THURSDAY;
 }

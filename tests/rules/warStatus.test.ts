@@ -7,6 +7,7 @@ import {
     getWarStartDate,
     getWarStartIndex,
     hasWarEnded,
+    isThursday,
     isWarPeriodOver,
     pickWarStartDate,
 } from "../../src/rules/warStatus";
@@ -195,5 +196,28 @@ describe("pickWarStartDate", () => {
 
     it("uses the computed date when the open war has another index", () => {
         assert.equal(pickWarStartDate(openWar, 17, "2026-11-19"), "2026-11-19");
+    });
+});
+
+describe("isThursday", () => {
+    it("returns true for a Thursday", () => {
+        assert.equal(isThursday("2026-11-19"), true);
+        assert.equal(isThursday("2026-10-22"), true);
+    });
+
+    it("returns false for the day before and the day after a Thursday", () => {
+        assert.equal(isThursday("2026-11-18"), false);
+        assert.equal(isThursday("2026-11-20"), false);
+    });
+
+    it("returns false for a Sunday and a Monday", () => {
+        assert.equal(isThursday("2026-11-22"), false);
+        assert.equal(isThursday("2026-11-23"), false);
+    });
+
+    it("works across a year boundary and a clock change", () => {
+        assert.equal(isThursday("2026-12-31"), true);
+        assert.equal(isThursday("2027-01-01"), false);
+        assert.equal(isThursday("2027-04-01"), true);
     });
 });
