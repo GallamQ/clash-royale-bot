@@ -7,6 +7,7 @@ import {
     getWarStartIndex,
     getWarStartDate,
     hasWarEnded,
+    isThursday,
     isWarPeriodOver,
     pickWarStartDate,
 } from "../rules/warStatus";
@@ -41,6 +42,10 @@ async function main() {
         startIndex: warStartIndex,
         periodType: warData.periodType,
     };
+
+    if (!isThursday(war.startDate)) {
+        throw new Error(`War start date ${war.startDate} is not a Thursday.`);
+    }
 
     const participants = warData.participants;
     const knownTags = await getAllClanTags();
