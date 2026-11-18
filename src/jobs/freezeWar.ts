@@ -6,7 +6,7 @@ import { saveWarResults } from "../db/warResults";
 import { closeWar, getOpenWar } from "../db/wars";
 import { getWarEndDate } from "../rules/warEndDate";
 import { buildWarResults } from "../rules/warResults";
-import { getGameDay } from "../rules/warStatus";
+import { isWarFinished } from "../rules/warStatus";
 import { runJob } from "./runJob";
 
 async function main() {
@@ -20,6 +20,20 @@ async function main() {
     }
 
     const warData = await getClanWarData();
+
+    if (
+        !isWarFinished(
+            warData.periodIndex,
+            war.startIndex,
+            warData.periodLogs,
+            CLAN_TAG,
+            war.periodType,
+        )
+    ) {
+        console.log("War is not over yet.");
+        return;
+    }
+
     const endDate = getWarEndDate(
         war.startDate,
         war.startIndex,
@@ -27,11 +41,6 @@ async function main() {
         CLAN_TAG,
         war.periodType,
     );
-
-    if (endDate > getGameDay(new Date())) {
-        console.log("War is not over yet.");
-        return;
-    }
 
     const members = await getAllClanMembers();
     const warLogs = await getWarLogsByStartDate(war.startDate);
