@@ -8,6 +8,7 @@ import {
     getWarStartIndex,
     hasWarEnded,
     isThursday,
+    isWarFinished,
     isWarPeriodOver,
     pickWarStartDate,
 } from "../../src/rules/warStatus";
@@ -219,5 +220,46 @@ describe("isThursday", () => {
         assert.equal(isThursday("2026-12-31"), true);
         assert.equal(isThursday("2027-01-01"), false);
         assert.equal(isThursday("2027-04-01"), true);
+    });
+});
+
+describe("isWarFinished", () => {
+    it("is false during the war while the finish line is not reached", () => {
+        const logs = [day(24, OUR_CLAN, 3400), day(25, OUR_CLAN, 6800)];
+
+        assert.equal(isWarFinished(26, 24, logs, OUR_CLAN, "warDay"), false);
+    });
+
+    it("is false on the last war day, just before the day change", () => {
+        assert.equal(isWarFinished(27, 24, [], OUR_CLAN, "warDay"), false);
+    });
+
+    it("is true on the first day after the four war days", () => {
+        assert.equal(isWarFinished(28, 24, [], OUR_CLAN, "warDay"), true);
+    });
+
+    it("is true when the finish line is reached before the last day", () => {
+        const logs = [day(24, OUR_CLAN, 3400), day(25, OUR_CLAN, 6800), day(26, OUR_CLAN, 10000)];
+
+        assert.equal(isWarFinished(27, 24, logs, OUR_CLAN, "warDay"), true);
+    });
+
+    it("ignores another clan reaching the finish line", () => {
+        const logs = [day(26, OTHER_CLAN, 10000)];
+
+        assert.equal(isWarFinished(27, 24, logs, OUR_CLAN, "warDay"), false);
+    });
+
+    it("ignores the logs of previous wars", () => {
+        const logs = [day(19, OUR_CLAN, 10000)];
+
+        assert.equal(isWarFinished(25, 24, logs, OUR_CLAN, "warDay"), false);
+    });
+
+    it("ends a colosseum only after its four days", () => {
+        const logs = [day(24, OUR_CLAN, 10000)];
+
+        assert.equal(isWarFinished(26, 24, logs, OUR_CLAN, "colosseum"), false);
+        assert.equal(isWarFinished(28, 24, logs, OUR_CLAN, "colosseum"), true);
     });
 });

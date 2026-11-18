@@ -61,3 +61,16 @@ export function isThursday(isoDate: string): boolean {
 
     return date.getUTCDay() === THURSDAY;
 }
+
+export function isWarFinished(
+    periodIndex: number,
+    warStartIndex: number,
+    periodLogs: PeriodLog[],
+    clanTag: string,
+    periodType: string,
+): boolean {
+    return (
+        isWarPeriodOver(periodIndex, warStartIndex) ||
+        hasWarEnded(periodLogs, clanTag, warStartIndex, periodType)
+    );
+}
