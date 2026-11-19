@@ -2,9 +2,12 @@ import { deleteExpiredAbsences, getAllAbsences } from "../db/absences";
 import { formatAbsencesList } from "../messages/absencesList";
 import { getClanToday } from "../utils/clanToday";
 import { sendWebhookMessage } from "../utils/discordWebhook";
+import { assertWarsFrozen } from "./assertWarsFrozen";
 import { runJob } from "./runJob";
 
 async function main() {
+    await assertWarsFrozen();
+
     console.log("Deleting expired absences...");
 
     const today = getClanToday();
