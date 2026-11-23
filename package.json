@@ -1,6 +1,6 @@
 {
   "name": "clan-bot-ts",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Discord bot for a Clash Royale clan: war tracking, podium, sanctions and joker system, written in TypeScript.",
   "private": true,
   "license": "MIT",

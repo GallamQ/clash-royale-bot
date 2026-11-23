@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.1](https://github.com/GallamQ/clash-royale-bot/compare/v2.0.0...v2.0.1) (2026-11-23)
+
+### Bug Fixes
+
+* freeze wars from the game calendar instead of the clock ([a7dd9c4](https://github.com/GallamQ/clash-royale-bot/commit/a7dd9c461a477f482da2e7f138f6b908f2fa5ff7))
+* gate absence cleanup on the war freeze ([a1345be](https://github.com/GallamQ/clash-royale-bot/commit/a1345be8c15f215fbe3f113ea8e6bf3efa254056)), closes [#3](https://github.com/GallamQ/clash-royale-bot/issues/3)
+* refuse war start dates that are not a Thursday ([f5c6dc9](https://github.com/GallamQ/clash-royale-bot/commit/f5c6dc9416bcadf9013e86c1083c8c8068d50210)), closes [#2](https://github.com/GallamQ/clash-royale-bot/issues/2)
+* run the war freeze every minute after the day change ([7836c9d](https://github.com/GallamQ/clash-royale-bot/commit/7836c9d77611c3af09367cf15980e6a531a322cb)), closes [#1](https://github.com/GallamQ/clash-royale-bot/issues/1)
+
 ## [2.0.0](https://github.com/GallamQ/clash-royale-bot/compare/v1.4.0...v2.0.0) (2026-11-17)
 
 ### Features
