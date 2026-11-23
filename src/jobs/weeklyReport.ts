@@ -6,6 +6,7 @@ import { runJob } from "./runJob";
 import { formatPodium } from "../messages/podium";
 import { toFrenchDate } from "../utils/frenchDate";
 import { assertWarsFrozen } from "./assertWarsFrozen";
+import { publishOnce } from "./publishOnce";
 
 async function main() {
     console.log("Generating weekly report...");
@@ -24,9 +25,15 @@ async function main() {
     const podium = buildPodium(frozenWar.results, membersByTag);
     const message = formatPodium(toFrenchDate(frozenWar.startDate), podium);
 
-    await sendWebhookMessage(message, "podium");
+    const wasSent = await publishOnce("podium", frozenWar.startDate, () =>
+        sendWebhookMessage(message, "podium"),
+    );
 
-    console.log("Weekly report sent.");
+    if (wasSent) {
+        console.log("Weekly report sent.");
+    } else {
+        console.log("Weekly report already published.");
+    }
 }
 
 runJob(main);
