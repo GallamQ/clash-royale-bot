@@ -3,6 +3,7 @@ import { formatAbsencesList } from "../messages/absencesList";
 import { getClanToday } from "../utils/clanToday";
 import { sendWebhookMessage } from "../utils/discordWebhook";
 import { assertWarsFrozen } from "./assertWarsFrozen";
+import { publishOnce } from "./publishOnce";
 import { runJob } from "./runJob";
 
 async function main() {
@@ -19,9 +20,15 @@ async function main() {
     const updatedAbsencesList = await getAllAbsences();
     const message = formatAbsencesList(updatedAbsencesList);
 
-    await sendWebhookMessage(message, "absences");
+    const wasSent = await publishOnce("absences", today, () =>
+        sendWebhookMessage(message, "absences"),
+    );
 
-    console.log("Absences list sent.");
+    if (wasSent) {
+        console.log("Absences list sent.");
+    } else {
+        console.log("Absences list already published.");
+    }
 }
 
 runJob(main);
