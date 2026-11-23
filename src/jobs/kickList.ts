@@ -3,6 +3,7 @@ import { sendWebhookMessage } from "../utils/discordWebhook";
 import { runJob } from "./runJob";
 import { formatKickList } from "../messages/kickList";
 import { loadJokerStates } from "./loadJokerStates";
+import { publishOnce } from "./publishOnce";
 
 async function main() {
     const data = await loadJokerStates();
@@ -14,9 +15,15 @@ async function main() {
     const list = buildKickList(data.states, data.membersByTag);
     const message = formatKickList(list);
 
-    await sendWebhookMessage(message, "kickList");
+    const wasSent = await publishOnce("kickList", data.warStartDate, () =>
+        sendWebhookMessage(message, "kickList"),
+    );
 
-    console.log("Kick list sent.");
+    if (wasSent) {
+        console.log("Kick list sent.");
+    } else {
+        console.log("Kick list already published.");
+    }
 }
 
 runJob(main);
