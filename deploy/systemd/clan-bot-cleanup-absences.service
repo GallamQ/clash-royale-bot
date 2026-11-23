@@ -1,10 +1,14 @@
 [Unit]
 Description=Clan bot - delete expired absences
 OnFailure=clan-bot-notify-failure@%n.service
+StartLimitIntervalSec=300
+StartLimitBurst=3
 
 [Service]
 Type=oneshot
 TimeoutStartSec=60
+Restart=on-failure
+RestartSec=60
 User=ubuntu
 WorkingDirectory=/home/ubuntu/clan-bot-ts
 ExecStart=/usr/bin/node --env-file=.env --import tsx src/jobs/cleanupAbsences.ts
