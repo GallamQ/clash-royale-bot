@@ -2,6 +2,7 @@ import { formatJokerLosses } from "../messages/jokerLosses";
 import { buildJokerLossList } from "../rules/jokerLosses";
 import { sendWebhookMessage } from "../utils/discordWebhook";
 import { loadJokerStates } from "./loadJokerStates";
+import { publishOnce } from "./publishOnce";
 import { runJob } from "./runJob";
 
 async function main() {
@@ -14,9 +15,15 @@ async function main() {
     const losses = buildJokerLossList(data.states, data.membersByTag);
     const message = formatJokerLosses(losses);
 
-    await sendWebhookMessage(message, "jokerLosses");
+    const wasSent = await publishOnce("jokerLosses", data.warStartDate, () =>
+        sendWebhookMessage(message, "jokerLosses"),
+    );
 
-    console.log("Joker losses sent.");
+    if (wasSent) {
+        console.log("Joker losses sent.");
+    } else {
+        console.log("Joker losses already published.");
+    }
 }
 
 runJob(main);
