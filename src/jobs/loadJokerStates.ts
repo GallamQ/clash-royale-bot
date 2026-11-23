@@ -10,6 +10,7 @@ import { parseProtectedTags, removeProtectedStates } from "../rules/protectedMem
 export type JokerData = {
     states: Map<string, JokerState>;
     membersByTag: Map<string, ClanMember>;
+    warStartDate: string;
 };
 
 export async function loadJokerStates(): Promise<JokerData | undefined> {
@@ -28,6 +29,7 @@ export async function loadJokerStates(): Promise<JokerData | undefined> {
     const states = removeProtectedStates(allStates, protectedTags);
     const clanMembers = await getAllClanMembers();
     const membersByTag = new Map(clanMembers.map((member) => [member.tag, member]));
+    const lastWar = countedWars[countedWars.length - 1];
 
-    return { states: states, membersByTag };
+    return { states: states, membersByTag, warStartDate: lastWar.startDate };
 }
